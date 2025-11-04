@@ -1,0 +1,3 @@
+[submodule "poe-dat-viewer"]
+	path = poe-dat-viewer
+	url = https://github.com/DonkiChen/poe-dat-viewer

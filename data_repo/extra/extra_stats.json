@@ -1,0 +1,4462 @@
+[
+  {
+    "refName": "+# to Level of all %s Gems",
+    "type": "ACTIVE_SKILL",
+    "en": [
+      {
+        "string": "# to Level of all %s Gems",
+        "advanced": "# to Level of all %s(Fireball-Kinetic Fusillade) Gems"
+      }
+    ],
+    "cn": [
+      {
+        "string": "所有 %s 宝石等级 #",
+        "advanced": "所有 %s(火球-神圣报应) 宝石等级 #"
+      }
+    ]
+  },
+  {
+    "refName": "# Crafted Modifiers",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# Crafted Modifiers "
+      }
+    ],
+    "cn": [
+      {
+        "string": "# 工艺词缀"
+      }
+    ]
+  },
+  {
+    "refName": "# Crafted Prefix Modifiers",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# Crafted Prefix Modifiers "
+      }
+    ],
+    "cn": [
+      {
+        "string": "# 工艺前缀"
+      }
+    ]
+  },
+  {
+    "refName": "# Crafted Suffix Modifiers",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# Crafted Suffix Modifiers "
+      }
+    ],
+    "cn": [
+      {
+        "string": "# 工艺后缀"
+      }
+    ]
+  },
+  {
+    "refName": "# Empty Modifiers",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# Empty Modifiers "
+      }
+    ],
+    "cn": [
+      {
+        "string": "# 空词缀"
+      }
+    ]
+  },
+  {
+    "refName": "# Empty Prefix Modifiers",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# Empty Prefix Modifiers "
+      }
+    ],
+    "cn": [
+      {
+        "string": "# 空前缀"
+      }
+    ]
+  },
+  {
+    "refName": "# Empty Suffix Modifiers",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# Empty Suffix Modifiers "
+      }
+    ],
+    "cn": [
+      {
+        "string": "# 空后缀"
+      }
+    ]
+  },
+  {
+    "refName": "# Enchant Modifiers",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# Enchant Modifiers "
+      }
+    ],
+    "cn": [
+      {
+        "string": "# 附魔词缀"
+      }
+    ]
+  },
+  {
+    "refName": "# Fractured Modifiers",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# Fractured Modifiers "
+      }
+    ],
+    "cn": [
+      {
+        "string": "# 分裂词缀"
+      }
+    ]
+  },
+  {
+    "refName": "# Implicit Modifiers",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# Implicit Modifiers "
+      }
+    ],
+    "cn": [
+      {
+        "string": "# 固有词缀"
+      }
+    ]
+  },
+  {
+    "refName": "# Prefix Modifiers",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# Prefix Modifiers "
+      }
+    ],
+    "cn": [
+      {
+        "string": "# 前缀修正"
+      }
+    ]
+  },
+  {
+    "refName": "# Suffix Modifiers",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# Suffix Modifiers "
+      }
+    ],
+    "cn": [
+      {
+        "string": "# 后缀修正"
+      }
+    ]
+  },
+  {
+    "refName": "# Modifiers",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# Modifiers "
+      }
+    ],
+    "cn": [
+      {
+        "string": "# 修正"
+      }
+    ]
+  },
+  {
+    "refName": "Allocates #",
+    "type": "PASSIVE_SKILL",
+    "en": [
+      {
+        "string": "Allocates %s"
+      }
+    ],
+    "cn": [
+      {
+        "string": "配置 %s"
+      }
+    ]
+  },
+  {
+    "refName": "# Life Regenerated per Second",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# Life Regenerated per Second "
+      }
+    ],
+    "cn": [
+      {
+        "string": "# 每秒生命回复"
+      }
+    ]
+  },
+  {
+    "refName": "# Notable Passive Skills",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# Notable Passive Skills "
+      }
+    ],
+    "cn": [
+      {
+        "string": "# 关键天赋点"
+      }
+    ]
+  },
+  {
+    "refName": "# total Elemental Resistances",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# total Elemental Resistances "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+#% 最大元素抗性"
+      }
+    ]
+  },
+  {
+    "refName": "# total Resistances",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# total Resistances "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+#% 最大抗性"
+      }
+    ]
+  },
+  {
+    "refName": "#% Base Defence Percentile",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% Base Defence Percentile "
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% 基础防御百分比"
+      }
+    ]
+  },
+  {
+    "refName": "#% chance for dropped Maps to convert to Atlas Memories",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% chance for dropped Maps to convert to Atlas Memories "
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% chance for dropped Maps to convert to Atlas Memories "
+      }
+    ]
+  },
+  {
+    "refName": "#% chance for dropped Maps to convert to Conqueror Maps",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% chance for dropped Maps to convert to Conqueror Maps "
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% chance for dropped Maps to convert to Conqueror Maps "
+      }
+    ]
+  },
+  {
+    "refName": "#% chance for dropped Maps to convert to Elder Maps",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% chance for dropped Maps to convert to Elder Maps "
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% chance for dropped Maps to convert to Elder Maps "
+      }
+    ]
+  },
+  {
+    "refName": "#% chance for dropped Maps to convert to Maven Invitations",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% chance for dropped Maps to convert to Maven Invitations "
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% chance for dropped Maps to convert to Maven Invitations "
+      }
+    ]
+  },
+  {
+    "refName": "#% chance for dropped Maps to convert to Scarabs",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% chance for dropped Maps to convert to Scarabs "
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% chance for dropped Maps to convert to Scarabs "
+      }
+    ]
+  },
+  {
+    "refName": "#% chance for dropped Maps to convert to Shaper Maps",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% chance for dropped Maps to convert to Shaper Maps "
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% chance for dropped Maps to convert to Shaper Maps "
+      }
+    ]
+  },
+  {
+    "refName": "#% chance for dropped Maps to convert to Unique Maps",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% chance for dropped Maps to convert to Unique Maps "
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% chance for dropped Maps to convert to Unique Maps "
+      }
+    ]
+  },
+  {
+    "refName": "#% chance to Cause Monsters to Flee",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% chance to Cause Monsters to Flee"
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% 的几率使敌人逃跑"
+      }
+    ]
+  },
+  {
+    "refName": "#% increased Cold Spell Damage",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% increased Cold Spell Damage "
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% 法术技能冰霜伤害提高"
+      }
+    ]
+  },
+  {
+    "refName": "#% increased Fire Spell Damage",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% increased Fire Spell Damage "
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% 法术技能火焰伤害提高"
+      }
+    ]
+  },
+  {
+    "refName": "#% increased Lightning Spell Damage",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% increased Lightning Spell Damage "
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% 法术技能闪电伤害提高"
+      }
+    ]
+  },
+  {
+    "refName": "#% of Life Regenerated per Second",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% of Life Regenerated per Second "
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% 每秒生命回复"
+      }
+    ]
+  },
+  {
+    "refName": "#% total increased Physical Damage",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% total increased Physical Damage "
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% 物理伤害增加"
+      }
+    ]
+  },
+  {
+    "refName": "#% total increased maximum Energy Shield",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% total increased maximum Energy Shield "
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% 最大能量护盾增加"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Accuracy Rating for each Empty Green Socket on any Equipped Item",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Accuracy Rating for each Empty Green Socket on any Equipped Item"
+      }
+    ],
+    "cn": [
+      {
+        "string": "任意装备的每个空的绿色插槽使命中值 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Accuracy Rating per 10 Dexterity on Unallocated Passives in Radius",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Accuracy Rating per 10 Dexterity on Unallocated Passives in Radius"
+      }
+    ],
+    "cn": [
+      {
+        "string": "范围内每有 10 点未配置的敏捷，便 # 命中值"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Agility Level for Heists",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Agility Level for Heists"
+      }
+    ],
+    "cn": [
+      {
+        "string": "夺宝奇兵的灵敏等级 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Brute Force Level for Heists",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Brute Force Level for Heists"
+      }
+    ],
+    "cn": [
+      {
+        "string": "夺宝奇兵的凶蛮之力等级 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Counter-Thaumaturgy Level for Heists",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Counter-Thaumaturgy Level for Heists"
+      }
+    ],
+    "cn": [
+      {
+        "string": "夺宝奇兵的逆向奇术等级 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Deception Level for Heists",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Deception Level for Heists"
+      }
+    ],
+    "cn": [
+      {
+        "string": "夺宝奇兵的欺诈等级 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Demolition Level for Heists",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Demolition Level for Heists"
+      }
+    ],
+    "cn": [
+      {
+        "string": "夺宝奇兵的爆破等级 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Engineering Level for Heists",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Engineering Level for Heists"
+      }
+    ],
+    "cn": [
+      {
+        "string": "夺宝奇兵的工程学等级 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Evasion Rating while in Sand Stance",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Evasion Rating while in Sand Stance"
+      }
+    ],
+    "cn": [
+      {
+        "string": "沙姿态下 # 闪避值"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Level of all Jobs for Heists",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Level of all Jobs for Heists"
+      }
+    ],
+    "cn": [
+      {
+        "string": "夺宝奇兵的所有任务等级 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Lockpicking Level for Heists",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Lockpicking Level for Heists"
+      }
+    ],
+    "cn": [
+      {
+        "string": "夺宝奇兵的解密术等级 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Maximum Endurance Charges while affected by Determination",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Maximum Endurance Charges while affected by Determination"
+      }
+    ],
+    "cn": [
+      {
+        "string": "受到坚定影响时，耐力球数量上限#"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Maximum Energy Shield per Blue Socket",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Maximum Energy Shield per Blue Socket"
+      }
+    ],
+    "cn": [
+      {
+        "string": "每个蓝色插槽 # 最大能量护盾"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Maximum Frenzy Charges while affected by Grace",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Maximum Frenzy Charges while affected by Grace"
+      }
+    ],
+    "cn": [
+      {
+        "string": "受到优雅影响时，狂怒球数量上限#"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Maximum Life per Red Socket",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Maximum Life per Red Socket"
+      }
+    ],
+    "cn": [
+      {
+        "string": "每个红色插槽 # 最大生命"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Maximum Mana per Green Socket",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Maximum Mana per Green Socket"
+      }
+    ],
+    "cn": [
+      {
+        "string": "每个绿色插槽 # 最大魔力"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Maximum Power Charges and Maximum Endurance Charges",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Maximum Power Charges and Maximum Endurance Charges"
+      }
+    ],
+    "cn": [
+      {
+        "string": "暴击球和耐力球上限 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Maximum Power Charges while affected by Discipline",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Maximum Power Charges while affected by Discipline"
+      }
+    ],
+    "cn": [
+      {
+        "string": "受到纪律影响时，暴击球数量上限#"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Perception Level for Heists",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Perception Level for Heists"
+      }
+    ],
+    "cn": [
+      {
+        "string": "夺宝奇兵的洞察等级 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to Trap Disarmament Level for Heists",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to Trap Disarmament Level for Heists"
+      }
+    ],
+    "cn": [
+      {
+        "string": "夺宝奇兵的解除陷阱 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to level of Socketed Skill Gems per Socketed Gem",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to level of Socketed Skill Gems per Socketed Gem"
+      }
+    ],
+    "cn": [
+      {
+        "string": "每个镶嵌的宝石使镶嵌的技能宝石等级 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to maximum Life for each Empty Red Socket on any Equipped Item",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to maximum Life for each Empty Red Socket on any Equipped Item"
+      }
+    ],
+    "cn": [
+      {
+        "string": "任意装备的每个空的红色插槽使最大生命 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to maximum Life if there are no Life Modifiers on other Equipped Items",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to maximum Life if there are no Life Modifiers on other Equipped Items"
+      }
+    ],
+    "cn": [
+      {
+        "string": "若装备的其他物品没有生命词缀，生命上限 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to maximum Mana for each Empty Blue Socket on any Equipped Item",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to maximum Mana for each Empty Blue Socket on any Equipped Item"
+      }
+    ],
+    "cn": [
+      {
+        "string": "任意装备的每个空的蓝色插槽使最大魔力 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# to maximum Mana per 2 Intelligence",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to maximum Mana per 2 Intelligence"
+      }
+    ],
+    "cn": [
+      {
+        "string": "每 2 点智慧使魔力上限 #"
+      }
+    ]
+  },
+  {
+    "refName": "+# total maximum Energy Shield",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total maximum Energy Shield "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 最大能量护盾"
+      }
+    ]
+  },
+  {
+    "refName": "+# total maximum Life",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total maximum Life "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 最大生命值"
+      }
+    ]
+  },
+  {
+    "refName": "+# total maximum Mana",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total maximum Mana "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 最大魔力值"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Dexterity",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Dexterity "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 敏捷"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Intelligence",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Intelligence "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 智慧"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Aura Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Aura Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 光环技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Bow Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Bow Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 弓技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Chaos Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Chaos Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 混沌技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Cold Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Cold Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 冰霜技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Curse Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Curse Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 诅咒技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Dexterity Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Dexterity Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 敏捷技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Elemental Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Elemental Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 元素技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Fire Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Fire Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 火焰技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Golem Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Golem Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 魔像技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Intelligence Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Intelligence Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 智慧技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Lightning Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Lightning Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 闪电技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Melee Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Melee Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 近战技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Minion Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Minion Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 召唤物技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Movement Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Movement Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 移动技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Projectile Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Projectile Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 投射物技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Skill Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Skill Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Spell Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Spell Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 主动技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Strength Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Strength Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 力量技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Support Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Support Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 辅助技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Vaal Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Vaal Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 瓦尔技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Level of Socketed Warcry Gems",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Level of Socketed Warcry Gems "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 战吼技能宝石等级"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to Strength",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to Strength "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 力量"
+      }
+    ]
+  },
+  {
+    "refName": "+# total to all Attributes",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+# total to all Attributes "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+# 全属性"
+      }
+    ]
+  },
+  {
+    "refName": "+#% Global Critical Strike Chance",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+#% Global Critical Strike Chance "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+#% 暴击率"
+      }
+    ]
+  },
+  {
+    "refName": "+#% Global Critical Strike Multiplier",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+#% Global Critical Strike Multiplier "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+#% 暴击伤害加成"
+      }
+    ]
+  },
+  {
+    "refName": "+#% Monster Chaos Resistance",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% Monster Chaos Resistance"
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% 怪物的混沌抗性"
+      }
+    ]
+  },
+  {
+    "refName": "+#% Monster Elemental Resistances",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% Monster Elemental Resistances"
+      }
+    ],
+    "cn": [
+      {
+        "string": "#% 怪物的元素抗性"
+      }
+    ]
+  },
+  {
+    "refName": "+#% Monster Physical Damage Reduction",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% Monster Physical Damage Reduction"
+      }
+    ],
+    "cn": [
+      {
+        "string": "怪物的物理减伤提高 #%"
+      }
+    ]
+  },
+  {
+    "refName": "+#% to Critical Strike Multiplier if you've cast Enfeeble in the past 10 seconds",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% to Critical Strike Multiplier if you've cast Enfeeble in the past 10 seconds"
+      }
+    ],
+    "cn": [
+      {
+        "string": "如果你在过去10秒内施放过衰弱，则 #% 暴击伤害加成"
+      }
+    ]
+  },
+  {
+    "refName": "+#% to Damage over Time Multiplier for Bleeding from Hits with this Weapon",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% to Damage over Time Multiplier for Bleeding from Hits with this Weapon"
+      }
+    ],
+    "cn": [
+      {
+        "string": "用该武器击中时，流血的持续伤害加成 #%"
+      }
+    ]
+  },
+  {
+    "refName": "+#% to Damage over Time Multiplier if you've dealt a Critical Strike in the past 8 seconds",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% to Damage over Time Multiplier if you've dealt a Critical Strike in the past 8 seconds"
+      }
+    ],
+    "cn": [
+      {
+        "string": "若过去 8 秒内你造成过暴击，则持续伤害加成 #%"
+      }
+    ]
+  },
+  {
+    "refName": "+#% to Global Critical Strike Multiplier per Green Socket",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% to Global Critical Strike Multiplier per Green Socket"
+      }
+    ],
+    "cn": [
+      {
+        "string": "每个绿色插槽 #% 全域暴击伤害加成"
+      }
+    ]
+  },
+  {
+    "refName": "+#% to Maximum Quality",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% to Maximum Quality"
+      }
+    ],
+    "cn": [
+      {
+        "string": "最大品质 #%"
+      }
+    ]
+  },
+  {
+    "refName": "+#% to all Elemental Resistances for each Empty White Socket on any Equipped Item",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% to all Elemental Resistances for each Empty White Socket on any Equipped Item"
+      }
+    ],
+    "cn": [
+      {
+        "string": "任意装备的每个空的白色插槽使所有元素抗性 #%"
+      }
+    ]
+  },
+  {
+    "refName": "+#% to all Elemental Resistances per 15 Omniscience",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% to all Elemental Resistances per 15 Omniscience"
+      }
+    ],
+    "cn": [
+      {
+        "string": "所有元素抗性按照每 15 点全知 #%"
+      }
+    ]
+  },
+  {
+    "refName": "+#% to all maximum Elemental Resistances while affected by Purity of Elements",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "#% to all maximum Elemental Resistances while affected by Purity of Elements"
+      }
+    ],
+    "cn": [
+      {
+        "string": "受到元素净化光环影响时，所有元素抗性上限提高#%"
+      }
+    ]
+  },
+  {
+    "refName": "+#% total Attack Speed",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+#% total Attack Speed "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+#% 攻击速度"
+      }
+    ]
+  },
+  {
+    "refName": "+#% total Cast Speed",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+#% total Cast Speed "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+#% 施法速度"
+      }
+    ]
+  },
+  {
+    "refName": "+#% total Critical Strike Chance for Spells",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+#% total Critical Strike Chance for Spells "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+#% 法术暴击率"
+      }
+    ]
+  },
+  {
+    "refName": "+#% total Elemental Resistance",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+#% total Elemental Resistance "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+#% 最大元素抗性"
+      }
+    ]
+  },
+  {
+    "refName": "+#% total Resistance",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+#% total Resistance "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+#%最大抗性"
+      }
+    ]
+  },
+  {
+    "refName": "+#% total to Chaos Resistance",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+#% total to Chaos Resistance "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+#% 最大混沌抗性"
+      }
+    ]
+  },
+  {
+    "refName": "+#% total to Cold Resistance",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+#% total to Cold Resistance "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+#% 最大冰霜抗性"
+      }
+    ]
+  },
+  {
+    "refName": "+#% total to Fire Resistance",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+#% total to Fire Resistance "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+#% 最大火焰抗性"
+      }
+    ]
+  },
+  {
+    "refName": "+#% total to Lightning Resistance",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+#% total to Lightning Resistance "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+#% 最大闪电抗性"
+      }
+    ]
+  },
+  {
+    "refName": "+#% total to all Elemental Resistances",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "+#% total to all Elemental Resistances "
+      }
+    ],
+    "cn": [
+      {
+        "string": "+#% 最大元素抗性"
+      }
+    ]
+  },
+  {
+    "refName": "Adds # to # Damage",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Adds # to # Damage "
+      }
+    ],
+    "cn": [
+      {
+        "string": "增加 # 至 # 伤害"
+      }
+    ]
+  },
+  {
+    "refName": "Adds # to # Damage to Attacks",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Adds # to # Damage to Attacks "
+      }
+    ],
+    "cn": [
+      {
+        "string": "攻击附加 # 至 # 伤害"
+      }
+    ]
+  },
+  {
+    "refName": "Adds # to # Damage to Spells",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Adds # to # Damage to Spells "
+      }
+    ],
+    "cn": [
+      {
+        "string": "法术附加 # 至 # 伤害"
+      }
+    ]
+  },
+  {
+    "refName": "Adds # to # Elemental Damage",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Adds # to # Elemental Damage "
+      }
+    ],
+    "cn": [
+      {
+        "string": "增加 # 至 # 元素伤害"
+      }
+    ]
+  },
+  {
+    "refName": "Adds # to # Elemental Damage to Attacks",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Adds # to # Elemental Damage to Attacks "
+      }
+    ],
+    "cn": [
+      {
+        "string": "攻击附加 # 至 # 元素伤害"
+      }
+    ]
+  },
+  {
+    "refName": "Adds # to # Elemental Damage to Spells",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Adds # to # Elemental Damage to Spells "
+      }
+    ],
+    "cn": [
+      {
+        "string": "法术附加 # 至 # 元素伤害"
+      }
+    ]
+  },
+  {
+    "refName": "Exposure you inflict applies an extra +#% to the affected Resistance",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Exposure you inflict applies an extra #% to the affected Resistance"
+      }
+    ],
+    "cn": [
+      {
+        "string": "你施加的曝露效果会使受影响的抗性额外 #%"
+      }
+    ]
+  },
+  {
+    "refName": "Has # Influences",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Has # Influences "
+      }
+    ],
+    "cn": [
+      {
+        "string": "有#影响效果"
+      }
+    ]
+  },
+  {
+    "refName": "Has Crusader Influence",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Has Crusader Influence "
+      }
+    ],
+    "cn": [
+      {
+        "string": "有圣战者影响效果"
+      }
+    ]
+  },
+  {
+    "refName": "Has Elder Influence",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Has Elder Influence "
+      }
+    ],
+    "cn": [
+      {
+        "string": "有裂界者影响效果"
+      }
+    ]
+  },
+  {
+    "refName": "Has Hunter Influence",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Has Hunter Influence "
+      }
+    ],
+    "cn": [
+      {
+        "string": "有狩猎者影响效果"
+      }
+    ]
+  },
+  {
+    "refName": "Has Logbook Area: %s",
+    "type": "EXPEDITION_AREA",
+    "en": [
+      {
+        "string": "Has Logbook Area: %s "
+      }
+    ],
+    "cn": [
+      {
+        "string": "有日志区域：%s "
+      }
+    ]
+  },
+  {
+    "refName": "Has Logbook Faction: Black Scythe Mercenaries",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Black Scythe Mercenaries"
+      }
+    ],
+    "cn": [
+      {
+        "string": "黑镰佣兵"
+      }
+    ]
+  },
+  {
+    "refName": "Has Logbook Faction: Druids of the Broken Circle",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Druids of the Broken Circle"
+      }
+    ],
+    "cn": [
+      {
+        "string": "裂环祭司"
+      }
+    ]
+  },
+  {
+    "refName": "Has Logbook Faction: Knights of the Sun",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Knights of the Sun"
+      }
+    ],
+    "cn": [
+      {
+        "string": "烈日骑士"
+      }
+    ]
+  },
+  {
+    "refName": "Has Logbook Faction: Order of the Chalice",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Order of the Chalice"
+      }
+    ],
+    "cn": [
+      {
+        "string": "圣杯教团"
+      }
+    ]
+  },
+  {
+    "refName": "Has Redeemer Influence",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Has Redeemer Influence "
+      }
+    ],
+    "cn": [
+      {
+        "string": "有救赎者影响效果"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Antechamber",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Antechamber"
+      }
+    ],
+    "cn": [
+      {
+        "string": "接待厅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Apex of Ascension (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Apex of Ascension (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "晋升之巅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Apex of Atzoatl",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Apex of Atzoatl"
+      }
+    ],
+    "cn": [
+      {
+        "string": "阿佐亚特之巅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Arena of Valour (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Arena of Valour (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "勇猛角斗场"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Armourer's Workshop (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Armourer's Workshop (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "护甲锻造师的工坊"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Armoury (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Armoury (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "装备库"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Atlas of Worlds (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Atlas of Worlds (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "异界图鉴"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Automaton Lab (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Automaton Lab (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "神兵实验室"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Banquet Hall",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Banquet Hall"
+      }
+    ],
+    "cn": [
+      {
+        "string": "宴会厅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Barracks (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Barracks (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "军营"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Breach Containment Chamber (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Breach Containment Chamber (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "裂隙之间"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Catalyst of Corruption (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Catalyst of Corruption (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "腐化演变室"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Cellar",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Cellar"
+      }
+    ],
+    "cn": [
+      {
+        "string": "地窖"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Chamber of Iron (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Chamber of Iron (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "钢铁之殿"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Chasm",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Chasm"
+      }
+    ],
+    "cn": [
+      {
+        "string": "裂口"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Cloister",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Cloister"
+      }
+    ],
+    "cn": [
+      {
+        "string": "隐居回廊"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Conduit of Lightning (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Conduit of Lightning (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "闪电通道"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Corruption Chamber (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Corruption Chamber (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "腐化之间"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Court of Sealed Death (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Court of Sealed Death (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "封印死亡之廷"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Crucible of Flame (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Crucible of Flame (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "烈焰坩埚"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Cultivar Chamber (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Cultivar Chamber (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "变种植园"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Defense Research Lab (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Defense Research Lab (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "防御研究实验室"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Demolition Lab (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Demolition Lab (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "毁灭实验室"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Department of Thaumaturgy (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Department of Thaumaturgy (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "奇术科"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Doryani's Institute (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Doryani's Institute (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "多里亚尼学会"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Engineering Department (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Engineering Department (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "工程科"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Explosives Room (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Explosives Room (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "爆炸物制造间"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Factory (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Factory (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "工厂"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Flame Workshop (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Flame Workshop (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "火焰工坊"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Gemcutter's Workshop (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Gemcutter's Workshop (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "宝石匠的工坊"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Glittering Halls (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Glittering Halls (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "闪光大厅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Guardhouse (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Guardhouse (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "护卫间"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Hall of Champions (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Hall of Champions (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "勇士大厅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Hall of Heroes (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Hall of Heroes (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "英雄大厅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Hall of Legends (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Hall of Legends (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "传奇大厅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Hall of Locks (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Hall of Locks (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "沉锁大厅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Hall of Lords (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Hall of Lords (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "领主大厅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Hall of Mettle (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Hall of Mettle (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "勇毅大厅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Hall of Offerings (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Hall of Offerings (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "祭品大厅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Hall of War (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Hall of War (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "战争大厅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Halls",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Halls"
+      }
+    ],
+    "cn": [
+      {
+        "string": "大厅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Hatchery (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Hatchery (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "孵化场"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: House of the Others (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "House of the Others (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "旁者之屋"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Hurricane Engine (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Hurricane Engine (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "飓风引擎"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Hybridisation Chamber (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Hybridisation Chamber (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "混化之间"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Jeweller's Workshop (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Jeweller's Workshop (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "珠宝匠的工坊"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Jewellery Forge (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Jewellery Forge (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "珠宝熔炉"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Lightning Workshop (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Lightning Workshop (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "雷霆工坊"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Locus of Corruption (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Locus of Corruption (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "腐化蝗群"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Museum of Artefacts (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Museum of Artefacts (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "神器博物馆"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Office of Cartography (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Office of Cartography (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "绘图室"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Omnitect Forge (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Omnitect Forge (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "妖塔熔炉"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Omnitect Reactor Plant (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Omnitect Reactor Plant (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "妖塔反应堆"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Passageways",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Passageways"
+      }
+    ],
+    "cn": [
+      {
+        "string": "通路"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Pits",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Pits"
+      }
+    ],
+    "cn": [
+      {
+        "string": "深坑"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Poison Garden (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Poison Garden (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "烈毒花园"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Pools of Restoration (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Pools of Restoration (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "恢复之池"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Royal Meeting Room (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Royal Meeting Room (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "皇家会议厅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Sacrificial Chamber (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Sacrificial Chamber (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "祭仪之厅"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Sadist's Den (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Sadist's Den (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "残虐者之穴"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Sanctum of Immortality (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Sanctum of Immortality (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "不朽圣殿"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Sanctum of Unity (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Sanctum of Unity (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "团结圣殿"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Sanctum of Vitality (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Sanctum of Vitality (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "活力圣殿"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Shrine of Empowerment (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Shrine of Empowerment (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "强能神殿"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Shrine of Unmaking (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Shrine of Unmaking (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "解构神殿"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Sparring Room (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Sparring Room (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "练兵房"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Splinter Research Lab (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Splinter Research Lab (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "分裂研究实验室"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Storage Room (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Storage Room (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "储藏屋"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Storm of Corruption (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Storm of Corruption (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "腐化风暴"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Strongbox Chamber (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Strongbox Chamber (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "密箱储藏室"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Surveyor's Study (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Surveyor's Study (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "勘查员的学习室"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Tempest Generator (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Tempest Generator (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "风雷之间"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Temple Defense Workshop (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Temple Defense Workshop (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "神庙防御工坊"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Temple Nexus (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Temple Nexus (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "神庙枢纽"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Throne of Atziri (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Throne of Atziri (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "阿兹里的王座"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Tombs",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Tombs"
+      }
+    ],
+    "cn": [
+      {
+        "string": "墓穴"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Torment Cells (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Torment Cells (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "折磨牢狱"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Torture Cages (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Torture Cages (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "酷刑牢笼"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Toxic Grove (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Toxic Grove (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "毒林"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Trap Workshop (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Trap Workshop (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "陷阱工坊"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Treasury (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Treasury (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "藏宝室"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Tunnels",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Tunnels"
+      }
+    ],
+    "cn": [
+      {
+        "string": "隧道"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Vault (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Vault (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "宝库"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Warehouses (Tier 2)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Warehouses (Tier 2)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "仓库"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Wealth of the Vaal (Tier 3)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Wealth of the Vaal (Tier 3)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "瓦尔之宝"
+      }
+    ]
+  },
+  {
+    "refName": "Has Room: Workshop (Tier 1)",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Workshop (Tier 1)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "工坊"
+      }
+    ]
+  },
+  {
+    "refName": "Has Shaper Influence",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Has Shaper Influence "
+      }
+    ],
+    "cn": [
+      {
+        "string": "有塑界者影响效果"
+      }
+    ]
+  },
+  {
+    "refName": "Has Warlord Influence",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Has Warlord Influence "
+      }
+    ],
+    "cn": [
+      {
+        "string": "有督军影响效果"
+      }
+    ]
+  },
+  {
+    "refName": "Hits with this Weapon have +#% to Critical Strike Multiplier per Enemy Power",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Hits with this Weapon have #% to Critical Strike Multiplier per Enemy Power"
+      }
+    ],
+    "cn": [
+      {
+        "string": "敌人的每点威力值使该武器的击中暴击伤害加成 #%"
+      }
+    ]
+  },
+  {
+    "refName": "Minions have +# to Accuracy Rating per 10 Devotion",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Minions have # to Accuracy Rating per 10 Devotion"
+      }
+    ],
+    "cn": [
+      {
+        "string": "每 10 点奉献使召唤生物的命中值 #"
+      }
+    ]
+  },
+  {
+    "refName": "Minions have +#% to Critical Strike Multiplier per Withered Debuff on Enemy",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Minions have #% to Critical Strike Multiplier per Withered Debuff on Enemy"
+      }
+    ],
+    "cn": [
+      {
+        "string": "敌人每受到一层死亡凋零影响，召唤生物的暴击加成 #%"
+      }
+    ]
+  },
+  {
+    "refName": "Mirrored Tablet has # Islands",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Mirrored Tablet has # Islands "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Mirrored Tablet has # Islands "
+      }
+    ]
+  },
+  {
+    "refName": "More Currency: #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "More Currency: #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "More Currency: #% "
+      }
+    ]
+  },
+  {
+    "refName": "More Divination Cards: #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "More Divination Cards: #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "More Divination Cards: #% "
+      }
+    ]
+  },
+  {
+    "refName": "More Maps: #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "More Maps: #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "More Maps: #% "
+      }
+    ]
+  },
+  {
+    "refName": "More Scarabs: #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "More Scarabs: #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "More Scarabs: #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Attack Modifiers): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Attack Modifiers): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Attack Modifiers): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Attribute Modifiers): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Attribute Modifiers): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Attribute Modifiers): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Caster Modifiers): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Caster Modifiers): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Caster Modifiers): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Critical Modifiers): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Critical Modifiers): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Critical Modifiers): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Currency): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Currency): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Currency): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Defence Modifiers): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Defence Modifiers): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Defence Modifiers): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Divination Cards): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Divination Cards): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Divination Cards): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Elemental Damage Modifiers): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Elemental Damage Modifiers): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Elemental Damage Modifiers): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Life and Mana Modifiers): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Life and Mana Modifiers): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Life and Mana Modifiers): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Pack Size): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Pack Size): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Pack Size): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Physical and Chaos Damage Modifiers): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Physical and Chaos Damage Modifiers): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Physical and Chaos Damage Modifiers): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Rarity): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Rarity): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Rarity): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Resistance Modifiers): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Resistance Modifiers): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Resistance Modifiers): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Scarabs): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Scarabs): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Scarabs): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Quality (Speed Modifiers): #%",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Quality (Speed Modifiers): #% "
+      }
+    ],
+    "cn": [
+      {
+        "string": "Quality (Speed Modifiers): #% "
+      }
+    ]
+  },
+  {
+    "refName": "Reflection of %s (Difficulty #)",
+    "type": "KALANDRA_TILE",
+    "en": [
+      {
+        "string": "Reflection of %s (Difficulty #)"
+      }
+    ],
+    "cn": [
+      {
+        "string": "Reflection of %s (Difficulty #) "
+      }
+    ]
+  },
+  {
+    "refName": "Removes all but one Life on use\nRemoved life is Regenerated as Energy Shield over # seconds",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Removes all but one Life on use\nRemoved life is Regenerated as Energy Shield over # seconds"
+      }
+    ],
+    "cn": [
+      {
+        "string": "使用时将生命扣至剩余 1 点\n扣除的生命将在 # 秒内转换为能量护盾"
+      }
+    ]
+  },
+  {
+    "refName": "Right ring slot: Projectiles from Spells Chain +# times",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Right ring slot: Projectiles from Spells Chain # times"
+      }
+    ],
+    "cn": [
+      {
+        "string": "右戒指栏位：法术的投射物连锁弹射 # 次"
+      }
+    ]
+  },
+  {
+    "refName": "Shrapnel Ballista has +# to maximum number of Summoned Totems per 200 Strength",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Shrapnel Ballista has # to maximum number of Summoned Totems per 200 Strength"
+      }
+    ],
+    "cn": [
+      {
+        "string": "每 200 点力量都使散射弩炮的召唤图腾上限 #"
+      }
+    ]
+  },
+  {
+    "refName": "Skills supported by Unleash have +# to maximum number of Seals",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Skills supported by Unleash have # to maximum number of Seals"
+      }
+    ],
+    "cn": [
+      {
+        "string": "技能被【释出】辅助时 # 封印数量上限"
+      }
+    ]
+  },
+  {
+    "refName": "Summoned Arbalists' Projectiles Chain +# times",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Summoned Arbalists' Projectiles Chain # times"
+      }
+    ],
+    "cn": [
+      {
+        "string": "召唤劲弩的投射物连锁次数 #"
+      }
+    ]
+  },
+  {
+    "refName": "Warcry Skills have +# seconds to Cooldown",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Warcry Skills have # seconds to Cooldown"
+      }
+    ],
+    "cn": [
+      {
+        "string": "战吼技能冷却时间 # 秒"
+      }
+    ]
+  },
+  {
+    "refName": "With a Ghastly Eye Jewel Socketed, Minions have +# to Accuracy Rating",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "With a Ghastly Eye Jewel Socketed, Minions have # to Accuracy Rating"
+      }
+    ],
+    "cn": [
+      {
+        "string": "插入苍白之凝珠宝时，召唤生物的命中值 #"
+      }
+    ]
+  },
+  {
+    "refName": "You have no Armour or Maximum Energy Shield",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "You have no Armour or Maximum Energy Shield"
+      }
+    ],
+    "cn": [
+      {
+        "string": "解除护甲和最大能量护盾"
+      }
+    ]
+  },
+  {
+    "refName": "Your nearby party members maximum Endurance Charges is equal to yours",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Your nearby party members maximum Endurance Charges is equal to yours"
+      }
+    ],
+    "cn": [
+      {
+        "string": "周围队友的耐力球数量上限和你的一样"
+      }
+    ]
+  },
+  {
+    "refName": "%s's Veiled",
+    "type": "BETRAYAL_NPC",
+    "en": [
+      {
+        "string": "%s's Veiled"
+      }
+    ],
+    "cn": [
+      {
+        "string": "%s的影匿"
+      }
+    ]
+  },
+  {
+    "refName": "%s' Veiled",
+    "type": "BETRAYAL_NPC",
+    "en": [
+      {
+        "string": "%s Veiled"
+      }
+    ],
+    "cn": [
+      {
+        "string": "%s的影匿"
+      }
+    ]
+  },
+  {
+    "refName": "of %s's Veil",
+    "type": "BETRAYAL_NPC",
+    "en": [
+      {
+        "string": "of %s's Veil"
+      }
+    ],
+    "cn": [
+      {
+        "string": "%s解密之"
+      }
+    ]
+  },
+  {
+    "refName": "of the Veil",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "of the Veil"
+      }
+    ],
+    "cn": [
+      {
+        "string": "解密之"
+      }
+    ]
+  },  {
+    "refName": "Veiled",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Veiled"
+      }
+    ],
+    "cn": [
+      {
+        "string": "影匿的"
+      }
+    ]
+  },
+  {
+    "refName": "Allocates # if you have the matching modifier on Forbidden Flesh",
+    "resolver": "MERGE",
+    "type": "ASCENDANCY",
+    "en": [
+      {
+        "string": "Allocates %s if you have the matching modifier on Forbidden Flesh"
+      }
+    ],
+    "cn": [
+      {
+        "string": "禁断之肉上有匹配的词缀则配置 %s"
+      }
+    ]
+  },
+  {
+    "refName": "Allocates # if you have the matching modifier on Forbidden Flame",
+    "resolver": "MERGE",
+    "type": "ASCENDANCY",
+    "en": [
+      {
+        "string": "Allocates %s if you have the matching modifier on Forbidden Flame"
+      }
+    ],
+    "cn": [
+      {
+        "string": "禁断之血上有匹配的词缀则配置 %s"
+      }
+    ]
+  },
+  {
+    "refName": "Allocates #",
+    "type": "PASSIVE_SKILL",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Allocates %s"
+      }
+    ],
+    "cn": [
+      {
+        "string": "配置 %s"
+      }
+    ]
+  },
+  {
+    "refName": "Added Small Passive Skills grant: #",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Added Small Passive Skills grant: Axe Attacks deal 12% increased Damage with Hits and Ailments\nAdded Small Passive Skills grant: Sword Attacks deal 12% increased Damage with Hits and Ailments"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 10% increased Spell Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 10% increased Elemental Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Physical Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Fire Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Lightning Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Cold Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Chaos Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: Minions deal 10% increased Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Burning Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Chaos Damage over Time"
+      },
+      {
+        "string": "Added Small Passive Skills grant: Staff Attacks deal 12% increased Damage with Hits and Ailments\nAdded Small Passive Skills grant: Mace or Sceptre Attacks deal 12% increased Damage with Hits and Ailments"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Physical Damage over Time"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Cold Damage over Time"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 10% increased Damage over Time"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 10% increased Effect of Non-Damaging Ailments"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 3% increased effect of Non-Curse Auras from your Skills"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 10% increased Damage while affected by a Herald"
+      },
+      {
+        "string": "Added Small Passive Skills grant: Minions deal 10% increased Damage while you are affected by a Herald"
+      },
+      {
+        "string": "Added Small Passive Skills grant: Exerted Attacks deal 20% increased Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 15% increased Critical Strike Chance"
+      },
+      {
+        "string": "Added Small Passive Skills grant: Claw Attacks deal 12% increased Damage with Hits and Ailments\nAdded Small Passive Skills grant: Dagger Attacks deal 12% increased Damage with Hits and Ailments"
+      },
+      {
+        "string": "Added Small Passive Skills grant: Minions have 12% increased maximum Life"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 10% increased Area Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 10% increased Projectile Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Trap Damage\nAdded Small Passive Skills grant: 12% increased Mine Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Totem Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Brand Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: Channelling Skills deal 12% increased Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 6% increased Flask Effect Duration"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 10% increased Life Recovery from Flasks\nAdded Small Passive Skills grant: 10% increased Mana Recovery from Flasks"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 4% increased maximum Life"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Damage with Bows\nAdded Small Passive Skills grant: 12% increased Damage Over Time with Bow Skills"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 6% increased maximum Energy Shield"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 6% increased maximum Mana"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 15% increased Armour"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 15% increased Evasion Rating"
+      },
+      {
+        "string": "Added Small Passive Skills grant: +2% Chance to Block Attack Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 2% Chance to Block Spell Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: +15% to Fire Resistance"
+      },
+      {
+        "string": "Added Small Passive Skills grant: +15% to Cold Resistance"
+      },
+      {
+        "string": "Added Small Passive Skills grant: +15% to Lightning Resistance"
+      },
+      {
+        "string": "Added Small Passive Skills grant: +12% to Chaos Resistance"
+      },
+      {
+        "string": "Added Small Passive Skills grant: Wand Attacks deal 12% increased Damage with Hits and Ailments"
+      },
+      {
+        "string": "Added Small Passive Skills grant: +4% chance to Suppress Spell Damage"
+      },
+      {
+        "string": "Added Small Passive Skills grant: +10 to Strength"
+      },
+      {
+        "string": "Added Small Passive Skills grant: +10 to Dexterity"
+      },
+      {
+        "string": "Added Small Passive Skills grant: +10 to Intelligence"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 6% increased Mana Reservation Efficiency of Skills"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 2% increased Effect of your Curses"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Damage with Two Handed Weapons"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Attack Damage while Dual Wielding"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Attack Damage while holding a Shield"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 10% increased Attack Damage"
+      }
+    ],
+    "cn": [
+      {
+        "string": "Added Small Passive Skills grant: 3% increased effect of Non-Curse Auras from your Skills"
+      },
+      {
+        "string": "增加的小天赋获得：斧类攻击造成的击中和异常状态伤害提高 12%\n增加的小天赋获得：剑类攻击造成的击中和异常状态伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：法术伤害提高 10%"
+      },
+      {
+        "string": "增加的小天赋获得：元素伤害提高 10%"
+      },
+      {
+        "string": "增加的小天赋获得：物理伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：火焰伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：闪电伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：冰霜伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：混沌伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：召唤生物的伤害提高 10%"
+      },
+      {
+        "string": "增加的小天赋获得：燃烧伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：持续混沌伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：长杖攻击造成的击中和异常状态伤害提高 12%\n增加的小天赋获得：锤类或短杖攻击造成的击中和异常状态伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：持续物理伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：持续冰霜伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：持续伤害提高 10%"
+      },
+      {
+        "string": "增加的小天赋获得：非伤害型异常状态效果提高 10%"
+      },
+      {
+        "string": "增加的小天赋获得：受捷影响时，伤害提高 10%"
+      },
+      {
+        "string": "增加的小天赋获得：你受捷影响时，召唤生物的伤害提高 10%"
+      },
+      {
+        "string": "增加的小天赋获得：增助攻击的伤害提高 20%"
+      },
+      {
+        "string": "增加的小天赋获得：暴击率提高 15%"
+      },
+      {
+        "string": "增加的小天赋获得：爪类攻击造成的击中和异常状态伤害提高 12%\n增加的小天赋获得：匕首攻击造成的击中和异常状态伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：召唤生物的最大生命提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：范围伤害提高 10%"
+      },
+      {
+        "string": "增加的小天赋获得：投射物伤害提高 10%"
+      },
+      {
+        "string": "增加的小天赋获得：陷阱伤害提高 12%\n增加的小天赋获得：地雷伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：图腾伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：烙印伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：持续吟唱技能伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：药剂效果的持续时间延长 6%"
+      },
+      {
+        "string": "增加的小天赋获得：药剂给予的生命恢复提高 10%\n增加的小天赋获得：药剂给予的魔力恢复提高 10%"
+      },
+      {
+        "string": "增加的小天赋获得：生命上限提高 4%"
+      },
+      {
+        "string": "增加的小天赋获得：弓类伤害提高 12%\n增加的小天赋获得：弓类技能的持续伤害效果提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：能量护盾上限提高 6%"
+      },
+      {
+        "string": "增加的小天赋获得：魔力上限提高 6%"
+      },
+      {
+        "string": "增加的小天赋获得：护甲提高 15%"
+      },
+      {
+        "string": "增加的小天赋获得：闪避值提高 15%"
+      },
+      {
+        "string": "增加的小天赋获得：+2% 攻击伤害格挡几率"
+      },
+      {
+        "string": "增加的小天赋获得：2% 法术伤害格挡几率"
+      },
+      {
+        "string": "增加的小天赋获得：+15% 火焰抗性"
+      },
+      {
+        "string": "增加的小天赋获得：+15% 冰霜抗性"
+      },
+      {
+        "string": "增加的小天赋获得：+15% 闪电抗性"
+      },
+      {
+        "string": "增加的小天赋获得：+12% 混沌抗性"
+      },
+      {
+        "string": "增加的小天赋获得：法杖攻击造成的击中和异常状态伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：法术伤害压制率 +4%"
+      },
+      {
+        "string": "增加的小天赋获得：+10 力量"
+      },
+      {
+        "string": "增加的小天赋获得：+10 敏捷"
+      },
+      {
+        "string": "增加的小天赋获得：+10 智慧"
+      },
+      {
+        "string": "增加的小天赋获得：技能的魔力保留效能提高 6%"
+      },
+      {
+        "string": "增加的小天赋获得：你所施放诅咒的效果提高 2%"
+      },
+      {
+        "string": "增加的小天赋获得：双手武器的攻击伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：攻击伤害在双持武器时提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：持盾牌时造成的攻击伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：攻击伤害提高 10%"
+      }
+    ]
+  },
+  {
+    "refName": "Rhoa Feather Lure",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Rhoa Feather Lure",
+        "value": 1
+      },
+      {
+        "string": "Siren Worm Bait",
+        "value": 2
+      },
+      {
+        "string": "Totemic Wood Lure",
+        "value": 3
+      },
+      {
+        "string": "Thaumaturgical Lure",
+        "value": 4
+      },
+      {
+        "string": "Wombgift Bait",
+        "value": 5
+      },
+      {
+        "string": "Otherworldly Lure",
+        "value": 6
+      }
+    ],
+    "cn": [
+      {
+        "string": "恐喙鸟羽毛鱼饵",
+        "value": 1
+      },
+      {
+        "string": "海妖虫鱼饵",
+        "value": 2
+      },
+      {
+        "string": "图腾木鱼饵",
+        "value": 3
+      },
+      {
+        "string": "奇术鱼饵",
+        "value": 4
+      },
+      {
+        "string": "Wombgift Bait",
+        "value": 5
+      },
+      {
+        "string": "Otherworldly Lure",
+        "value": 6
+      }
+    ]
+  },
+  {
+    "refName": "#% chance to gain a Power Charge on Kill",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Gain a Power Charge on Kill"
+      }
+    ],
+    "cn": [
+      {
+        "string": "击败敌人时获得一个暴击球"
+      }
+    ]
+  },
+  {
+    "refName": "#% chance to gain a Power, Frenzy or Endurance Charge on Kill",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Gain a Power Charge on Kill"
+      }
+    ],
+    "cn": [
+      {
+        "string": "击败敌人时获得一个暴击球、狂怒球或耐力球"
+      }
+    ]
+  },
+  {
+    "refName": "#% increased Critical Strike Chance during Effect",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "#% increased Critical Strike Chance during Effect"
+      },
+      {
+        "string": "#% reduced Critical Strike Chance during Effect",
+        "negate": true
+      }
+    ],
+    "cn": [
+      {
+        "string": "生效期间，暴击率提高 #%"
+      },
+      {
+        "string": "生效期间，暴击率提高 #%",
+        "negate": true
+      }
+    ]
+  },
+  {
+    "refName": "#% increased Spell Critical Strike Chance",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "#% increased Spell Critical Strike Chance"
+      },
+      {
+        "string": "#% reduced Spell Critical Strike Chance",
+        "negate": true
+      }
+    ],
+    "cn": [
+      {
+        "string": "法术暴击几率提高 #%"
+      },
+      {
+        "string": "法术暴击几率提高 #%",
+        "negate": true
+      }
+    ]
+  },
+  {
+    "refName": "#% chance to gain a Power, Frenzy or Endurance Charge on Kill",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "#% chance to gain a Power, Frenzy or Endurance Charge on Kill"
+      },
+      {
+        "string": "Gain a Power, Frenzy or Endurance Charge on Kill",
+        "value": 100
+      }
+    ],
+    "cn": [
+      {
+        "string": "击败敌人时有 #% 的几率获得一个暴击球、狂怒球或耐力球"
+      },
+      {
+        "string": "击败敌人时获得一个暴击球、狂怒球或耐力球",
+        "value": 100
+      }
+    ]
+  },
+  {
+    "refName": "Chill Enemy for # second when Hit, reducing their Action Speed by 30%",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Chill Enemy for # second when Hit, reducing their Action Speed by 30%"
+      },
+      {
+        "string": "Chill Enemy for # seconds when Hit, reducing their Action Speed by 30%"
+      }
+    ],
+    "cn": [
+      {
+        "string": "被敌人击中后使其冰缓 # 秒，行动速度降低 30%"
+      },
+      {
+        "string": "击中敌人时，使其冰缓 # 秒，行动速度降低 30%"
+      }
+    ]
+  },
+  {
+    "refName": "Gain # Charge when you are Hit by an Enemy",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Gain # Charge when you are Hit by an Enemy"
+      },
+      {
+        "string": "Gain # Charges when you are Hit by an Enemy"
+      }
+    ],
+    "cn": [
+      {
+        "string": "你被敌人击中时获得 # 次充能"
+      },
+      {
+        "string": "你被敌人击中时获得 # 次充能"
+      }
+    ]
+  },
+  {
+    "refName": "Grants # Life per Enemy Hit",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Grants # Life per Enemy Hit"
+      },
+      {
+        "string": "Removes # of your Life per Enemy Hit",
+        "negate": true
+      }
+    ],
+    "cn": [
+      {
+        "string": "每击中一名敌人获得 # 点生命"
+      },
+      {
+        "string": "每击中一名敌人使你流失 # 点生命",
+        "negate": true
+      }
+    ]
+  },
+  {
+    "refName": "Gravicius' Veiled",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Gravicius' Veiled"
+      }
+    ],
+    "cn": [
+      {
+        "string": "格拉维奇的影匿"
+      }
+    ]
+  },
+  {
+    "refName": "Monsters' Attacks have #% chance to Impale on Hit",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Monsters' Attacks have #% chance to Impale on Hit"
+      },
+      {
+        "string": "Monsters' Attacks Impale on Hit",
+        "value": 100
+      }
+    ],
+    "cn": [
+      {
+        "string": "怪物的攻击击中有 #% 的几率造成穿刺"
+      },
+      {
+        "string": "怪物的攻击击中造成穿刺",
+        "value": 100
+      }
+    ]
+  },  {
+  "refName": "Monsters cannot be Leeched from",
+  "type": "DEFAULT",
+  "resolver": "MERGE",
+  "en": [
+    {
+      "string": "Monsters cannot be Leeched from"
+    }
+  ],
+  "cn": [
+    {
+      "string": "怪物无法被偷取"
+    }
+  ]
+},
+  {
+    "refName": "of Janus' Veil",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "of Janus' Veil"
+      }
+    ],
+    "cn": [
+      {
+        "string": "杨纳斯解密之"
+      }
+    ]
+  },
+  {
+    "refName": "Recover #% of Life when you Block",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Recover #% of Life when you Block"
+      },
+      {
+        "string": "Lose #% of Life when you Block",
+        "negate": true
+      }
+    ],
+    "cn": [
+      {
+        "string": "格挡时回复 #% 生命"
+      },{
+        "string": "格挡时回复 #% 生命",
+        "negate": true
+      }
+    ]
+  },
+  {
+    "refName": "Socketed Gems are Supported by Level # Cluster Traps",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Socketed Gems are Supported by Level # Cluster Traps"
+      }
+    ],
+    "cn": [
+      {
+        "string": "此物品上的技能石受到 # 级的 散弹陷阱 辅助"
+      }
+    ]
+  },
+  {
+    "refName": "Socketed Gems are Supported by Level # Elemental Army",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Socketed Gems are Supported by Level # Elemental Army"
+      }
+    ],
+    "cn": [
+      {
+        "string": "Socketed Gems are Supported by Level # Elemental Army"
+      }
+    ]
+  },
+  {
+    "refName": "Socketed Gems are Supported by Level # Power Charge On Critical",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Socketed Gems are Supported by Level # Power Charge On Critical"
+      }
+    ],
+    "cn": [
+      {
+        "string": "Socketed Gems are Supported by Level # Power Charge On Critical"
+      }
+    ]
+  },
+  {
+    "refName": "You gain +#% to all maximum Elemental Resistances per stack of Sulphite Intoxication",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "You gain #% to all maximum Elemental Resistances per stack of Sulphite Intoxication"
+      }
+    ],
+    "cn": [
+      {
+        "string": "You gain #% to all maximum Elemental Resistances per stack of Sulphite Intoxication"
+      }
+    ]
+  },
+  {
+    "refName": "Falling Crystals used by this Graft fires up to # additional mortar",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Falling Crystals used by this Graft fires up to # additional mortar"
+      },
+      {
+        "string": "Falling Crystals used by this Graft fires up to # additional mortars"
+      }
+    ],
+    "cn": [
+      {
+        "string": "此移植物使用的坠落水晶额外发射至多 # 发炮击"
+      },{
+        "string": "此移植物使用的坠落水晶额外发射至多 # 发炮击"
+      }
+    ]
+  },
+  {
+    "refName": "Prevent +#% of Suppressed Spell Damage if you have not Suppressed Spell Damage Recently",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Prevent #% of Suppressed Spell Damage if you have not Suppressed Spell Damage Recently"
+      }
+    ],
+    "cn": [
+      {
+        "string": "若你近期未压制法术伤害，额外阻挡 #% 被压制的法术伤害"
+      }
+    ]
+  },
+  {
+    "refName": "Searing Exarch Implicit Modifier (#)",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Searing Exarch Implicit Modifier (#) "
+      }
+    ],
+    "cn": [
+      {
+        "string": "焚界者基底词缀（#）"
+      }
+    ]
+  },
+  {
+    "refName": "Eater of Worlds Implicit Modifier (#)",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Eater of Worlds Implicit Modifier (#) "
+      }
+    ],
+    "cn": [
+      {
+        "string": "灭界者基底词缀（#）"
+      }
+    ]
+  },
+  {
+    "refName": "Passive Skills in Radius can be Allocated without being connected to your tree\n+#% to all Elemental Resistances\nPassage",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Passive Skills in Radius can be Allocated without being connected to your tree\n#% to all Elemental Resistances\nPassage"
+      }
+    ],
+    "cn": [
+      {
+        "string": "范围内的核心天赋技能无需连接到你的天赋树即可配置\n通途"
+      }
+    ]
+  },
+  {
+    "refName": "Passive Skills in Radius of # can be Allocated\nwithout being connected to your tree\nPassage",
+    "type": "KEYSTONE",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Passive Skills in Radius of %s can be Allocated\nwithout being connected to your tree\nPassage"
+      }
+    ],
+    "cn": [
+      {
+        "string": "%s范围内的核心天赋技能可以在\n未连结至天赋树的情况下配置\n通途"
+      }
+    ]
+  },
+  {
+    "refName": "While a Pinnacle Atlas Boss is in your Presence, %s",
+    "type": "EXARCH_EATER",
+    "resolver": "FLATTEN",
+    "en": [
+      {
+        "string": "While a Pinnacle Atlas Boss is in your Presence, %s"
+      }
+    ],
+    "cn": [
+      {
+        "string": "有一个异界图鉴最终首领出现在你面前：%s"
+      }
+    ]
+  },
+  {
+    "refName": "While a Unique Enemy is in your Presence, %s",
+    "type": "EXARCH_EATER",
+    "resolver": "FLATTEN",
+    "en": [
+      {
+        "string": "While a Unique Enemy is in your Presence, %s"
+      }
+    ],
+    "cn": [
+      {
+        "string": "有一个传奇怪物出现在你面前：%s"
+      }
+    ]
+  },
+  {
+    "refName": "While a Pinnacle Atlas Boss is in your Presence, #% increased Spell Critical Strike Chance",
+    "type": "DEFAULT",
+    "resolver": "FLATTEN",
+    "en": [
+      {
+        "string": "While a Pinnacle Atlas Boss is in your Presence, #% increased Spell Critical Strike Chance"
+      },
+      {
+        "string": "While a Pinnacle Atlas Boss is in your Presence, #% reduced Spell Critical Strike Chance",
+        "negate": true
+      }
+    ],
+    "cn": [
+      {
+        "string": "有一个异界图鉴最终首领出现在你面前：法术暴击几率提高 #%"
+      },
+      {
+        "string": "有一个异界图鉴最终首领出现在你面前：法术暴击几率降低 #%",
+        "negate": true
+      }
+    ]
+  },
+  {
+    "refName": "While a Unique Enemy is in your Presence, #% increased Spell Critical Strike Chance",
+    "type": "DEFAULT",
+    "resolver": "FLATTEN",
+    "en": [
+      {
+        "string": "While a Unique Enemy is in your Presence, #% increased Spell Critical Strike Chance"
+      },
+      {
+        "string": "While a Unique Enemy is in your Presence, #% reduced Spell Critical Strike Chance",
+        "negate": true
+      }
+    ],
+    "cn": [
+      {
+        "string": "有一个传奇怪物出现在你面前：法术暴击几率提高 #%"
+      },
+      {
+        "string": "有一个传奇怪物出现在你面前：法术暴击几率降低 #%",
+        "negate": true
+      }
+    ]
+  }
+]

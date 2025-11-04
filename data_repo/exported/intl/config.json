@@ -1,0 +1,113 @@
+{
+  "steam": "C:\\Program Files\\Epic Games\\PathOfExile",
+  "files": [
+    "Metadata/StatDescriptions/active_skill_gem_stat_descriptions.txt",
+    "Metadata/StatDescriptions/advanced_mod_stat_descriptions.txt",
+    "Metadata/StatDescriptions/atlas_relic_stat_descriptions.txt",
+    "Metadata/StatDescriptions/atlas_stat_descriptions.txt",
+    "Metadata/StatDescriptions/aura_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/banner_aura_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/beam_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/brand_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/buff_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/chest_stat_descriptions.txt",
+    "Metadata/StatDescriptions/curse_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/debuff_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/expedition_relic_stat_descriptions.txt",
+    "Metadata/StatDescriptions/gem_stat_descriptions.txt",
+    "Metadata/StatDescriptions/graft_stat_descriptions.txt",
+    "Metadata/StatDescriptions/heist_equipment_stat_descriptions.txt",
+    "Metadata/StatDescriptions/leaguestone_stat_descriptions.txt",
+    "Metadata/StatDescriptions/map_stat_descriptions.txt",
+    "Metadata/StatDescriptions/mercenary_support_stat_descriptions.txt",
+    "Metadata/StatDescriptions/minion_attack_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/minion_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/minion_spell_damage_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/minion_spell_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/monster_stat_descriptions.txt",
+    "Metadata/StatDescriptions/necropolis_stat_descriptions.txt",
+    "Metadata/StatDescriptions/offering_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/passive_skill_aura_stat_descriptions.txt",
+    "Metadata/StatDescriptions/passive_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/primordial_altar_stat_descriptions.txt",
+    "Metadata/StatDescriptions/sanctum_relic_stat_descriptions.txt",
+    "Metadata/StatDescriptions/secondary_debuff_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/sentinel_stat_descriptions.txt",
+    "Metadata/StatDescriptions/single_minion_spell_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/stat_descriptions.txt",
+    "Metadata/StatDescriptions/tincture_stat_descriptions.txt",
+    "Metadata/StatDescriptions/vaal_side_area_stat_descriptions.txt",
+    "Metadata/StatDescriptions/variable_duration_skill_stat_descriptions.txt",
+    "Metadata/StatDescriptions/village_stat_descriptions.txt"
+  ],
+  "translations": [
+    "English",
+    "Korean"
+  ],
+  "tables": [
+    {
+      "name": "ActiveSkills",
+      "columns": [
+        "Id",
+        "DisplayedName"
+      ]
+    },
+    {
+      "name": "MonsterVarieties",
+      "columns": [
+        "Id",
+        "Name"
+      ]
+    },
+    {
+      "name": "PassiveSkills",
+      "columns": [
+        "Id",
+        "Name"
+      ]
+    },
+    {
+      "name": "WorldAreas",
+      "columns": [
+        "Id",
+        "Name"
+      ]
+    },
+    {
+      "name": "NPCs",
+      "columns": [
+        "Id",
+        "ShortName"
+      ]
+    },
+    {
+      "name": "Ascendancy",
+      "columns": [
+        "Id",
+        "Name"
+      ]
+    },
+    {
+      "name": "AchievementItems",
+      "columns": [
+        "Id",
+        "Name"
+      ]
+    },
+    {
+      "name": "Words",
+      "columns": [
+        "Text",
+        "Text2"
+      ]
+    },
+    {
+      "name": "BaseItemTypes",
+      "columns": [
+        "Id",
+        "Name"
+      ]
+    }
+  ]
+}
