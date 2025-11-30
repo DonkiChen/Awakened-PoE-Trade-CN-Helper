@@ -5,7 +5,7 @@ import util.NdJsonHelper
 import java.io.File
 
 object AptDataRepo {
-    const val APT_PROJECT_DIR = """../Awakened-PoE-Trade-Simplified-Chinese"""
+    const val APT_PROJECT_DIR = """../"""
 
     private const val EN_ITEMS_FILE = """renderer/public/data/en/items.ndjson"""
     private const val EN_STATS_FILE = """renderer/public/data/en/stats.ndjson"""
