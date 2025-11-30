@@ -4458,5 +4458,61 @@
         "negate": true
       }
     ]
+  },
+  {
+    "refName": "# to maximum Energy Shield if there are no Defence Modifiers on other Equipped Items",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "# to maximum Energy Shield if there are no Defence Modifiers on other Equipped Items"
+      }
+    ],
+    "cn": [
+      {
+        "string": "若装备的其他物品没有防御词缀，能量护盾上限 #"
+      }
+    ]
+  },
+  {
+    "refName": "Found Items with Memory Strands have # Memory Strands",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Found Items with Memory Strands have # Memory Strands"
+      }
+    ],
+    "cn": [
+      {
+        "string": "具有回忆束丝的物品的回忆束丝 #"
+      }
+    ]
+  },
+  {
+    "refName": "Skills which Throw Traps have # Cooldown Use",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Skills which Throw Traps have # Cooldown Use"
+      }
+    ],
+    "cn": [
+      {
+        "string": "陷阱投掷技能 # 冷却时间次数"
+      }
+    ]
+  },
+  {
+    "refName": "Skills which Throw Traps have # Cooldown Uses",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Skills which Throw Traps have # Cooldown Uses"
+      }
+    ],
+    "cn": [
+      {
+        "string": "陷阱投掷技能 # 冷却时间次数"
+      }
+    ]
   }
 ]
