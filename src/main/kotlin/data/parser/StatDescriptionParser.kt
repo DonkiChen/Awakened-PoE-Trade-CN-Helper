@@ -115,6 +115,17 @@ private fun doParseStatDescriptions(dir: File): Sequence<GameStatDescription> = 
                                     state = State.WAITING_DESCRIPTION
                                     continue
                                 }
+
+                                fun chooseNamesContainer(language: String): MutableList<String>? {
+                                    return when {
+                                        language == "English" -> context.enNames
+                                        // 国际服打了汉化补丁的时候, 简体中文下是繁体中文, 繁体下是简体....
+                                        language == "Traditional Chinese" && Config.usePatchedIntlStatDescriptionFiles -> context.cnNames
+                                        language == "Simplified Chinese" && !Config.usePatchedIntlStatDescriptionFiles -> context.cnNames
+                                        else -> null
+                                    }
+                                }
+
                                 for (i in 0 until count) {
                                     val captured = TEXT_LINE_PATTERN.find(iterator.next().trim())!!.groupValues[1]
                                     val text = captured
@@ -123,14 +134,7 @@ private fun doParseStatDescriptions(dir: File): Sequence<GameStatDescription> = 
                                         .replace(Regex("\\{\\d?}"), "#")
                                         .replace(Regex("[{}]+"), "")
                                         .replace(Regex("<[^>]+>"), "")
-                                    val names = when {
-                                        context.currentLanguage == "English" -> context.enNames
-                                        context.currentLanguage == "Simplified Chinese" -> context.cnNames
-                                        // 国际服打了汉化补丁的时候, 取代的是韩文
-                                        context.currentLanguage == "Korean" && Config.usePatchedIntlStatDescriptionFiles -> context.cnNames
-                                        else -> null
-                                    }
-                                    names?.add(text)
+                                    chooseNamesContainer(context.currentLanguage)?.add(text)
                                 }
                                 val next = runCatching { iterator.next().trim() }.getOrNull()
                                 if (next != null && next.matches(LANG_PATTERN)) {
@@ -143,14 +147,7 @@ private fun doParseStatDescriptions(dir: File): Sequence<GameStatDescription> = 
                                     //	1
                                     //		# "超然飞升" reminderstring ReminderTextPrismaticBulwark
                                     // 会导致重复添加, 导致数量对不上, 所以在这里清空一下
-                                    val names = when {
-                                        nextLanguage == "English" -> context.enNames
-                                        nextLanguage == "Simplified Chinese" -> context.cnNames
-                                        // 国际服打了汉化补丁的时候, 取代的是韩文
-                                        nextLanguage == "Korean" && Config.usePatchedIntlStatDescriptionFiles -> context.cnNames
-                                        else -> null
-                                    }
-                                    names?.clear()
+                                    chooseNamesContainer(nextLanguage)?.clear()
                                     context.currentLanguage = nextLanguage
                                     continue
                                 }

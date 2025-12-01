@@ -18,8 +18,9 @@ inline fun <reified T : BaseTableItem> parseExportedTableData(
     val result = mutableMapOf<String, String>()
     // TODO: 目标文件夹可配置
     val which = if (Config.usePatchedIntlStatDescriptionFiles) "intl" else "tencent"
+    val cnLang = if (Config.usePatchedIntlStatDescriptionFiles) "Traditional Chinese" else "Simplified Chinese"
     val enFile = File(exportedDataDir, "/${which}/tables/English/${gameFileName}")
-    val cnFile = File(exportedDataDir, "/${which}/tables/Simplified Chinese/${gameFileName}")
+    val cnFile = File(exportedDataDir, "/${which}/tables/${cnLang}/${gameFileName}")
 
     val enItems = fromJson<List<T>>(enFile.reader()).filter(predicate).associateBy { it.id }
     val cnItems = fromJson<List<T>>(cnFile.reader()).filter(predicate).associateBy { it.id }
