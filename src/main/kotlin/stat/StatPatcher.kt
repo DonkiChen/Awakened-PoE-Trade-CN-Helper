@@ -9,17 +9,24 @@ import java.io.File
 object StatPatcher {
     private val outputFile = File(AptDataRepo.APT_PROJECT_DIR, "renderer/public/data/zh_CN/stats.ndjson")
 
+    private val mapper = GameDataRepo.GameDataMapper(
+        "intl",
+        "intl",
+        "Traditional Chinese",
+        "English"
+    )
+
     private fun AptDataRepo.Stat.replaceStringAndAdvanced() {
         matchers.forEach { matcher ->
             // 优先从游戏 description 数据里拿
-            val cnStatName = GameDataRepo.statsFromDescriptions[matcher.string.uppercase()]
+            val cnStatName = mapper.statsFromDescriptions[matcher.string.uppercase()]
             if (cnStatName != null) {
                 matcher.updateString(cnStatName)
                 return@forEach
             }
 
-            if (matcher.replaceByExtraStat(GameDataRepo.extraStats[refName.uppercase()])
-                || matcher.replaceByExtraStat(GameDataRepo.extraStats[matcher.string.uppercase()])
+            if (matcher.replaceByExtraStat(mapper.extraStats[refName.uppercase()])
+                || matcher.replaceByExtraStat(mapper.extraStats[matcher.string.uppercase()])
             ) {
                 return@forEach
             }

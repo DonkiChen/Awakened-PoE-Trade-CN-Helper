@@ -101,7 +101,7 @@ private fun resolvePlaceholder(stat: ExtraStat, items: Map<String, String>): Lis
     }
 }
 
-fun parseExtraStats(file: File): List<ExtraStat> {
+fun parseExtraStats(mapper: GameDataRepo.GameDataMapper, file: File): List<ExtraStat> {
     val result = mutableListOf<ExtraStat>()
     file.reader().use { fromJson<List<ExtraStat>>(it) }
         .forEach { stat ->
@@ -111,14 +111,14 @@ fun parseExtraStats(file: File): List<ExtraStat> {
                     return@forEach
                 }
 
-                Type.ACTIVE_SKILL -> GameDataRepo.activeSkills
-                Type.PASSIVE_SKILL -> GameDataRepo.passiveSkills
-                Type.EXPEDITION_AREA -> GameDataRepo.expeditionAreas
-                Type.KALANDRA_TILE -> GameDataRepo.kalandraTiles
-                Type.BETRAYAL_NPC -> GameDataRepo.betrayalNpcs
-                Type.ASCENDANCY -> GameDataRepo.ascendancies
-                Type.KEYSTONE -> GameDataRepo.keystones
-                Type.EXARCH_EATER -> GameDataRepo.exarchEaterMods
+                Type.ACTIVE_SKILL -> mapper.activeSkills
+                Type.PASSIVE_SKILL -> mapper.passiveSkills
+                Type.EXPEDITION_AREA -> mapper.expeditionAreas
+                Type.KALANDRA_TILE -> mapper.kalandraTiles
+                Type.BETRAYAL_NPC -> mapper.betrayalNpcs
+                Type.ASCENDANCY -> mapper.ascendancies
+                Type.KEYSTONE -> mapper.keystones
+                Type.EXARCH_EATER -> mapper.exarchEaterMods
             }
             result.addAll(resolvePlaceholder(stat, map))
         }

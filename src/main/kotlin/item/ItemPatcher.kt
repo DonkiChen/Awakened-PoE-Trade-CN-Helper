@@ -6,8 +6,15 @@ import java.io.File
 
 object ItemPatcher {
     private val outputFile = File(AptDataRepo.APT_PROJECT_DIR, "renderer/public/data/zh_CN/items.ndjson")
+    private val mapper = GameDataRepo.GameDataMapper(
+        "intl",
+        "intl",
+        "Traditional Chinese",
+        "English"
+    )
+
     private val candidates =
-        listOf(GameDataRepo.baseItems, GameDataRepo.activeSkills, GameDataRepo.words, GameDataRepo.monsters)
+        listOf(mapper.baseItems, mapper.activeSkills, mapper.words, mapper.monsters)
 
     private fun AptDataRepo.Item.choose(): String? {
         candidates.forEach {

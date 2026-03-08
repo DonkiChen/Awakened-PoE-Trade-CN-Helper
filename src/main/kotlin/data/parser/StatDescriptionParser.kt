@@ -1,14 +1,12 @@
 package data.parser
 
-import Config
 import java.io.File
 import java.io.InputStreamReader
 
 data class GameStatDescription(
     val fileName: String,
     val id: String,
-    val enNames: List<String>,
-    val cnNames: List<String>,
+    val namesByLang: Map<String, List<String>>,
 ) {
 
     val uniqueId = "${fileName}_${id}"
@@ -22,20 +20,21 @@ private val LANG_PATTERN = Regex("^lang\\s+\"([^\"]+)\"")
 /**
  * 解析器上下文，管理当前解析状态和数据
  */
-class ParserContext {
+class ParserContext(private val defaultLang: String) {
     var currentId: String? = null
-    var currentLanguage: String = "English"
-    val enNames = mutableListOf<String>()
-    val cnNames = mutableListOf<String>()
+    var currentLanguage: String = defaultLang
+    val namesByLang = mutableMapOf<String, MutableList<String>>()
+
+    val currentNamesContainer: MutableList<String>
+        get() = namesByLang.getOrPut(currentLanguage) { mutableListOf() }
 
     /**
      * 为新的description块重置上下文
      */
     fun resetForNewBlock() {
         currentId = null
-        currentLanguage = "English"
-        enNames.clear()
-        cnNames.clear()
+        currentLanguage = defaultLang
+        namesByLang.clear()
     }
 
     /**
@@ -43,7 +42,7 @@ class ParserContext {
      */
     fun createGameStatDescription(fileName: String): GameStatDescription? {
         return currentId?.let { id ->
-            GameStatDescription(fileName, id, enNames.toList(), cnNames.toList())
+            GameStatDescription(fileName, id, namesByLang.toMap())
         }
     }
 }
@@ -60,7 +59,7 @@ private enum class State {
  *
  * @return GameStatDescription对象的序列
  */
-private fun doParseStatDescriptions(dir: File): Sequence<GameStatDescription> = sequence {
+private fun doParseStatDescriptions(dir: File, defaultLang: String): Sequence<GameStatDescription> = sequence {
     dir.listFiles()?.forEach { file ->
         try {
             file.inputStream().use {
@@ -85,7 +84,7 @@ private fun doParseStatDescriptions(dir: File): Sequence<GameStatDescription> = 
                             return next
                         }
                     }
-                    val context = ParserContext()
+                    val context = ParserContext(defaultLang)
 
                     var state = State.WAITING_DESCRIPTION
                     while (iterator.hasNext()) {
@@ -116,16 +115,6 @@ private fun doParseStatDescriptions(dir: File): Sequence<GameStatDescription> = 
                                     continue
                                 }
 
-                                fun chooseNamesContainer(language: String): MutableList<String>? {
-                                    return when {
-                                        language == "English" -> context.enNames
-                                        // 国际服打了汉化补丁的时候, 简体中文下是繁体中文, 繁体下是简体....
-                                        language == "Traditional Chinese" && Config.usePatchedIntlStatDescriptionFiles -> context.cnNames
-                                        language == "Simplified Chinese" && !Config.usePatchedIntlStatDescriptionFiles -> context.cnNames
-                                        else -> null
-                                    }
-                                }
-
                                 for (i in 0 until count) {
                                     val captured = TEXT_LINE_PATTERN.find(iterator.next().trim())!!.groupValues[1]
                                     val text = captured
@@ -134,11 +123,11 @@ private fun doParseStatDescriptions(dir: File): Sequence<GameStatDescription> = 
                                         .replace(Regex("\\{\\d?}"), "#")
                                         .replace(Regex("[{}]+"), "")
                                         .replace(Regex("<[^>]+>"), "")
-                                    chooseNamesContainer(context.currentLanguage)?.add(text)
+                                    context.currentNamesContainer.add(text)
                                 }
                                 val next = runCatching { iterator.next().trim() }.getOrNull()
                                 if (next != null && next.matches(LANG_PATTERN)) {
-                                    val nextLanguage = LANG_PATTERN.find(next)!!.groupValues[1]
+                                    context.currentLanguage = LANG_PATTERN.find(next)!!.groupValues[1]
                                     // 国服在同一条 stat_description 上偶尔会有两个一样的中文翻译, 例如:
                                     // 	lang "Simplified Chinese"
                                     //	1
@@ -147,16 +136,15 @@ private fun doParseStatDescriptions(dir: File): Sequence<GameStatDescription> = 
                                     //	1
                                     //		# "超然飞升" reminderstring ReminderTextPrismaticBulwark
                                     // 会导致重复添加, 导致数量对不上, 所以在这里清空一下
-                                    chooseNamesContainer(nextLanguage)?.clear()
-                                    context.currentLanguage = nextLanguage
+                                    context.currentNamesContainer.clear()
                                     continue
                                 }
 
-                                context.createGameStatDescription(file.name)?.let {
+                                context.createGameStatDescription(file.name)?.let { desc ->
                                     context.resetForNewBlock()
-                                    missingIds.remove(it.id)
+                                    missingIds.remove(desc.id)
                                     expectedCount--
-                                    yield(it)
+                                    yield(desc)
                                 }
                                 state = when (next) {
                                     null -> return@useLines
@@ -210,38 +198,13 @@ private fun String.unescape(): String {
     return result.toString()
 }
 
-/**
- * A大国服功能补丁里的 stat_descriptions.txt 没有存英文信息, 导致无法对应上, 所以这里需要国际服的数据
- * TODO: 可选国际服 + 国服(A 大功能补丁 v1) or 国服
- */
-fun parseAPatchedStatDescriptions(intlDescriptionsDir: File, tencentDescriptionsDir: File): List<GameStatDescription> {
-    val enStatsFromGame = doParseStatDescriptions(intlDescriptionsDir)
-    val cnStatsFromGameById = doParseStatDescriptions(tencentDescriptionsDir).associateBy { it.uniqueId }
-    return buildList {
-        enStatsFromGame.forEach { description ->
-            val cnStat = cnStatsFromGameById[description.uniqueId]
-            if (cnStat == null
-                // 国际服中有些是已过期的, 会导致国服中没有对应字段, 所以这时候直接用国际服
-                || cnStat.cnNames.isEmpty()
-            ) {
-                add(description)
-            } else {
-                if (description.enNames.size != cnStat.cnNames.size && cnStat.cnNames.size > 1) {
-                    println("[WARNING] en names size: ${description.enNames.size}, cn names size: ${cnStat.cnNames.size} at: ${description.uniqueId}")
-                    println(description.enNames)
-                    println(cnStat.cnNames)
-                }
-                add(GameStatDescription(description.fileName, description.id, description.enNames, cnStat.cnNames))
+fun parseStatDescriptions(descriptionsDir: File, defaultLang: String = "English"): List<GameStatDescription> {
+    return doParseStatDescriptions(descriptionsDir, defaultLang).onEach { description ->
+        val expectedCount = description.namesByLang[defaultLang]?.size ?: 0
+        description.namesByLang.forEach { entry ->
+            if (expectedCount != entry.value.size) {
+                println("[WARNING] size not match, expected: $expectedCount, actual: ${entry.value.size}, lang: ${entry.key} at: ${description.uniqueId}")
             }
-        }
-    }
-}
-
-fun parseStatDescriptions(descriptionsDir: File): List<GameStatDescription> {
-    return doParseStatDescriptions(descriptionsDir).onEach { description ->
-        if (description.enNames.size != description.cnNames.size && description.cnNames.size > 1) {
-//             error("Stat ${description.uniqueId} has different number of enNames and cnNames\n$description")
-            println("[WARNING] en names size: ${description.enNames.size}, cn names size: ${description.cnNames.size} at: ${description.uniqueId}")
         }
     }.toList()
 }
