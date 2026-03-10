@@ -26,7 +26,7 @@
 
 1. 前置要求: 请确保已经安装了 nodejs 且版本 >= 18
 2. 使用 `git clone --recurse-submodules <url>` clone 当前仓库; 因为该仓库使用 submodule 关联了 [poe-dat-viewer(魔改版, 支持简中)](https://github.com/DonkiChen/poe-dat-viewer)
-3. 确认 [intl-config.json](./data_repo/exported/intl/config.json) 与 [tencent-config.json](./data_repo/exported/tencent/config.json) 中游戏文件夹的路径正确(第二行的 `steam`)
+3. 确认 [intl-config.json](data_repo/exported/intl_amsco2/config.json) 与 [tencent-config.json](./data_repo/exported/tencent/config.json) 中游戏文件夹的路径正确(第二行的 `steam`)
 4. 执行 `(cd ./data_repo && sh export.sh)`, 会编译 poe-dat-viewer 并导出游戏文件
 5. 运行 [Main.kt](./src/main/kotlin/Main.kt) 会在 APT 目录下生成翻译好的 items.ndjson 和 stats.ndjson 文件
 

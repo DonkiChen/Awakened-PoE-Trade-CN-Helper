@@ -14,6 +14,18 @@ private val extraStatsDir = File(dataRepoDir, "extra")
 private val extraStatsFile = File(extraStatsDir, "extra_stats.json")
 
 object GameDataRepo {
+    private val _mappers = mutableListOf<GameDataMapper>()
+    val mappers: List<GameDataMapper> = _mappers
+
+    fun prepareMapper(
+        sourceBaseDirName: String,
+        targetBaseDir: String,
+        targetLang: String,
+        targetStatDefaultLang: String,
+    ) {
+        _mappers.add(GameDataMapper(sourceBaseDirName, targetBaseDir, targetLang, targetStatDefaultLang))
+    }
+
     class GameDataMapper(
         private val sourceBaseDirName: String,
         private val targetBaseDir: String,
@@ -84,7 +96,8 @@ object GameDataRepo {
                         stat.namesByLang[targetStatDefaultLang]!!.mapIndexed { index, enName ->
                             enName to stat.namesByLang[targetLang]!![index]
                         }
-                    }.toMap()
+                    }
+                    .toMap()
                 )
                 putAll(parseTableDataToMapper<BaseTableItem>("AchievementItems.json") { it.id.startsWith("Keystone") })
                 putAll(parseTableDataToMapper<BaseTableItem>("PassiveSkills.json") { it.id.contains("keystone") })
@@ -150,7 +163,8 @@ object GameDataRepo {
                             putAll(sourceNames.mapIndexed { index, name ->
                                 // 如果 cn 不够, 则统一用最后一个兜底
                                 name.uppercase() to targetNames[min(index, targetNames.size - 1)]
-                            }.toMap())
+                            }
+                                .toMap())
                         }
                     }
             }

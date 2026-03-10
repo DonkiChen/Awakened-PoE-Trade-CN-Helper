@@ -81,8 +81,9 @@ object AptDataRepo {
         val name: String,
         val rawData: JsonObject
     ) {
-        fun updateName(name: String) {
+        fun updateName(name: String): Item {
             rawData.addProperty("name", name)
+            return this
         }
     }
 
