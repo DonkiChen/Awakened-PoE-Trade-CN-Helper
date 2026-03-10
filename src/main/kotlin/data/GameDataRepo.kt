@@ -53,6 +53,12 @@ object GameDataRepo {
             }
         }
 
+        val supportGems by lazy {
+            parseTableDataToMapper<BaseTableItem>("BaseItemTypes.json") {
+                it.id.startsWith("Metadata/Items/Gems/SupportGem")
+            }
+        }
+
         val monsters by lazy {
             parseTableDataToMapper<BaseTableItem>("MonsterVarieties.json") {
                 // 有些怪物在中文中的灵体名和野兽名不一样...

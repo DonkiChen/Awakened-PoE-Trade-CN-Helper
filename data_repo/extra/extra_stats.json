@@ -4514,5 +4514,19 @@
         "string": "陷阱投掷技能 # 冷却时间次数"
       }
     ]
+  },
+  {
+    "refName": "Supported by Level 1 %s",
+    "type": "SUPPORT_GEM",
+    "en": [
+      {
+        "string": "Supported by Level 1 %s"
+      }
+    ],
+    "cn": [
+      {
+        "string": "被等级 1 的 %s 辅助"
+      }
+    ]
   }
 ]

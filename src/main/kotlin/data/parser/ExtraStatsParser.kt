@@ -22,6 +22,7 @@ enum class Resolver {
 enum class Type {
     ACTIVE_SKILL,
     PASSIVE_SKILL,
+    SUPPORT_GEM,
     EXPEDITION_AREA,
     KALANDRA_TILE,
     BETRAYAL_NPC,
@@ -119,6 +120,11 @@ fun parseExtraStats(mapper: GameDataRepo.GameDataMapper, file: File): List<Extra
                 Type.ASCENDANCY -> mapper.ascendancies
                 Type.KEYSTONE -> mapper.keystones
                 Type.EXARCH_EATER -> mapper.exarchEaterMods
+                Type.SUPPORT_GEM -> {
+                    mapper.supportGems
+                        .mapKeys { it.key.replace(" Support", "") }
+                        .mapValues { it.value.replace("(辅)", "").replace("（辅）", "") }
+                }
             }
             result.addAll(resolvePlaceholder(stat, map))
         }
