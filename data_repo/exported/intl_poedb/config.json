@@ -109,6 +109,41 @@
         "Id",
         "Name"
       ]
+    },
+    {
+      "name": "ClientStrings",
+      "columns": [
+        "Id",
+        "Text"
+      ]
+    },
+    {
+      "name": "IndexableSupportGems",
+      "columns": [
+        "Index",
+        "Name"
+      ]
+    },
+    {
+      "name": "LakeRooms",
+      "columns": [
+        "Id",
+        "Name"
+      ]
+    },
+    {
+      "name": "IncursionRooms",
+      "columns": [
+        "Id",
+        "Name"
+      ]
+    },
+    {
+      "name": "ExpeditionFactions",
+      "columns": [
+        "Id",
+        "Name"
+      ]
     }
   ]
 }

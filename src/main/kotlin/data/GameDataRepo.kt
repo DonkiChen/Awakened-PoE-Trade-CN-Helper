@@ -3,7 +3,6 @@ package data
 import data.parser.BaseTableItem
 import data.parser.parseExtraStats
 import data.parser.parseStatDescriptions
-import util.fromJson
 import java.io.File
 import kotlin.math.min
 
@@ -59,6 +58,10 @@ object GameDataRepo {
             }
         }
 
+        val indexableSupportGems by lazy {
+            parseTableDataToMapper<BaseTableItem>("IndexableSupportGems.json")
+        }
+
         val monsters by lazy {
             parseTableDataToMapper<BaseTableItem>("MonsterVarieties.json") {
                 // 有些怪物在中文中的灵体名和野兽名不一样...
@@ -76,9 +79,20 @@ object GameDataRepo {
             }
         }
 
-        val kalandraTiles by lazy {
-            val file = File(extraStatsDir, "kalandra_tiles.json")
-            fromJson<List<String>>(file.reader()).associateBy { it }
+        val lakeRooms by lazy {
+            parseTableDataToMapper<BaseTableItem>("LakeRooms.json")
+        }
+
+        val incursionRooms by lazy {
+            parseTableDataToMapper<BaseTableItem>("IncursionRooms.json")
+        }
+
+        val logbookFactions by lazy {
+            parseTableDataToMapper<BaseTableItem>("ExpeditionFactions.json")
+        }
+
+        val clientStrings by lazy {
+            parseTableDataToMapper<BaseTableItem>("ClientStrings.json")
         }
 
         val betrayalNpcs by lazy {

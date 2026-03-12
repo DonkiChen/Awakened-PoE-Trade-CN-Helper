@@ -22,9 +22,11 @@ enum class Resolver {
 enum class Type {
     ACTIVE_SKILL,
     PASSIVE_SKILL,
-    SUPPORT_GEM,
+    INDEXABLE_SUPPORT_GEM,
     EXPEDITION_AREA,
-    KALANDRA_TILE,
+    LAKE_ROOM,
+    INCURSION_ROOM,
+    LOGBOOK_FACTION,
     BETRAYAL_NPC,
     ASCENDANCY,
     KEYSTONE,
@@ -104,7 +106,8 @@ private fun resolvePlaceholder(stat: ExtraStat, items: Map<String, String>): Lis
 
 fun parseExtraStats(mapper: GameDataRepo.GameDataMapper, file: File): List<ExtraStat> {
     val result = mutableListOf<ExtraStat>()
-    file.reader().use { fromJson<List<ExtraStat>>(it) }
+    file.reader()
+        .use { fromJson<List<ExtraStat>>(it) }
         .forEach { stat ->
             val map = when (stat.type) {
                 Type.DEFAULT -> {
@@ -115,18 +118,31 @@ fun parseExtraStats(mapper: GameDataRepo.GameDataMapper, file: File): List<Extra
                 Type.ACTIVE_SKILL -> mapper.activeSkills
                 Type.PASSIVE_SKILL -> mapper.passiveSkills
                 Type.EXPEDITION_AREA -> mapper.expeditionAreas
-                Type.KALANDRA_TILE -> mapper.kalandraTiles
+                Type.LAKE_ROOM -> mapper.lakeRooms
+                Type.INCURSION_ROOM -> mapper.incursionRooms
+                Type.LOGBOOK_FACTION -> mapper.logbookFactions
                 Type.BETRAYAL_NPC -> mapper.betrayalNpcs
                 Type.ASCENDANCY -> mapper.ascendancies
                 Type.KEYSTONE -> mapper.keystones
                 Type.EXARCH_EATER -> mapper.exarchEaterMods
-                Type.SUPPORT_GEM -> {
-                    mapper.supportGems
-                        .mapKeys { it.key.replace(" Support", "") }
-                        .mapValues { it.value.replace("(辅)", "").replace("（辅）", "") }
-                }
+                Type.INDEXABLE_SUPPORT_GEM -> mapper.indexableSupportGems
             }
-            result.addAll(resolvePlaceholder(stat, map))
+            val resolvedStats = resolvePlaceholder(stat, map)
+            when (stat.type) {
+                Type.INCURSION_ROOM -> {
+                    resolvedStats.flatMapTo(result) { resolvedStat ->
+                        (1..3).map { i ->
+                            resolvedStat.copy(
+                                refName = "${resolvedStat.refName} (Tier ${i})",
+                                en = resolvedStat.en.map { it.copy(string = "${it.string} (Tier ${i})") }
+                            )
+                        }
+                    }
+                }
+
+                else -> {}
+            }
+            result.addAll(resolvedStats)
         }
     return result
 }
