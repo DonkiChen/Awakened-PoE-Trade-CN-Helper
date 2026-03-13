@@ -2298,7 +2298,8 @@
         "string": "解密之"
       }
     ]
-  },  {
+  },
+  {
     "refName": "Veiled",
     "type": "DEFAULT",
     "en": [
@@ -2366,6 +2367,30 @@
         "string": "Added Small Passive Skills grant: Axe Attacks deal 12% increased Damage with Hits and Ailments\nAdded Small Passive Skills grant: Sword Attacks deal 12% increased Damage with Hits and Ailments"
       },
       {
+        "string": "Added Small Passive Skills grant: Staff Attacks deal 12% increased Damage with Hits and Ailments\nAdded Small Passive Skills grant: Mace or Sceptre Attacks deal 12% increased Damage with Hits and Ailments"
+      },
+      {
+        "string": "Added Small Passive Skills grant: Claw Attacks deal 12% increased Damage with Hits and Ailments\nAdded Small Passive Skills grant: Dagger Attacks deal 12% increased Damage with Hits and Ailments"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Damage with Bows\nAdded Small Passive Skills grant: 12% increased Damage Over Time with Bow Skills"
+      },
+      {
+        "string": "Added Small Passive Skills grant: Wand Attacks deal 12% increased Damage with Hits and Ailments"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Damage with Two Handed Weapons"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Attack Damage while Dual Wielding"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 12% increased Attack Damage while holding a Shield"
+      },
+      {
+        "string": "Added Small Passive Skills grant: 10% increased Attack Damage"
+      },
+      {
         "string": "Added Small Passive Skills grant: 10% increased Spell Damage"
       },
       {
@@ -2396,9 +2421,6 @@
         "string": "Added Small Passive Skills grant: 12% increased Chaos Damage over Time"
       },
       {
-        "string": "Added Small Passive Skills grant: Staff Attacks deal 12% increased Damage with Hits and Ailments\nAdded Small Passive Skills grant: Mace or Sceptre Attacks deal 12% increased Damage with Hits and Ailments"
-      },
-      {
         "string": "Added Small Passive Skills grant: 12% increased Physical Damage over Time"
       },
       {
@@ -2414,6 +2436,9 @@
         "string": "Added Small Passive Skills grant: 3% increased effect of Non-Curse Auras from your Skills"
       },
       {
+        "string": "Added Small Passive Skills grant: 2% increased Effect of your Curses"
+      },
+      {
         "string": "Added Small Passive Skills grant: 10% increased Damage while affected by a Herald"
       },
       {
@@ -2424,9 +2449,6 @@
       },
       {
         "string": "Added Small Passive Skills grant: 15% increased Critical Strike Chance"
-      },
-      {
-        "string": "Added Small Passive Skills grant: Claw Attacks deal 12% increased Damage with Hits and Ailments\nAdded Small Passive Skills grant: Dagger Attacks deal 12% increased Damage with Hits and Ailments"
       },
       {
         "string": "Added Small Passive Skills grant: Minions have 12% increased maximum Life"
@@ -2459,9 +2481,6 @@
         "string": "Added Small Passive Skills grant: 4% increased maximum Life"
       },
       {
-        "string": "Added Small Passive Skills grant: 12% increased Damage with Bows\nAdded Small Passive Skills grant: 12% increased Damage Over Time with Bow Skills"
-      },
-      {
         "string": "Added Small Passive Skills grant: 6% increased maximum Energy Shield"
       },
       {
@@ -2492,9 +2511,6 @@
         "string": "Added Small Passive Skills grant: +12% to Chaos Resistance"
       },
       {
-        "string": "Added Small Passive Skills grant: Wand Attacks deal 12% increased Damage with Hits and Ailments"
-      },
-      {
         "string": "Added Small Passive Skills grant: +4% chance to Suppress Spell Damage"
       },
       {
@@ -2511,26 +2527,35 @@
       },
       {
         "string": "Added Small Passive Skills grant: 2% increased Effect of your Curses"
-      },
-      {
-        "string": "Added Small Passive Skills grant: 12% increased Damage with Two Handed Weapons"
-      },
-      {
-        "string": "Added Small Passive Skills grant: 12% increased Attack Damage while Dual Wielding"
-      },
-      {
-        "string": "Added Small Passive Skills grant: 12% increased Attack Damage while holding a Shield"
-      },
-      {
-        "string": "Added Small Passive Skills grant: 10% increased Attack Damage"
       }
     ],
     "cn": [
       {
-        "string": "Added Small Passive Skills grant: 3% increased effect of Non-Curse Auras from your Skills"
+        "string": "增加的小天赋获得：斧类攻击造成的击中和异常状态伤害提高 12%\n增加的小天赋获得：剑类攻击造成的击中和异常状态伤害提高 12%"
       },
       {
-        "string": "增加的小天赋获得：斧类攻击造成的击中和异常状态伤害提高 12%\n增加的小天赋获得：剑类攻击造成的击中和异常状态伤害提高 12%"
+        "string": "增加的小天赋获得：长杖攻击造成的击中和异常状态伤害提高 12%\n增加的小天赋获得：锤类或短杖攻击造成的击中和异常状态伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：爪类攻击造成的击中和异常状态伤害提高 12%\n增加的小天赋获得：匕首攻击造成的击中和异常状态伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：弓类伤害提高 12%\n增加的小天赋获得：弓类技能的持续伤害效果提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：法杖攻击造成的击中和异常状态伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：双手武器的攻击伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：攻击伤害在双持武器时提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：持盾牌时造成的攻击伤害提高 12%"
+      },
+      {
+        "string": "增加的小天赋获得：攻击伤害提高 10%"
       },
       {
         "string": "增加的小天赋获得：法术伤害提高 10%"
@@ -2563,9 +2588,6 @@
         "string": "增加的小天赋获得：持续混沌伤害提高 12%"
       },
       {
-        "string": "增加的小天赋获得：长杖攻击造成的击中和异常状态伤害提高 12%\n增加的小天赋获得：锤类或短杖攻击造成的击中和异常状态伤害提高 12%"
-      },
-      {
         "string": "增加的小天赋获得：持续物理伤害提高 12%"
       },
       {
@@ -2578,6 +2600,12 @@
         "string": "增加的小天赋获得：非伤害型异常状态效果提高 10%"
       },
       {
+        "string": "增加的小天赋获得：你技能的非诅咒类光环效果提高 3% (遗产)"
+      },
+      {
+        "string": "增加的小天赋获得：你所施放诅咒的效果提高 2% (遗产)"
+      },
+      {
         "string": "增加的小天赋获得：受捷影响时，伤害提高 10%"
       },
       {
@@ -2588,9 +2616,6 @@
       },
       {
         "string": "增加的小天赋获得：暴击率提高 15%"
-      },
-      {
-        "string": "增加的小天赋获得：爪类攻击造成的击中和异常状态伤害提高 12%\n增加的小天赋获得：匕首攻击造成的击中和异常状态伤害提高 12%"
       },
       {
         "string": "增加的小天赋获得：召唤生物的最大生命提高 12%"
@@ -2623,19 +2648,16 @@
         "string": "增加的小天赋获得：生命上限提高 4%"
       },
       {
-        "string": "增加的小天赋获得：弓类伤害提高 12%\n增加的小天赋获得：弓类技能的持续伤害效果提高 12%"
-      },
-      {
         "string": "增加的小天赋获得：能量护盾上限提高 6%"
       },
       {
         "string": "增加的小天赋获得：魔力上限提高 6%"
       },
       {
-        "string": "增加的小天赋获得：护甲提高 15%"
+        "string": "增加的小天赋获得：该装备的护甲提高 15%"
       },
       {
-        "string": "增加的小天赋获得：闪避值提高 15%"
+        "string": "增加的小天赋获得：该装备的闪避值提高 15%"
       },
       {
         "string": "增加的小天赋获得：+2% 攻击伤害格挡几率"
@@ -2656,9 +2678,6 @@
         "string": "增加的小天赋获得：+12% 混沌抗性"
       },
       {
-        "string": "增加的小天赋获得：法杖攻击造成的击中和异常状态伤害提高 12%"
-      },
-      {
         "string": "增加的小天赋获得：法术伤害压制率 +4%"
       },
       {
@@ -2675,18 +2694,6 @@
       },
       {
         "string": "增加的小天赋获得：你所施放诅咒的效果提高 2%"
-      },
-      {
-        "string": "增加的小天赋获得：双手武器的攻击伤害提高 12%"
-      },
-      {
-        "string": "增加的小天赋获得：攻击伤害在双持武器时提高 12%"
-      },
-      {
-        "string": "增加的小天赋获得：持盾牌时造成的攻击伤害提高 12%"
-      },
-      {
-        "string": "增加的小天赋获得：攻击伤害提高 10%"
       }
     ]
   },
@@ -2946,21 +2953,22 @@
         "value": 100
       }
     ]
-  },  {
-  "refName": "Monsters cannot be Leeched from",
-  "type": "DEFAULT",
-  "resolver": "MERGE",
-  "en": [
-    {
-      "string": "Monsters cannot be Leeched from"
-    }
-  ],
-  "cn": [
-    {
-      "string": "怪物无法被偷取"
-    }
-  ]
-},
+  },
+  {
+    "refName": "Monsters cannot be Leeched from",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "Monsters cannot be Leeched from"
+      }
+    ],
+    "cn": [
+      {
+        "string": "怪物无法被偷取"
+      }
+    ]
+  },
   {
     "refName": "of Janus' Veil",
     "type": "DEFAULT",
@@ -2992,7 +3000,8 @@
     "cn": [
       {
         "string": "格挡时回复 #% 生命"
-      },{
+      },
+      {
         "string": "格挡时回复 #% 生命",
         "negate": true
       }
@@ -3073,7 +3082,8 @@
     "cn": [
       {
         "string": "此移植物使用的坠落水晶额外发射至多 # 发炮击"
-      },{
+      },
+      {
         "string": "此移植物使用的坠落水晶额外发射至多 # 发炮击"
       }
     ]
