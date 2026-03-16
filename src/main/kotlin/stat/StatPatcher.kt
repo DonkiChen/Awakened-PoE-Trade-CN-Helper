@@ -21,31 +21,36 @@ object StatPatcher {
         return text.replace(Regex(" +\n"), "\n")
     }
 
-    private fun translateByStatsFromDescriptions(
-        mapper: GameDataRepo.GameDataMapper,
+    private fun doReplace(
+        cnMatcherNames: Set<String>,
+        cnAdvancedNames: Set<String>,
         stat: AptDataRepo.Stat,
         matcher: AptDataRepo.Stat.Matcher,
     ): Boolean {
-        val cnStatNames = mapper.statsFromDescriptions[matcher.string.uppercase()] ?: emptySet()
-        // 确保最少有一个, 保证后续笛卡尔积计算正确
-        val cnAdvanceds =
-            if (matcher.advanced == null) setOf("") else mapper.statsFromDescriptions[matcher.advanced.uppercase()] ?: setOf("")
-        if (cnStatNames.isEmpty() && cnAdvanceds.size == 1 && cnAdvanceds.first().isBlank()) {
+        if (cnMatcherNames.isEmpty() && cnAdvancedNames.isEmpty()) {
             return false
         }
+        if (matcher.advanced != null && cnAdvancedNames.isEmpty()) {
+            // 如果 matcher 有 advanced, 则必须要有 cnAdvancedNames
+            return false
+        }
+        val backupMatcherRawData = matcher.rawData.deepCopy()
 
-        val combinations = cnStatNames.flatMap { cnStatName ->
-            cnAdvanceds.map { cnAdvanced -> cnStatName to cnAdvanced }
+        val finalCnAdvancedNames = cnAdvancedNames.ifEmpty {
+            // 确保最少有一个, 保证后续笛卡尔积计算正确
+            setOf("")
+        }
+        val combinations = cnMatcherNames.flatMap { cnStatName ->
+            finalCnAdvancedNames.map { cnAdvanced -> cnStatName to cnAdvanced }
         }
 
-        val backupMatcherRawData = matcher.rawData
         // 因为会出现同一个英文名在不同场景下有不同中文翻译的问题, 例如:
         // Adds {0} to {1} Cold Damage 可以被翻译为
         // - 附加 {0} - {1} 基础冰霜伤害 与
         // - 该装备附加 {0} - {1} 基础冰霜伤害
         // 这里的处理方式是:
         // - 如果只有一条中文翻译: 没问题, 直接修改
-        // - 如果有多条: 则直接添加 matcher
+        // - 如果有多条: 先更新第一条, 然后再添加剩下 matcher
         combinations.forEachIndexed { index, (cnStatName, cnAdvanced) ->
             if (index == 0) {
                 matcher.updateString(specialFix(cnStatName))
@@ -63,30 +68,54 @@ object StatPatcher {
 
     private fun AptDataRepo.Stat.translateStringAndAdvanced(mapper: GameDataRepo.GameDataMapper): AptDataRepo.Stat {
         matchers.forEach { matcher ->
-            if (refName == "Socketed Gems are Supported by Level # Impending Doom") {
+            if (refName == "+# to Level of all Raise Spectre Gems") {
                 println()
             }
-            // 优先从游戏 description 数据里拿
-            if (translateByStatsFromDescriptions(mapper, this, matcher)
-                || matcher.replaceByExtraStat(mapper.extraStats[refName.uppercase()])
-                || matcher.replaceByExtraStat(mapper.extraStats[matcher.string.uppercase()])
-            ) {
-                return@forEach
+            val cnMatcherNames = mutableSetOf<String>()
+            val cnAdvancedNames = mutableSetOf<String>()
+
+            if (mapper.statsFromDescriptions[matcher.string.uppercase()] != null) {
+                cnMatcherNames.addAll(mapper.statsFromDescriptions[matcher.string.uppercase()]!!)
             }
-            println("missing: $matcher at ${this.refName}")
+            if (matcher.advanced != null && mapper.statsFromDescriptions[matcher.advanced.uppercase()] != null) {
+                cnAdvancedNames.addAll(mapper.statsFromDescriptions[matcher.advanced.uppercase()]!!)
+            }
+
+            if (matcher.advanced != null && cnAdvancedNames.isEmpty()) {
+                // 如果 matcher 有 advanced, 则必须要有 cnAdvancedNames
+                cnMatcherNames.clear()
+            }
+
+            val extraStats = buildList {
+                if (mapper.extraStats[refName.uppercase()] != null) {
+                    add(mapper.extraStats[refName.uppercase()]!!)
+                }
+                if (mapper.extraStats[matcher.string.uppercase()] != null) {
+                    add(mapper.extraStats[matcher.string.uppercase()]!!)
+                }
+            }
+            extraStats.forEach { extraStat ->
+                val index = extraStat.en.indexOfFirst { it.string.equals(matcher.string, true) }
+                if (index >= 0 && extraStat.cn.size > index) {
+                    cnMatcherNames.add(extraStat.cn[index].string)
+                    if (extraStat.cn[index].advanced != null) {
+                        cnAdvancedNames.add(extraStat.cn[index].advanced!!)
+                    }
+                }
+            }
+
+            val replaced = doReplace(
+                cnMatcherNames = cnMatcherNames,
+                cnAdvancedNames = cnAdvancedNames,
+                stat = this,
+                matcher = matcher
+            )
+
+            if (!replaced) {
+                println("missing: $matcher at ${this.refName}")
+            }
         }
         return this
-    }
-
-    private fun AptDataRepo.Stat.Matcher.replaceByExtraStat(extraStat: ExtraStat?): Boolean {
-        extraStat ?: return false
-        val index = extraStat.en.indexOfFirst { it.string.equals(string, true) }
-        if (index >= 0 && extraStat.cn.size > index) {
-            updateString(extraStat.cn[index].string)
-            updateAdvancedIfExists(extraStat.cn[index].advanced)
-            return true
-        }
-        return false
     }
 
     private fun AptDataRepo.BaseStat.translate(mapper: GameDataRepo.GameDataMapper): AptDataRepo.BaseStat {

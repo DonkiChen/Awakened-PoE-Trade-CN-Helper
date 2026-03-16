@@ -3298,6 +3298,7 @@
   {
     "refName": "Supported by Level 1 %s",
     "type": "INDEXABLE_SUPPORT_GEM",
+    "resolver": "FLATTEN",
     "en": [
       {
         "string": "Supported by Level 1 %s"
@@ -3306,6 +3307,21 @@
     "cn": [
       {
         "string": "被等级 1 的 %s 辅助"
+      }
+    ]
+  },
+  {
+    "refName": "Socketed Gems are Supported by Level # %s",
+    "type": "INDEXABLE_SUPPORT_GEM",
+    "resolver": "FLATTEN",
+    "en": [
+      {
+        "string": "Socketed Gems are supported by Level # %s"
+      }
+    ],
+    "cn": [
+      {
+        "string": "插入的技能石被 # 级的%s(高阶多重投射-圣化)辅助"
       }
     ]
   }
