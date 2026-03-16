@@ -5,13 +5,13 @@
     "en": [
       {
         "string": "# to Level of all %s Gems",
-        "advanced": "# to Level of all %s(Fireball-Kinetic Fusillade) Gems"
+        "advanced": "# to Level of all %s(Fireball-Divine Blast) Gems"
       }
     ],
     "cn": [
       {
         "string": "所有 %s 宝石等级 #",
-        "advanced": "所有 %s(火球-神圣报应) 宝石等级 #"
+        "advanced": "所有 %s(火球-神圣冲击) 宝石等级 #"
       }
     ]
   },
