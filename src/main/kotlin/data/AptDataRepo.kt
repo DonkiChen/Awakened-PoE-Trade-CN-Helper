@@ -25,7 +25,9 @@ object AptDataRepo {
         override val rawData: JsonObject,
     ) : BaseStat {
         override val associateKey by lazy {
-            stats.map { it.refName }.toSet().toString()
+            stats.map { it.refName }
+                .toSet()
+                .toString()
         }
     }
 
@@ -37,15 +39,20 @@ object AptDataRepo {
             get() = refName
 
         val matchers by lazy {
-            rawData.getAsJsonArray("matchers").map { Matcher(it.asJsonObject["string"].asString, it.asJsonObject) }
+            rawData.getAsJsonArray("matchers")
+                .map {
+                    Matcher(it.asJsonObject["string"].asString, it.asJsonObject["advanced"]?.asString, it.asJsonObject)
+                }
         }
 
         fun addMatcher(matcher: Matcher) {
-            rawData.getAsJsonArray("matchers").add(matcher.rawData)
+            rawData.getAsJsonArray("matchers")
+                .add(matcher.rawData)
         }
 
         data class Matcher(
             val string: String,
+            val advanced: String?,
             val rawData: JsonObject,
         ) {
             fun updateString(newString: String) {
@@ -53,7 +60,7 @@ object AptDataRepo {
             }
 
             fun updateAdvancedIfExists(newAdvanced: String?) {
-                if (newAdvanced != null && rawData.has("advanced")) {
+                if (!newAdvanced.isNullOrBlank() && rawData.has("advanced")) {
                     rawData.addProperty("advanced", newAdvanced)
                 }
             }
