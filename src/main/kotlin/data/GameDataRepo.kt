@@ -1,8 +1,8 @@
 package data
 
 import data.parser.BaseTableItem
+import data.parser.StatDescriptionParsers
 import data.parser.parseExtraStats
-import data.parser.parseStatDescriptions
 import java.io.File
 import kotlin.math.min
 
@@ -148,17 +148,17 @@ object GameDataRepo {
 
         private val rawSourceStatsFromStatDescriptions by lazy {
             val dir = File(exportedDataDir, "${sourceBaseDirName}/files")
-            parseStatDescriptions(dir)
+            StatDescriptionParsers.parse(dir)
         }
         private val rawTargetStatsFromStatDescriptions by lazy {
             val dir = File(exportedDataDir, "${targetBaseDir}/files")
-            parseStatDescriptions(dir, targetStatDefaultLang)
+            StatDescriptionParsers.parse(dir, targetStatDefaultLang)
         }
 
         val statsFromDescriptions by lazy {
             val enStatsFromGame = rawSourceStatsFromStatDescriptions
             val cnStatsFromGameById = rawTargetStatsFromStatDescriptions.associateBy { it.uniqueId }
-            buildMap {
+            buildMap statsMap@{
                 enStatsFromGame
                     .filter {
                         // fishing_lure_type 英文名有 6 个, 中文名只有 4 个, 直接跳过
@@ -175,7 +175,7 @@ object GameDataRepo {
                             return@forEach
                         } else {
                             if (sourceNames == null || (sourceNames.size != targetNames.size && targetNames.size > 1)) {
-                                println("[WARNING] source names size: ${sourceNames?.size}, target names size: ${targetNames?.size} at: ${sourceDesc.uniqueId}")
+                                println("[WARNING] source names size: ${sourceNames?.size}, target names size: ${targetNames.size} at: ${sourceDesc.uniqueId}")
                                 println(sourceNames)
                                 println(targetNames)
                                 return@forEach

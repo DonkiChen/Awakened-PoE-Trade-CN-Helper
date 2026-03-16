@@ -2,7 +2,6 @@ package data.parser
 
 import com.google.gson.annotations.SerializedName
 import data.GameDataRepo
-import util.fromJson
 import java.io.File
 
 enum class Resolver {
@@ -107,7 +106,7 @@ private fun resolvePlaceholder(stat: ExtraStat, items: Map<String, String>): Lis
 fun parseExtraStats(mapper: GameDataRepo.GameDataMapper, file: File): List<ExtraStat> {
     val result = mutableListOf<ExtraStat>()
     file.reader()
-        .use { fromJson<List<ExtraStat>>(it) }
+        .use { util.JsonUtils.fromJson<List<ExtraStat>>(it) }
         .forEach { stat ->
             val map = when (stat.type) {
                 Type.DEFAULT -> {

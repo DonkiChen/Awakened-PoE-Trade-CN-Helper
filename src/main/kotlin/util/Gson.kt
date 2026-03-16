@@ -9,3 +9,9 @@ val gson = Gson()
 inline fun <reified T> fromJson(json: String): T = gson.fromJson(json, object : TypeToken<T>() {}.type)
 
 inline fun <reified T> fromJson(reader: Reader): T = gson.fromJson(reader, object : TypeToken<T>() {}.type)
+
+object JsonUtils {
+    inline fun <reified T> fromJson(json: String): T = gson.fromJson(json, object : TypeToken<T>() {}.type)
+
+    inline fun <reified T> fromJson(reader: Reader): T = gson.fromJson(reader, object : TypeToken<T>() {}.type)
+}

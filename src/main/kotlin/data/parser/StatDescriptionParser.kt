@@ -198,13 +198,19 @@ private fun String.unescape(): String {
     return result.toString()
 }
 
-fun parseStatDescriptions(descriptionsDir: File, defaultLang: String = "English"): List<GameStatDescription> {
-    return doParseStatDescriptions(descriptionsDir, defaultLang).onEach { description ->
-        val expectedCount = description.namesByLang[defaultLang]?.size ?: 0
-        description.namesByLang.forEach { entry ->
-            if (expectedCount != entry.value.size) {
-                println("[WARNING] size not match, expected: $expectedCount, actual: ${entry.value.size}, lang: ${entry.key} at: ${description.uniqueId}")
+object StatDescriptionParsers {
+    fun parse(descriptionsDir: File, defaultLang: String = "English"): List<GameStatDescription> {
+        return doParseStatDescriptions(descriptionsDir, defaultLang).onEach { description ->
+            val expectedCount = description.namesByLang[defaultLang]?.size ?: 0
+            description.namesByLang.forEach { entry ->
+                if (expectedCount != entry.value.size) {
+                    println("[WARNING] size not match, expected: $expectedCount, actual: ${entry.value.size}, lang: ${entry.key} at: ${description.uniqueId}")
+                }
             }
-        }
-    }.toList()
+        }.toList()
+    }
+}
+
+fun parseStatDescriptions(descriptionsDir: File, defaultLang: String = "English"): List<GameStatDescription> {
+    return StatDescriptionParsers.parse(descriptionsDir, defaultLang)
 }
