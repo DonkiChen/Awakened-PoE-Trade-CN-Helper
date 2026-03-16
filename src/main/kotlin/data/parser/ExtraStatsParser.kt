@@ -123,7 +123,8 @@ fun parseExtraStats(mapper: GameDataRepo.GameDataMapper, file: File): List<Extra
                 Type.BETRAYAL_NPC -> mapper.betrayalNpcs
                 Type.ASCENDANCY -> mapper.ascendancies
                 Type.KEYSTONE -> mapper.keystones
-                Type.EXARCH_EATER -> mapper.exarchEaterMods
+                // FIXME: 偷懒直接拿第一个
+                Type.EXARCH_EATER -> mapper.exarchEaterMods.mapValues { it.value.first() }
                 Type.INDEXABLE_SUPPORT_GEM -> mapper.indexableSupportGems
             }
             val resolvedStats = resolvePlaceholder(stat, map)

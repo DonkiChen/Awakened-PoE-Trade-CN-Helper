@@ -17,9 +17,26 @@ object StatPatcher {
     private fun AptDataRepo.Stat.translateStringAndAdvanced(mapper: GameDataRepo.GameDataMapper): AptDataRepo.Stat {
         matchers.forEach { matcher ->
             // 优先从游戏 description 数据里拿
-            val cnStatName = mapper.statsFromDescriptions[matcher.string.uppercase()]
-            if (cnStatName != null) {
-                matcher.updateString(cnStatName)
+            val cnStatNames = mapper.statsFromDescriptions[matcher.string.uppercase()]
+            if (cnStatNames != null) {
+                val backupMatcherRawData = matcher.rawData
+                // 因为会出现同一个英文名在不同场景下有不同中文翻译的问题, 例如:
+                // Adds {0} to {1} Cold Damage 可以被翻译为
+                // - 附加 {0} - {1} 基础冰霜伤害 与
+                // - 该装备附加 {0} - {1} 基础冰霜伤害
+                // 这里的处理方式是:
+                // - 如果只有一条中文翻译: 没问题, 直接修改
+                // - 如果有多条: 则直接添加 matcher
+                cnStatNames.forEachIndexed { index, cnStatName ->
+                    if (index == 0) {
+                        matcher.updateString(cnStatName)
+                    } else {
+                        val copied = matcher.copy(rawData = backupMatcherRawData.deepCopy())
+                        copied.updateString(cnStatName)
+                        addMatcher(copied)
+                    }
+                }
+
                 return@forEach
             }
 

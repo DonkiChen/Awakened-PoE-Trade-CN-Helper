@@ -155,10 +155,10 @@ object GameDataRepo {
             StatDescriptionParsers.parse(dir, targetStatDefaultLang)
         }
 
-        val statsFromDescriptions by lazy {
+        val statsFromDescriptions: Map<String, Set<String>> by lazy {
             val enStatsFromGame = rawSourceStatsFromStatDescriptions
             val cnStatsFromGameById = rawTargetStatsFromStatDescriptions.associateBy { it.uniqueId }
-            buildMap statsMap@{
+            buildMap<String, MutableSet<String>> statsMap@{
                 enStatsFromGame
                     .filter {
                         // fishing_lure_type 英文名有 6 个, 中文名只有 4 个, 直接跳过
@@ -180,11 +180,12 @@ object GameDataRepo {
                                 println(targetNames)
                                 return@forEach
                             }
-                            putAll(sourceNames.mapIndexed { index, name ->
+
+                            sourceNames.forEachIndexed { index, enName ->
+                                val set = getOrPut(enName.uppercase()) { mutableSetOf() }
                                 // 如果 cn 不够, 则统一用最后一个兜底
-                                name.uppercase() to targetNames[min(index, targetNames.size - 1)]
+                                set.add(targetNames[min(index, targetNames.size - 1)])
                             }
-                                .toMap())
                         }
                     }
             }

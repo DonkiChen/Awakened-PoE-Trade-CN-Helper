@@ -40,6 +40,10 @@ object AptDataRepo {
             rawData.getAsJsonArray("matchers").map { Matcher(it.asJsonObject["string"].asString, it.asJsonObject) }
         }
 
+        fun addMatcher(matcher: Matcher) {
+            rawData.getAsJsonArray("matchers").add(matcher.rawData)
+        }
+
         data class Matcher(
             val string: String,
             val rawData: JsonObject,
