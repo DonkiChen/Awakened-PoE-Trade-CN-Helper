@@ -1,5 +1,6 @@
 package data
 
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import util.NdJsonHelper
 import java.io.File
@@ -29,6 +30,20 @@ object AptDataRepo {
                 .toSet()
                 .toString()
         }
+
+        fun deepClone(): StatGroup {
+            return StatGroup(
+                stats.map { it.deepClone() },
+                rawData.deepCopy()
+            )
+        }
+
+        fun syncToRawData() {
+            rawData.remove("stats")
+            val newStats = JsonArray(this.stats.size)
+            this.stats.forEach { newStats.add(it.rawData) }
+            rawData.add("stats", newStats)
+        }
     }
 
     data class Stat(
@@ -43,6 +58,10 @@ object AptDataRepo {
                 .map {
                     Matcher(it.asJsonObject["string"].asString, it.asJsonObject["advanced"]?.asString, it.asJsonObject)
                 }
+        }
+
+        fun deepClone(): Stat {
+            return Stat(refName, rawData.deepCopy())
         }
 
         fun addMatcher(matcher: Matcher) {

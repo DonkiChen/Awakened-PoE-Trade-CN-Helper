@@ -10,7 +10,8 @@ object StatPatcher {
     private val outputFile = File(AptDataRepo.APT_PROJECT_DIR, "renderer/public/data/zh_CN/stats.ndjson")
 
     private fun AptDataRepo.StatGroup.translateStringAndAdvanced(mapper: GameDataRepo.GameDataMapper): AptDataRepo.StatGroup {
-        stats.forEach { it.translateStringAndAdvanced(mapper) }
+        stats.map { it.translateStringAndAdvanced(mapper) }
+        syncToRawData()
         return this
     }
 
@@ -62,6 +63,9 @@ object StatPatcher {
 
     private fun AptDataRepo.Stat.translateStringAndAdvanced(mapper: GameDataRepo.GameDataMapper): AptDataRepo.Stat {
         matchers.forEach { matcher ->
+            if (refName == "Socketed Gems are Supported by Level # Impending Doom") {
+                println()
+            }
             // 优先从游戏 description 数据里拿
             if (translateByStatsFromDescriptions(mapper, this, matcher)
                 || matcher.replaceByExtraStat(mapper.extraStats[refName.uppercase()])
@@ -87,8 +91,8 @@ object StatPatcher {
 
     private fun AptDataRepo.BaseStat.translate(mapper: GameDataRepo.GameDataMapper): AptDataRepo.BaseStat {
         return when (this) {
-            is AptDataRepo.Stat -> copy(rawData = rawData.deepCopy()).translateStringAndAdvanced(mapper)
-            is AptDataRepo.StatGroup -> copy(rawData = rawData.deepCopy()).translateStringAndAdvanced(mapper)
+            is AptDataRepo.Stat -> deepClone().translateStringAndAdvanced(mapper)
+            is AptDataRepo.StatGroup -> deepClone().translateStringAndAdvanced(mapper)
         }
     }
 
