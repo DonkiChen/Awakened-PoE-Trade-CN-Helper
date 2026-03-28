@@ -1,6 +1,6 @@
 [
   {
-    "refName": "+# to Level of all %s Gems",
+    "refName": "+# to Level of all %s Gems (Random Skill Gem)",
     "type": "ACTIVE_SKILL",
     "en": [
       {
@@ -277,7 +277,7 @@
     ],
     "cn": [
       {
-        "string": "#% chance for dropped Maps to convert to Atlas Memories "
+        "string": "掉落的地图有 #% 的几率转化为异界回忆 "
       }
     ]
   },
@@ -291,7 +291,7 @@
     ],
     "cn": [
       {
-        "string": "#% chance for dropped Maps to convert to Conqueror Maps "
+        "string": "掉落的地图有 #% 的几率转化为征服者地图 "
       }
     ]
   },
@@ -305,7 +305,7 @@
     ],
     "cn": [
       {
-        "string": "#% chance for dropped Maps to convert to Elder Maps "
+        "string": "掉落的地图有 #% 的几率转化为裂界者地图 "
       }
     ]
   },
@@ -319,7 +319,7 @@
     ],
     "cn": [
       {
-        "string": "#% chance for dropped Maps to convert to Maven Invitations "
+        "string": "掉落的地图有 #% 的几率转化为贤主之邀 "
       }
     ]
   },
@@ -333,7 +333,7 @@
     ],
     "cn": [
       {
-        "string": "#% chance for dropped Maps to convert to Scarabs "
+        "string": "掉落的地图有 #% 的几率转化为圣甲虫 "
       }
     ]
   },
@@ -347,7 +347,7 @@
     ],
     "cn": [
       {
-        "string": "#% chance for dropped Maps to convert to Shaper Maps "
+        "string": "掉落的地图有 #% 的几率转化为塑界者地图 "
       }
     ]
   },
@@ -361,7 +361,7 @@
     ],
     "cn": [
       {
-        "string": "#% chance for dropped Maps to convert to Unique Maps "
+        "string": "掉落的地图有 #% 的几率转化为传奇地图 "
       }
     ]
   },
@@ -1847,7 +1847,7 @@
     ],
     "cn": [
       {
-        "string": "More Currency: #% "
+        "string": "更多通货：#% "
       }
     ]
   },
@@ -1861,7 +1861,7 @@
     ],
     "cn": [
       {
-        "string": "More Divination Cards: #% "
+        "string": "更多命运卡：#% "
       }
     ]
   },
@@ -1875,7 +1875,7 @@
     ],
     "cn": [
       {
-        "string": "More Maps: #% "
+        "string": "更多地图：#% "
       }
     ]
   },
@@ -1889,7 +1889,7 @@
     ],
     "cn": [
       {
-        "string": "More Scarabs: #% "
+        "string": "更多圣甲虫：#% "
       }
     ]
   },
@@ -1903,7 +1903,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Attack Modifiers): #% "
+        "string": "品质（攻击词缀）：#% "
       }
     ]
   },
@@ -1917,7 +1917,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Attribute Modifiers): #% "
+        "string": "品质（属性词缀）：#% "
       }
     ]
   },
@@ -1931,7 +1931,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Caster Modifiers): #% "
+        "string": "品质（施法词缀）：#% "
       }
     ]
   },
@@ -1945,7 +1945,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Critical Modifiers): #% "
+        "string": "品质（暴击词缀）：#% "
       }
     ]
   },
@@ -1959,7 +1959,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Currency): #% "
+        "string": "品质（通货）：#% "
       }
     ]
   },
@@ -1973,7 +1973,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Defence Modifiers): #% "
+        "string": "品质（防御词缀）：#% "
       }
     ]
   },
@@ -1987,7 +1987,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Divination Cards): #% "
+        "string": "品质（命运卡）：#% "
       }
     ]
   },
@@ -2001,7 +2001,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Elemental Damage Modifiers): #% "
+        "string": "品质（元素伤害词缀）：#% "
       }
     ]
   },
@@ -2015,7 +2015,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Life and Mana Modifiers): #% "
+        "string": "品质（生命和魔力词缀）：#% "
       }
     ]
   },
@@ -2029,7 +2029,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Pack Size): #% "
+        "string": "品质（规模）：#% "
       }
     ]
   },
@@ -2043,7 +2043,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Physical and Chaos Damage Modifiers): #% "
+        "string": "品质（物理伤害和混沌伤害词缀）：#% "
       }
     ]
   },
@@ -2057,7 +2057,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Rarity): #% "
+        "string": "品质（稀有度）：#% "
       }
     ]
   },
@@ -2071,7 +2071,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Resistance Modifiers): #% "
+        "string": "品质（抗性词缀）：#% "
       }
     ]
   },
@@ -2085,7 +2085,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Scarabs): #% "
+        "string": "品质（圣甲虫）：#% "
       }
     ]
   },
@@ -2099,7 +2099,7 @@
     ],
     "cn": [
       {
-        "string": "Quality (Speed Modifiers): #% "
+        "string": "品质（速度词缀）：#% "
       }
     ]
   },
@@ -3311,17 +3311,47 @@
     ]
   },
   {
-    "refName": "Socketed Gems are Supported by Level # %s",
+    "refName": "Socketed Gems are Supported by Level # %s (Random Support Gem)",
     "type": "INDEXABLE_SUPPORT_GEM",
     "resolver": "FLATTEN",
     "en": [
       {
-        "string": "Socketed Gems are supported by Level # %s"
+        "string": "Socketed Gems are supported by Level # %s",
+        "advanced": "Socketed Gems are Supported by Level # %s"
       }
     ],
     "cn": [
       {
-        "string": "插入的技能石被 # 级的%s辅助"
+        "string": "插入的技能石被 # 级的%s辅助",
+        "advanced": "插入的技能石被 # 级的%s辅助"
+      }
+    ]
+  },
+  {
+    "refName": "Unique Monsters (Blood-Filled Vessel): #",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Unique Monsters (Blood-Filled Vessel): # "
+      }
+    ],
+    "cn": [
+      {
+        "string": "传奇怪物（浸血法器）：# "
+      }
+    ]
+  },
+  {
+    "refName": "Non-Unique Monsters (Blood-Filled Vessel): #",
+    "type": "DEFAULT",
+    "en": [
+      {
+        "string": "Non-Unique Monsters (Blood-Filled Vessel): # "
+      }
+    ],
+    "cn": [
+      {
+        "string": "非传奇怪物（浸血法器）：# "
       }
     ]
   }

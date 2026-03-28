@@ -120,7 +120,7 @@ private fun doParseStatDescriptions(dir: File, defaultLang: String): Sequence<Ga
                                     val text = captured
                                         .unescape()
                                         .replace("{0:+d}", "#")
-                                        .replace(Regex("\\{\\d?}"), "#")
+                                        .replace(Regex("\\+?\\{\\d?}"), "#")
                                         .replace(Regex("[{}]+"), "")
                                         .replace(Regex("<[^>]+>"), "")
                                     context.currentNamesContainer.add(text)

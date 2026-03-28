@@ -31,13 +31,11 @@ object GameDataRepo {
         private val targetLang: String,
         private val targetStatDefaultLang: String,
     ) {
-        /**
-         * @return key: item 英文名称, value: item 中文名称
-         */
+
         private inline fun <reified T : BaseTableItem> parseTableDataToMapper(
             gameFileName: String,
             predicate: (T) -> Boolean = { true }
-        ): Map<String, String> = data.parser.parseExportedTableDataToMapper<T>(
+        ): Map<T, T> = data.parser.parseExportedTableDataToMapper<T>(
             exportedDataDir = exportedDataDir,
             gameBaseDir = targetBaseDir,
             gameFileName = gameFileName,
@@ -45,66 +43,85 @@ object GameDataRepo {
             predicate = predicate
         )
 
+        /**
+         * @return key: item 英文名称, value: item 中文名称
+         */
+        private inline fun <reified T : BaseTableItem> parseTableDataToTextMapper(
+            gameFileName: String,
+            predicate: (T) -> Boolean = { true }
+        ): Map<String, String> {
+            return parseTableDataToMapper(gameFileName, predicate)
+                .map { it.key.name to it.value.name }
+                .toMap()
+        }
+
         val activeSkills by lazy {
-            parseTableDataToMapper<BaseTableItem>("ActiveSkills.json") {
+            parseTableDataToTextMapper<BaseTableItem>("ActiveSkills.json") {
                 // Royale和普通技能英文名一样, 但中文名不一样
                 !it.id.endsWith("Royale")
             }
         }
 
         val supportGems by lazy {
-            parseTableDataToMapper<BaseTableItem>("BaseItemTypes.json") {
+            parseTableDataToTextMapper<BaseTableItem>("BaseItemTypes.json") {
                 it.id.startsWith("Metadata/Items/Gems/SupportGem")
             }
         }
 
         val indexableSupportGems by lazy {
+            parseTableDataToTextMapper<BaseTableItem>("IndexableSupportGems.json")
+        }
+
+        val sortedRawIndexableSupportGems by lazy {
             parseTableDataToMapper<BaseTableItem>("IndexableSupportGems.json")
+                .toSortedMap { o1, o2 ->
+                    o1.id.toInt().compareTo(o2.id.toInt())
+                }.toList()
         }
 
         val monsters by lazy {
-            parseTableDataToMapper<BaseTableItem>("MonsterVarieties.json") {
+            parseTableDataToTextMapper<BaseTableItem>("MonsterVarieties.json") {
                 // 有些怪物在中文中的灵体名和野兽名不一样...
                 !it.id.endsWith("Spectre")
             }
         }
 
         val passiveSkills by lazy {
-            parseTableDataToMapper<BaseTableItem>("PassiveSkills.json")
+            parseTableDataToTextMapper<BaseTableItem>("PassiveSkills.json")
         }
 
         val expeditionAreas by lazy {
-            parseTableDataToMapper<BaseTableItem>("WorldAreas.json") {
+            parseTableDataToTextMapper<BaseTableItem>("WorldAreas.json") {
                 it.id.startsWith("Expedition")
             }
         }
 
         val lakeRooms by lazy {
-            parseTableDataToMapper<BaseTableItem>("LakeRooms.json")
+            parseTableDataToTextMapper<BaseTableItem>("LakeRooms.json")
         }
 
         val incursionRooms by lazy {
-            parseTableDataToMapper<BaseTableItem>("IncursionRooms.json")
+            parseTableDataToTextMapper<BaseTableItem>("IncursionRooms.json")
         }
 
         val logbookFactions by lazy {
-            parseTableDataToMapper<BaseTableItem>("ExpeditionFactions.json")
+            parseTableDataToTextMapper<BaseTableItem>("ExpeditionFactions.json")
         }
 
         val clientStrings by lazy {
-            parseTableDataToMapper<BaseTableItem>("ClientStrings.json")
+            parseTableDataToTextMapper<BaseTableItem>("ClientStrings.json")
         }
 
         val betrayalNpcs by lazy {
-            parseTableDataToMapper<BaseTableItem>("NPCs.json") {
+            parseTableDataToTextMapper<BaseTableItem>("NPCs.json") {
                 it.id.startsWith("Metadata/Monsters/LeagueBetrayal/Betrayal")
             }
         }
 
         val ascendancies by lazy {
             buildMap {
-                putAll(parseTableDataToMapper<BaseTableItem>("Ascendancy.json"))
-                putAll(parseTableDataToMapper<BaseTableItem>("PassiveSkills.json") { it.id.startsWith("Ascendancy") })
+                putAll(parseTableDataToTextMapper<BaseTableItem>("Ascendancy.json"))
+                putAll(parseTableDataToTextMapper<BaseTableItem>("PassiveSkills.json") { it.id.startsWith("Ascendancy") })
             }
         }
 
@@ -119,8 +136,8 @@ object GameDataRepo {
                     }
                     .toMap()
                 )
-                putAll(parseTableDataToMapper<BaseTableItem>("AchievementItems.json") { it.id.startsWith("Keystone") })
-                putAll(parseTableDataToMapper<BaseTableItem>("PassiveSkills.json") { it.id.contains("keystone") })
+                putAll(parseTableDataToTextMapper<BaseTableItem>("AchievementItems.json") { it.id.startsWith("Keystone") })
+                putAll(parseTableDataToTextMapper<BaseTableItem>("PassiveSkills.json") { it.id.contains("keystone") })
             }
         }
 
@@ -128,11 +145,11 @@ object GameDataRepo {
         val exarchEaterMods by lazy { statsFromDescriptions }
 
         val words by lazy {
-            parseTableDataToMapper<BaseTableItem>("Words.json")
+            parseTableDataToTextMapper<BaseTableItem>("Words.json")
         }
 
         val baseItems by lazy {
-            parseTableDataToMapper<BaseTableItem>("BaseItemTypes.json") {
+            parseTableDataToTextMapper<BaseTableItem>("BaseItemTypes.json") {
                 !it.id.contains("Royale")
                         // 电能释放 被覆盖了
                         && it.id != "Metadata/Items/Gems/SkillGemLightningTendrilsChannelled"

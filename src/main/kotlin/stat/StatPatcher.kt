@@ -2,7 +2,6 @@ package stat
 
 import data.AptDataRepo
 import data.GameDataRepo
-import data.parser.ExtraStat
 import java.io.File
 
 
@@ -104,16 +103,12 @@ object StatPatcher {
                 }
             }
 
-            val replaced = doReplace(
+            doReplace(
                 cnMatcherNames = cnMatcherNames,
                 cnAdvancedNames = cnAdvancedNames,
                 stat = this,
                 matcher = matcher
             )
-
-            if (!replaced) {
-                println("missing: $matcher at ${this.refName}")
-            }
         }
         return this
     }
@@ -129,10 +124,16 @@ object StatPatcher {
         outputFile.bufferedWriter()
             .use { writer ->
                 for (statOrGroup in AptDataRepo.enStatOrGroup) {
-                    mappers.map { statOrGroup.translate(it) }
+                    val translatedStatOrStatGroup = mappers
+                        .map {
+                            statOrGroup.translate(it)
+                        }
                         .distinct()
-                        .map { it.rawData.toString() }
-                        .forEach(writer::appendLine)
+                    if (translatedStatOrStatGroup.all { statOrGroup.rawData == it.rawData }) {
+                        println("missing: ${statOrGroup.rawData}")
+                    }
+
+                    translatedStatOrStatGroup.forEach { writer.appendLine(it.rawData.toString()) }
                 }
             }
     }

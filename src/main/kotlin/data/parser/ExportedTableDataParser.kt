@@ -15,8 +15,8 @@ inline fun <reified T : BaseTableItem> parseExportedTableDataToMapper(
     gameFileName: String,
     cnLang: String,
     predicate: (T) -> Boolean = { true }
-): Map<String, String> {
-    val result = mutableMapOf<String, String>()
+): Map<T, T> {
+    val result = mutableMapOf<T, T>()
     val enFile = File(exportedDataDir, "/${gameBaseDir}/tables/English/${gameFileName}")
     val cnFile = File(exportedDataDir, "/${gameBaseDir}/tables/${cnLang}/${gameFileName}")
 
@@ -24,7 +24,7 @@ inline fun <reified T : BaseTableItem> parseExportedTableDataToMapper(
     val cnItems = fromJson<List<T>>(cnFile.reader()).filter(predicate).associateBy { it.id }
 
     enItems.forEach { (id, enItem) ->
-        result[enItem.name] = cnItems[id]?.name ?: return@forEach
+        result[enItem] = cnItems[id] ?: return@forEach
     }
     return result
 }

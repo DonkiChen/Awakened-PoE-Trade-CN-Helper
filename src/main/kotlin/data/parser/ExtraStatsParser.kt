@@ -50,26 +50,36 @@ data class ExtraStat private constructor(
         get() = _resolver ?: Resolver.FLATTEN
 }
 
-private fun String.safeFormat(vararg args: Any): String {
+private fun String.safeFormat(vararg args: String): String {
     return runCatching { format(*args) }.getOrDefault(this)
 }
 
-private fun resolvePlaceholder(stat: ExtraStat, items: Map<String, String>): List<ExtraStat> {
+private data class FormatArgs(
+    val refName: String,
+    val string: String = refName,
+    val advanced: String = string,
+)
+
+private fun Map<String, String>.toArgs(): Map<FormatArgs, FormatArgs> {
+    return map { FormatArgs(it.key) to FormatArgs(it.value) }.toMap()
+}
+
+private fun resolvePlaceholder(stat: ExtraStat, items: Map<FormatArgs, FormatArgs>): List<ExtraStat> {
     return when (stat.resolver) {
         Resolver.FLATTEN -> {
             items.map { (enName, cnName) ->
                 stat.copy(
-                    refName = stat.refName.safeFormat(enName),
+                    refName = stat.refName.safeFormat(enName.refName),
                     en = stat.en.map { text ->
                         text.copy(
-                            string = text.string.safeFormat(enName),
-                            advanced = text.advanced?.safeFormat(enName)
+                            string = text.string.safeFormat(enName.string),
+                            advanced = text.advanced?.safeFormat(enName.advanced)
                         )
                     },
                     cn = stat.cn.map { text ->
                         text.copy(
-                            string = text.string.safeFormat(cnName),
-                            advanced = text.advanced?.safeFormat(cnName)
+                            string = text.string.safeFormat(cnName.string),
+                            advanced = text.advanced?.safeFormat(cnName.advanced)
                         )
                     }
                 )
@@ -83,16 +93,16 @@ private fun resolvePlaceholder(stat: ExtraStat, items: Map<String, String>): Lis
                     en = stat.en.flatMap { text ->
                         items.keys.map { enName ->
                             text.copy(
-                                string = text.string.safeFormat(enName),
-                                advanced = text.advanced?.safeFormat(enName)
+                                string = text.string.safeFormat(enName.string),
+                                advanced = text.advanced?.safeFormat(enName.advanced)
                             )
                         }
                     },
                     cn = stat.cn.flatMap { text ->
                         items.values.map { cnName ->
                             text.copy(
-                                string = text.string.safeFormat(cnName),
-                                advanced = text.advanced?.safeFormat(cnName)
+                                string = text.string.safeFormat(cnName.string),
+                                advanced = text.advanced?.safeFormat(cnName.advanced)
                             )
                         }
                     }
@@ -114,18 +124,44 @@ fun parseExtraStats(mapper: GameDataRepo.GameDataMapper, file: File): List<Extra
                     return@forEach
                 }
 
-                Type.ACTIVE_SKILL -> mapper.activeSkills
-                Type.PASSIVE_SKILL -> mapper.passiveSkills
-                Type.EXPEDITION_AREA -> mapper.expeditionAreas
-                Type.LAKE_ROOM -> mapper.lakeRooms
-                Type.INCURSION_ROOM -> mapper.incursionRooms
-                Type.LOGBOOK_FACTION -> mapper.logbookFactions
-                Type.BETRAYAL_NPC -> mapper.betrayalNpcs
-                Type.ASCENDANCY -> mapper.ascendancies
-                Type.KEYSTONE -> mapper.keystones
+                Type.ACTIVE_SKILL -> mapper.activeSkills.toArgs()
+                Type.PASSIVE_SKILL -> mapper.passiveSkills.toArgs()
+                Type.EXPEDITION_AREA -> mapper.expeditionAreas.toArgs()
+                Type.LAKE_ROOM -> mapper.lakeRooms.toArgs()
+                Type.INCURSION_ROOM -> mapper.incursionRooms.toArgs()
+                Type.LOGBOOK_FACTION -> mapper.logbookFactions.toArgs()
+                Type.BETRAYAL_NPC -> mapper.betrayalNpcs.toArgs()
+                Type.ASCENDANCY -> mapper.ascendancies.toArgs()
+                Type.KEYSTONE -> mapper.keystones.toArgs()
                 // FIXME: 偷懒直接拿第一个
                 Type.EXARCH_EATER -> mapper.exarchEaterMods.mapValues { it.value.first() }
-                Type.INDEXABLE_SUPPORT_GEM -> mapper.indexableSupportGems
+                    .toArgs()
+
+                Type.INDEXABLE_SUPPORT_GEM -> {
+                    // It's ugly...
+                    val firstGemPair = mapper.sortedRawIndexableSupportGems.first()
+                    val lastGemPair = mapper.sortedRawIndexableSupportGems.last()
+                    if (stat.refName == "Socketed Gems are Supported by Level # %s (Random Support Gem)") {
+                        // 处理军帽词缀, 避免写死技能: 插入的技能石被 # 级的附加混沌伤害(高阶多重投射-圣化)辅助;
+                        mapper.indexableSupportGems
+                            .map {
+                                val en = FormatArgs(
+                                    refName = it.key,
+                                    string = it.key,
+                                    advanced = "${it.key}(${firstGemPair.first.name}-${lastGemPair.first.name})"
+                                )
+                                val cn = FormatArgs(
+                                    refName = it.value,
+                                    string = it.value,
+                                    advanced = "${it.value}(${firstGemPair.second.name}-${lastGemPair.second.name})"
+                                )
+                                en to cn
+                            }
+                            .toMap()
+                    } else {
+                        mapper.indexableSupportGems.toArgs()
+                    }
+                }
             }
             val resolvedStats = resolvePlaceholder(stat, map)
             when (stat.type) {
