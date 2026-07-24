@@ -1,3 +1,7 @@
+#!/usr/bin/env sh
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd) || exit 1
+cd "$SCRIPT_DIR" || exit 1
 
 (cd ../poe-dat-viewer/lib/ && npm install && npx tsc) || { echo "编译 poe-dat-viewer 失败, 请确认你在 data_repo 目录下"; exit; }
 # TODO: 目前只能手动切换不同补丁 & 切换注释导出数据, 后续优化一下
