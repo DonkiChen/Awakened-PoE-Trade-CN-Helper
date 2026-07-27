@@ -131,7 +131,8 @@ object GameDataRepo {
                     .filter { it.id.startsWith("keystone_") }
                     .flatMap { stat ->
                         stat.namesByLang[targetStatDefaultLang]!!.mapIndexed { index, enName ->
-                            enName to stat.namesByLang[targetLang]!![index]
+                            val names = stat.namesByLang[targetLang]
+                            enName to names!![index]
                         }
                     }
                     .toMap()

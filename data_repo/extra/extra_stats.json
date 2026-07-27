@@ -2314,8 +2314,8 @@
     ]
   },
   {
-    "refName": "Allocates # if you have the matching modifier on Forbidden Flesh",
-    "resolver": "MERGE",
+    "refName": "Allocates %s if you have the matching modifier on Forbidden Flesh",
+    "resolver": "FLATTEN",
     "type": "ASCENDANCY",
     "en": [
       {
@@ -2329,8 +2329,8 @@
     ]
   },
   {
-    "refName": "Allocates # if you have the matching modifier on Forbidden Flame",
-    "resolver": "MERGE",
+    "refName": "Allocates %s if you have the matching modifier on Forbidden Flame",
+    "resolver": "FLATTEN",
     "type": "ASCENDANCY",
     "en": [
       {
@@ -2344,9 +2344,9 @@
     ]
   },
   {
-    "refName": "Allocates #",
+    "refName": "Allocates %s",
     "type": "PASSIVE_SKILL",
-    "resolver": "MERGE",
+    "resolver": "FLATTEN",
     "en": [
       {
         "string": "Allocates %s"
@@ -2360,8 +2360,8 @@
   },
   {
     "refName": "Added Small Passive Skills grant: #",
-    "type": "DEFAULT",
-    "resolver": "MERGE",
+    "type": "CLUSTER_JEWEL",
+    "resolver": "FLATTEN",
     "en": [
       {
         "string": "Added Small Passive Skills grant: Axe Attacks deal 12% increased Damage with Hits and Ailments\nAdded Small Passive Skills grant: Sword Attacks deal 12% increased Damage with Hits and Ailments"
@@ -3149,9 +3149,9 @@
     ]
   },
   {
-    "refName": "Passive Skills in Radius of # can be Allocated\nwithout being connected to your tree\nPassage",
+    "refName": "Passive Skills in Radius of %s can be Allocated\nwithout being connected to your tree\nPassage",
     "type": "KEYSTONE",
-    "resolver": "MERGE",
+    "resolver": "FLATTEN",
     "en": [
       {
         "string": "Passive Skills in Radius of %s can be Allocated\nwithout being connected to your tree\nPassage"
@@ -3312,7 +3312,7 @@
   },
   {
     "refName": "Socketed Gems are Supported by Level # %s (Random Support Gem)",
-    "type": "INDEXABLE_SUPPORT_GEM",
+    "type": "INDEXABLE_SUPPORT_GEM_WITH_ADVANCED",
     "resolver": "FLATTEN",
     "en": [
       {
@@ -3352,6 +3352,74 @@
     "cn": [
       {
         "string": "非传奇怪物（浸血法器）：# "
+      }
+    ]
+  },
+  {
+    "refName": "Skills Socketed in your Boots are Supported by level # %s",
+    "type": "INDEXABLE_SUPPORT_GEM_WITH_ADVANCED",
+    "resolver": "FLATTEN",
+    "en": [
+      {
+        "string": "Skills Socketed in your Boots are Supported by level # %s",
+        "advanced": "Skills Socketed in your Boots are Supported by level # %s"
+      }
+    ],
+    "cn": [
+      {
+        "string": "你鞋子中镶嵌的技能由 # 级的%s辅助",
+        "advanced": "你鞋子中镶嵌的技能由 # 级的%s辅助"
+      }
+    ]
+  },
+  {
+    "refName": "Skills Socketed in your Gloves are Supported by level # %s",
+    "type": "INDEXABLE_SUPPORT_GEM_WITH_ADVANCED",
+    "resolver": "FLATTEN",
+    "en": [
+      {
+        "string": "Skills Socketed in your Gloves are Supported by level # %s",
+        "advanced": "Skills Socketed in your Gloves are Supported by level # %s"
+      }
+    ],
+    "cn": [
+      {
+        "string": "你手套中镶嵌的技能由 # 级的%s辅助",
+        "advanced": "你手套中镶嵌的技能由 # 级的%s辅助"
+      }
+    ]
+  },
+  {
+    "refName": "Skills Socketed in your Helmet are Supported by level # %s",
+    "type": "INDEXABLE_SUPPORT_GEM_WITH_ADVANCED",
+    "resolver": "FLATTEN",
+    "en": [
+      {
+        "string": "Skills Socketed in your Helmet are Supported by level # %s",
+        "advanced": "Skills Socketed in your Helmet are Supported by level # %s"
+      }
+    ],
+    "cn": [
+      {
+        "string": "你头盔中镶嵌的技能由 # 级的%s辅助",
+        "advanced": "你头盔中镶嵌的技能由 # 级的%s辅助"
+      }
+    ]
+  },
+  {
+    "refName": "Skills granted by your Passive Tree are Supported by level # %s",
+    "type": "INDEXABLE_SUPPORT_GEM_WITH_ADVANCED",
+    "resolver": "FLATTEN",
+    "en": [
+      {
+        "string": "Skills granted by your Passive Tree are Supported by level # %s",
+        "advanced": "Skills granted by your Passive Tree are Supported by level # %s"
+      }
+    ],
+    "cn": [
+      {
+        "string": "你天赋树赋予的技能由 # 级的%s辅助",
+        "advanced": "你天赋树赋予的技能由 # 级的%s辅助"
       }
     ]
   }

@@ -22,6 +22,8 @@ enum class Type {
     ACTIVE_SKILL,
     PASSIVE_SKILL,
     INDEXABLE_SUPPORT_GEM,
+    INDEXABLE_SUPPORT_GEM_WITH_ADVANCED,
+    CLUSTER_JEWEL,
     EXPEDITION_AREA,
     LAKE_ROOM,
     INCURSION_ROOM,
@@ -136,12 +138,18 @@ fun parseExtraStats(mapper: GameDataRepo.GameDataMapper, file: File): List<Extra
                 // FIXME: 偷懒直接拿第一个
                 Type.EXARCH_EATER -> mapper.exarchEaterMods.mapValues { it.value.first() }
                     .toArgs()
-
-                Type.INDEXABLE_SUPPORT_GEM -> {
-                    // It's ugly...
+                Type.CLUSTER_JEWEL -> {
+                    val resolvedStats = stat.en.mapIndexed { index, text ->
+                        stat.copy(refName = text.string, en = listOf(text), cn = listOf(stat.cn[index]))
+                    }
+                    result.addAll(resolvedStats)
+                    return@forEach
+                }
+                Type.INDEXABLE_SUPPORT_GEM,
+                Type.INDEXABLE_SUPPORT_GEM_WITH_ADVANCED -> {
                     val firstGemPair = mapper.sortedRawIndexableSupportGems.first()
                     val lastGemPair = mapper.sortedRawIndexableSupportGems.last()
-                    if (stat.refName == "Socketed Gems are Supported by Level # %s (Random Support Gem)") {
+                    if (stat.type == Type.INDEXABLE_SUPPORT_GEM_WITH_ADVANCED) {
                         // 处理军帽词缀, 避免写死技能: 插入的技能石被 # 级的附加混沌伤害(高阶多重投射-圣化)辅助;
                         mapper.indexableSupportGems
                             .map {
@@ -163,6 +171,7 @@ fun parseExtraStats(mapper: GameDataRepo.GameDataMapper, file: File): List<Extra
                     }
                 }
             }
+
             val resolvedStats = resolvePlaceholder(stat, map)
             when (stat.type) {
                 Type.INCURSION_ROOM -> {
