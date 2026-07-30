@@ -131,7 +131,11 @@ object GameDataRepo {
                     .filter { it.id.startsWith("keystone_") }
                     .flatMap { stat ->
                         stat.namesByLang[targetStatDefaultLang]!!.mapIndexed { index, enName ->
-                            val names = stat.namesByLang[targetLang]
+                            var names = stat.namesByLang[targetLang]
+                            if (names == null) {
+                                names = stat.namesByLang[targetStatDefaultLang]
+                                println("[WARNING] missing target language, fallback to default: $names")
+                            }
                             enName to names!![index]
                         }
                     }
