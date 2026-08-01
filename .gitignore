@@ -44,3 +44,5 @@ bin/
 
 data_repo/exported/*/files
 data_repo/exported/*/tables
+data_repo/exported/*/config.json
+scripts/patch

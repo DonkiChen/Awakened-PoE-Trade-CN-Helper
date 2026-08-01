@@ -57,23 +57,35 @@ git submodule update --init --recursive
 
 ### 1. 配置游戏目录
 
-在需要使用的数据源目录中修改 `config.json` 的 `steam` 字段。当前仓库包含以下配置：
+使用 [`scripts/build_and_export.bat`](./scripts/build_and_export.bat) 时，在脚本开头修改本机的游戏路径变量：
 
-- [intl_amsco2/config.json](./data_repo/exported/intl_amsco2/config.json)
-- [intl_poedb/config.json](./data_repo/exported/intl_poedb/config.json)
-- [tencent/config.json](./data_repo/exported/tencent/config.json)
-
-例如：
-
-```json
-{
-  "steam": "C:\\Program Files\\Epic Games\\PathOfExile"
-}
+```bat
+set "INTL_GAME_PATH=C:\Program Files\Epic Games\PathOfExile"
+set "TENCENT_GAME_PATH=C:\Program Files (x86)\流放之路(511)"
 ```
 
-请根据本机的游戏安装位置修改路径。`config.json` 中的路径属于本地环境配置，不要直接复制其他人的路径。
+导出配置模板如下：
 
-### 2. 选择要导出的游戏数据
+- [intl_config.json.template](./data_repo/exported/intl_config.json.template)
+- [tencent_config.json.template](./data_repo/exported/tencent_config.json.template)
+
+脚本会根据模板生成各数据源目录中的 `config.json`。生成的配置属于本地环境配置，不要直接复制其他人的路径。
+
+### 2. 自动导出游戏数据
+
+将补丁 ZIP 放入 [`scripts/patch`](./scripts/patch)，关闭正在运行的游戏，然后执行：
+
+```powershell
+.\scripts\build_and_export.bat
+```
+
+仅检查发布工具、配置和补丁包匹配时，可执行 `.\scripts\build_and_export.bat --check`；该模式不会修改游戏文件。
+
+脚本会自动编译补丁器和 `poe-dat-viewer`，根据 ZIP 配对选择可用的数据源，完成补丁、导出和还原流程。国服会连续导出还原数据到 `tencent`，再导出功能补丁数据到 `tencent_amsco2`，最后还原游戏。生成的 `config.json` 会保留在各数据源目录中，但不会提交到 Git。
+
+### 3. 手动选择导出的游戏数据
+
+手动执行此流程前，需要先运行自动脚本生成各数据源目录中的 `config.json`，或根据模板自行生成。
 
 打开 [`data_repo/export.sh`](./data_repo/export.sh)，手动取消注释需要导出的数据源，或注释掉不需要的数据源。
 
@@ -83,6 +95,7 @@ git submodule update --init --recursive
 (cd exported/intl_amsco2 && node ../../../poe-dat-viewer/lib/dist/cli/run.js)
 #(cd exported/intl_poedb && node ../../../poe-dat-viewer/lib/dist/cli/run.js)
 #(cd exported/tencent && node ../../../poe-dat-viewer/lib/dist/cli/run.js)
+#(cd exported/tencent_amsco2 && node ../../../poe-dat-viewer/lib/dist/cli/run.js)
 ```
 
 然后从 `data_repo` 目录执行导出脚本：
@@ -95,7 +108,7 @@ cd ..
 
 脚本会先编译 `poe-dat-viewer/lib`，再根据已启用的配置导出游戏文件。导出结果位于对应数据源目录的 `files/` 和 `tables/` 中。
 
-### 3. 选择 Main.kt 使用的数据
+### 4. 选择 Main.kt 使用的数据
 
 打开 [`src/main/kotlin/Main.kt`](./src/main/kotlin/Main.kt)，手动配置一个或多个 `GameDataRepo.prepareMapper(...)`。
 
@@ -117,9 +130,9 @@ GameDataRepo.prepareMapper(
 - `targetLang`：目标数据中的语言名称，必须与 `config.json` 的 `translations` 配置一致。
 - `targetStatDefaultLang`：目标词缀描述的默认语言，通常为 `English`。
 
-如果需要生成国服简体中文数据，需要确保 `tencent` 数据已经导出，并根据实际数据修改 `targetBaseDir` 和 `targetLang`。如果需要同时使用多个数据源，可以保留多个 `prepareMapper(...)` 调用。
+如果需要生成国服简体中文数据，需要确保 `tencent` 和 `tencent_amsco2` 数据已经导出，并根据实际数据修改 `targetBaseDir` 和 `targetLang`。如果需要同时使用多个数据源，可以保留多个 `prepareMapper(...)` 调用。
 
-### 4. 构建并运行
+### 5. 构建并运行
 
 先构建 Kotlin 项目：
 

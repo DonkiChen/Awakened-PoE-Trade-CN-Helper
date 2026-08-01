@@ -1,5 +1,5 @@
 {
-  "steam": "C:\\Program Files (x86)\\流放之路(511)",
+  "steam": "__GAME_PATH__",
   "files": [
     "Metadata/StatDescriptions/active_skill_gem_stat_descriptions.txt",
     "Metadata/StatDescriptions/advanced_mod_stat_descriptions.txt",
