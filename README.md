@@ -35,7 +35,7 @@ APT renderer/public/data/zh_CN/{items,stats}.ndjson
 - Git
 - JDK（项目使用 JVM 8 toolchain）
 - Node.js `>= 20`
-- 可以运行 POSIX shell 的环境：Linux、macOS，或 Windows 上的 Git Bash/WSL
+- Windows PowerShell（导出脚本使用 Windows 批处理和 PowerShell）
 - 已安装 Path of Exile 1，并能够访问需要导出的游戏数据
 
 Node.js `>= 20` 是 `poe-dat-viewer/lib` 当前依赖声明的最低版本。项目自带 Gradle Wrapper，不需要单独安装 Gradle。
@@ -83,32 +83,7 @@ set "TENCENT_GAME_PATH=C:\Program Files (x86)\流放之路(511)"
 
 脚本会自动编译补丁器和 `poe-dat-viewer`，根据 ZIP 配对选择可用的数据源，完成补丁、导出和还原流程。国服会连续导出还原数据到 `tencent`，再导出功能补丁数据到 `tencent_amsco2`，最后还原游戏。生成的 `config.json` 会保留在各数据源目录中，但不会提交到 Git。
 
-### 3. 手动选择导出的游戏数据
-
-手动执行此流程前，需要先运行自动脚本生成各数据源目录中的 `config.json`，或根据模板自行生成。
-
-打开 [`data_repo/export.sh`](./data_repo/export.sh)，手动取消注释需要导出的数据源，或注释掉不需要的数据源。
-
-当前脚本默认启用 `intl_amsco2`，其他数据源默认被注释：
-
-```sh
-(cd exported/intl_amsco2 && node ../../../poe-dat-viewer/lib/dist/cli/run.js)
-#(cd exported/intl_poedb && node ../../../poe-dat-viewer/lib/dist/cli/run.js)
-#(cd exported/tencent && node ../../../poe-dat-viewer/lib/dist/cli/run.js)
-#(cd exported/tencent_amsco2 && node ../../../poe-dat-viewer/lib/dist/cli/run.js)
-```
-
-然后从 `data_repo` 目录执行导出脚本：
-
-```bash
-cd data_repo
-sh export.sh
-cd ..
-```
-
-脚本会先编译 `poe-dat-viewer/lib`，再根据已启用的配置导出游戏文件。导出结果位于对应数据源目录的 `files/` 和 `tables/` 中。
-
-### 4. 选择 Main.kt 使用的数据
+### 3. 选择 Main.kt 使用的数据
 
 打开 [`src/main/kotlin/Main.kt`](./src/main/kotlin/Main.kt)，手动配置一个或多个 `GameDataRepo.prepareMapper(...)`。
 
@@ -146,7 +121,7 @@ GameDataRepo.prepareMapper(
 
 如果需要同时使用多个目标数据源，可以保留多个 `prepareMapper(...)` 调用；每个 mapper 可以独立指定目标语言和 stat 默认语言。
 
-### 5. 构建并运行
+### 4. 构建并运行
 
 先构建 Kotlin 项目：
 
@@ -184,8 +159,7 @@ GameDataRepo.prepareMapper(
 │   └── util/       # NDJSON、JSON 等通用工具
 ├── data_repo/
 │   ├── exported/   # 各数据源的配置和本地导出结果
-│   ├── extra/      # 手工补充的词缀映射
-│   └── export.sh   # 编译导出工具并导出游戏数据
+│   └── extra/      # 手工补充的词缀映射
 ├── poe-dat-viewer/ # 游戏数据导出工具，Git submodule
 ├── build.gradle.kts
 └── gradlew.bat
@@ -195,8 +169,8 @@ GameDataRepo.prepareMapper(
 
 ## 当前限制
 
-- 游戏目录需要手动写入每个数据源的 `config.json`。
-- `export.sh` 当前需要手动选择要导出的数据源，并且数据补丁的选择也需要维护者自行确认。
+- 脚本中的游戏目录需要根据本机环境手动配置。
+- `build_and_export.bat` 依赖补丁 ZIP 文件名匹配脚本中的规则；如果补丁命名发生变化，需要同步更新脚本。
 - `Main.kt` 当前需要手动选择要使用的数据源、目标目录和目标语言。
 - 生成过程依赖具体游戏版本；如果导出的游戏数据与 APT 当前数据版本不匹配，可能出现缺少翻译或名称无法匹配的情况。
 - 项目当前没有 Gradle `run` 任务，需要通过 IDE 运行 `Main.main()`。
@@ -209,7 +183,7 @@ GameDataRepo.prepareMapper(
 .\gradlew.bat build
 ```
 
-如修改了数据导出流程，请在构建前重新执行 `sh data_repo/export.sh`，并检查生成的 `items.ndjson` 和 `stats.ndjson` 是否包含预期翻译。
+如修改了数据导出流程，请在构建前重新执行 `.\scripts\build_and_export.bat`，并检查生成的 `items.ndjson` 和 `stats.ndjson` 是否包含预期翻译。
 
 ## 相关项目与致谢
 
