@@ -5,13 +5,13 @@
     "en": [
       {
         "string": "# to Level of all %s Gems",
-        "advanced": "# to Level of all %s(Fireball-Divine Blast) Gems"
+        "advanced": "# to Level of all %s(Fireball-Mana-Infused Staff) Gems"
       }
     ],
     "cn": [
       {
         "string": "所有 %s 宝石等级 #",
-        "advanced": "所有 %s(火球-神圣冲击) 宝石等级 #"
+        "advanced": "所有 %s(火球-注魔长杖) 宝石等级 #"
       }
     ]
   },
@@ -2339,7 +2339,7 @@
     ],
     "cn": [
       {
-        "string": "禁断之血上有匹配的词缀则配置 %s"
+        "string": "禁断之火上有匹配的词缀则配置 %s"
       }
     ]
   },
