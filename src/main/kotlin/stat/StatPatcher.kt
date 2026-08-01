@@ -1,5 +1,7 @@
 package stat
 
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import data.AptDataRepo
 import data.GameDataRepo
 import java.io.File
@@ -7,6 +9,35 @@ import java.io.File
 
 object StatPatcher {
     private val outputFile = File(AptDataRepo.APT_PROJECT_DIR, "renderer/public/data/zh_CN/stats.ndjson")
+
+    // Some translations collapse distinct English stats into the same matcher.
+    // Keep these groups explicit instead of merging every duplicate translation.
+    private val trivialMergeRules = listOf(
+        setOf(
+            "#% increased Elemental Damage",
+            "Has #% increased Elemental Damage"
+        ),
+        setOf(
+            "#% reduced Elemental Damage taken while stationary",
+            "#% reduced Elemental Damage Taken while stationary"
+        ),
+        setOf(
+            "Cannot be Chilled",
+            "Immune to Chill"
+        ),
+        setOf(
+            "Lose # Mana per second",
+            "Lose # Mana per Second"
+        ),
+        setOf(
+            "Socketed Gems are supported by Level # Chance to Bleed",
+            "Socketed Gems are Supported by Level # Chance To Bleed"
+        ),
+        setOf(
+            "#% increased Physical Damage",
+            "Deal no Physical Damage"
+        )
+    )
 
     private fun AptDataRepo.StatGroup.translateStringAndAdvanced(mapper: GameDataRepo.GameDataMapper): AptDataRepo.StatGroup {
         stats.map { it.translateStringAndAdvanced(mapper) }
@@ -120,21 +151,73 @@ object StatPatcher {
         }
     }
 
-    fun patch(mappers: List<GameDataRepo.GameDataMapper>) {
-        outputFile.bufferedWriter()
-            .use { writer ->
-                for (statOrGroup in AptDataRepo.enStatOrGroup) {
-                    val translatedStatOrStatGroup = mappers
-                        .map {
-                            statOrGroup.translate(it)
-                        }
-                        .distinct()
-                    if (translatedStatOrStatGroup.all { statOrGroup.rawData == it.rawData }) {
-                        println("missing: ${statOrGroup.rawData}")
-                    }
+    private fun createTrivialMergeGroup(stats: List<AptDataRepo.Stat>): AptDataRepo.StatGroup {
+        val rawData = JsonObject().apply {
+            add("resolve", JsonObject().apply {
+                addProperty("strat", "trivial-merge")
+            })
+            add("stats", JsonArray().apply {
+                stats.forEach { add(it.rawData) }
+            })
+        }
+        return AptDataRepo.StatGroup(stats, rawData)
+    }
 
-                    translatedStatOrStatGroup.forEach { writer.appendLine(it.rawData.toString()) }
+    /**
+     * Rebuild groups that are lost when distinct English stats receive the same
+     * localized matcher. Rules are keyed by English refs so this remains stable
+     * across target-language changes.
+     */
+    internal fun mergeTrivialGroups(
+        stats: List<AptDataRepo.BaseStat>
+    ): List<AptDataRepo.BaseStat> {
+        var result = stats
+
+        for (rule in trivialMergeRules) {
+            val matchingIndexes = result.withIndex()
+                .filter { (_, stat) ->
+                    stat is AptDataRepo.Stat && stat.refName in rule
                 }
+                .map { it.index }
+
+            if (matchingIndexes.size != rule.size) continue
+
+            val firstIndex = matchingIndexes.min()
+            val mergedStats = matchingIndexes
+                .sorted()
+                .map { result[it] as AptDataRepo.Stat }
+            val mergedGroup = createTrivialMergeGroup(mergedStats)
+
+            result = result
+                .filterIndexed { index, _ -> index !in matchingIndexes }
+                .toMutableList()
+                .apply { add(firstIndex, mergedGroup) }
+        }
+
+        return result
+    }
+
+    fun patch(mappers: List<GameDataRepo.GameDataMapper>) {
+        val translatedByMapper = mappers.map { mapper ->
+            AptDataRepo.enStatOrGroup.map { statOrGroup ->
+                statOrGroup.translate(mapper)
             }
+        }
+
+        for (index in AptDataRepo.enStatOrGroup.indices) {
+            val statOrGroup = AptDataRepo.enStatOrGroup[index]
+            val translated = translatedByMapper.map { it[index] }
+            if (translated.all { statOrGroup.rawData == it.rawData }) {
+                println("missing: ${statOrGroup.rawData}")
+            }
+        }
+
+        val normalized = translatedByMapper
+            .flatMap(::mergeTrivialGroups)
+            .distinctBy { it.rawData.toString() }
+
+        outputFile.bufferedWriter().use { writer ->
+            normalized.forEach { writer.appendLine(it.rawData.toString()) }
+        }
     }
 }
