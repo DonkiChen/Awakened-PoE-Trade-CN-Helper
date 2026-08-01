@@ -116,21 +116,35 @@ cd ..
 
 ```kotlin
 GameDataRepo.prepareMapper(
-    sourceBaseDirName = "intl_amsco2",
-    targetBaseDir = "intl_amsco2",
-    targetLang = "Traditional Chinese",
-    targetStatDefaultLang = "English"
+    sourceExportDirName = "intl_amsco2",
+    targetExportDirName = "intl_amsco2",
+    targetLanguageKey = "Traditional Chinese",
+    sourceStatUnlabelledLanguage = "English",
+    targetStatUnlabelledLanguage = "English"
 )
 ```
 
 这几个参数的含义如下：
 
-- `sourceBaseDirName`：英文源数据所在的数据源目录。
-- `targetBaseDir`：目标语言数据所在的数据源目录。
-- `targetLang`：目标数据中的语言名称，必须与 `config.json` 的 `translations` 配置一致。
-- `targetStatDefaultLang`：目标词缀描述的默认语言，通常为 `English`。
+- `sourceExportDirName`：`data_repo/exported` 下提供源 stat 描述的数据目录名，通常包含英文文案。
+- `targetExportDirName`：`data_repo/exported` 下提供目标 table 和 stat 描述的数据目录名。
+- `targetLanguageKey`：目标数据中的语言 key，必须与 `config.json` 的 `translations` 配置一致。
+- `sourceStatUnlabelledLanguage`：源 stat 描述中没有 `lang` 标记的内容所属语言，通常为 `English`。
+- `targetStatUnlabelledLanguage`：目标 stat 描述中没有 `lang` 标记的内容所属语言。国际服通常为 `English`，国服中文-only 导出通常为 `Simplified Chinese`。
 
-如果需要生成国服简体中文数据，需要确保 `tencent` 和 `tencent_amsco2` 数据已经导出，并根据实际数据修改 `targetBaseDir` 和 `targetLang`。如果需要同时使用多个数据源，可以保留多个 `prepareMapper(...)` 调用。
+如果需要生成国服简体中文数据，需要确保 `tencent` 和 `tencent_amsco2` 数据已经导出，并保留类似下面的 mapper：
+
+```kotlin
+GameDataRepo.prepareMapper(
+    sourceExportDirName = "tencent",
+    targetExportDirName = "tencent_amsco2",
+    targetLanguageKey = "Simplified Chinese",
+    sourceStatUnlabelledLanguage = "English",
+    targetStatUnlabelledLanguage = "Simplified Chinese"
+)
+```
+
+如果需要同时使用多个目标数据源，可以保留多个 `prepareMapper(...)` 调用；每个 mapper 可以独立指定目标语言和 stat 默认语言。
 
 ### 5. 构建并运行
 
@@ -157,7 +171,7 @@ GameDataRepo.prepareMapper(
 ../renderer/public/data/zh_CN/stats.ndjson
 ```
 
-生成的 `items.ndjson` 和 `stats.ndjson` 会直接覆盖 APT 项目中的 `zh_CN` 数据。实际写入的语言取决于 `Main.kt` 中配置的 `targetLang`。运行工具前请确认 APT 英文输入文件存在，并在需要时备份现有的中文输出文件。
+生成的 `items.ndjson` 和 `stats.ndjson` 会直接覆盖 APT 项目中的 `zh_CN` 数据。实际写入的语言取决于 `Main.kt` 中配置的 `targetLanguageKey`。运行工具前请确认 APT 英文输入文件存在，并在需要时备份现有的中文输出文件。
 
 ## 项目结构
 

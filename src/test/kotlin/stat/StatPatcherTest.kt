@@ -4,6 +4,7 @@ import com.google.gson.JsonParser
 import data.AptDataRepo
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
 
 class StatPatcherTest {
@@ -84,13 +85,116 @@ class StatPatcherTest {
         assertEquals(listOf(first, second), normalized)
     }
 
-    private fun stat(ref: String, tradeType: String): AptDataRepo.Stat {
+    @Test
+    fun `copies advanced matcher for additional translations`() {
+        val stat = stat(
+            ref = "Advanced stat",
+            tradeType = "explicit",
+            matcherString = "base matcher",
+            advanced = "base advanced"
+        )
+
+        StatPatcher.doReplace(
+            cnMatcherNames = setOf("first matcher", "second matcher"),
+            cnAdvancedNames = setOf("first advanced", "second advanced"),
+            stat = stat,
+            matcher = stat.matchers.single()
+        )
+
+        val matchers = stat.rawData.getAsJsonArray("matchers").map { it.asJsonObject }
+        assertEquals(
+            listOf("first matcher", "first matcher", "second matcher", "second matcher"),
+            matchers.map { it.get("string").asString }
+        )
+        assertEquals(
+            listOf("first advanced", "second advanced", "first advanced", "second advanced"),
+            matchers.map { it.get("advanced").asString }
+        )
+    }
+
+    @Test
+    fun `rejects a replacement without a matcher translation`() {
+        val stat = stat(
+            ref = "Untranslated stat",
+            tradeType = "explicit",
+            matcherString = "original matcher"
+        )
+
+        val replaced = StatPatcher.doReplace(
+            cnMatcherNames = setOf("original matcher"),
+            cnAdvancedNames = setOf("translated advanced"),
+            stat = stat,
+            matcher = stat.matchers.single()
+        )
+
+        assertFalse(replaced)
+        assertEquals(
+            "original matcher",
+            stat.matchers.single().rawData.get("string").asString
+        )
+    }
+
+    @Test
+    fun `rejects a mapping identical to the English matcher`() {
+        val stat = stat(
+            ref = "Untranslated stat",
+            tradeType = "explicit"
+        )
+
+        val replaced = StatPatcher.doReplace(
+            cnMatcherNames = setOf("same matcher"),
+            cnAdvancedNames = emptySet(),
+            stat = stat,
+            matcher = stat.matchers.single()
+        )
+
+        assertFalse(replaced)
+    }
+
+    @Test
+    fun `removes a matcher without a translation`() {
+        val stat = stat(
+            ref = "Untranslated stat",
+            tradeType = "explicit"
+        )
+
+        stat.removeMatcher(stat.matchers.single())
+
+        assertEquals(0, stat.rawData.getAsJsonArray("matchers").size())
+    }
+
+    @Test
+    fun `reads matchers after replacing the raw matcher array`() {
+        val stat = stat(
+            ref = "Translated stat",
+            tradeType = "explicit"
+        )
+        val replacement = JsonParser.parseString(
+            "{\"string\": \"translated matcher\"}"
+        ).asJsonObject
+
+        stat.replaceMatchers(listOf(replacement))
+
+        assertEquals("translated matcher", stat.matchers.single().string)
+    }
+
+    private fun stat(
+        ref: String,
+        tradeType: String,
+        matcherString: String = "same matcher",
+        advanced: String? = null
+    ): AptDataRepo.Stat {
+        val matcher = if (advanced == null) {
+            "{\"string\": \"$matcherString\"}"
+        } else {
+            "{\"string\": \"$matcherString\", \"advanced\": \"$advanced\"}"
+        }
         val rawData = JsonParser.parseString(
             """
             {
               "ref": "$ref",
               "better": 1,
-              "matchers": [{"string": "same matcher"}],
+              "matchers": [$matcher],
               "trade": {"ids": {"$tradeType": ["$tradeType.stat"]}}
             }
             """.trimIndent()

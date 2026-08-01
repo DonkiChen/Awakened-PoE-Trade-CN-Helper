@@ -53,12 +53,11 @@ object AptDataRepo {
         override val associateKey: String
             get() = refName
 
-        val matchers by lazy {
-            rawData.getAsJsonArray("matchers")
+        val matchers: List<Matcher>
+            get() = rawData.getAsJsonArray("matchers")
                 .map {
                     Matcher(it.asJsonObject["string"].asString, it.asJsonObject["advanced"]?.asString, it.asJsonObject)
                 }
-        }
 
         fun deepClone(): Stat {
             return Stat(refName, rawData.deepCopy())
@@ -67,6 +66,21 @@ object AptDataRepo {
         fun addMatcher(matcher: Matcher) {
             rawData.getAsJsonArray("matchers")
                 .add(matcher.rawData)
+        }
+
+        fun replaceMatchers(matchers: List<JsonObject>) {
+            val newMatchers = JsonArray(matchers.size)
+            matchers.forEach { newMatchers.add(it) }
+            rawData.add("matchers", newMatchers)
+        }
+
+        fun removeMatcher(matcher: Matcher) {
+            rawData.getAsJsonArray("matchers")
+                .remove(matcher.rawData)
+        }
+
+        fun hasMatchers(): Boolean {
+            return rawData.getAsJsonArray("matchers").size() > 0
         }
 
         data class Matcher(

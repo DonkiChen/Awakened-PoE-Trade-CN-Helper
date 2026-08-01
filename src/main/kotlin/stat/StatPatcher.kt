@@ -40,7 +40,7 @@ object StatPatcher {
     )
 
     private fun AptDataRepo.StatGroup.translateStringAndAdvanced(mapper: GameDataRepo.GameDataMapper): AptDataRepo.StatGroup {
-        stats.map { it.translateStringAndAdvanced(mapper) }
+        stats.forEach { it.translateStringAndAdvanced(mapper) }
         syncToRawData()
         return this
     }
@@ -51,28 +51,45 @@ object StatPatcher {
         return text.replace(Regex(" +\n"), "\n")
     }
 
-    private fun doReplace(
+    private fun createCombinations(
+        cnMatcherNames: Set<String>,
+        cnAdvancedNames: Set<String>,
+        matcher: AptDataRepo.Stat.Matcher,
+    ): List<Pair<String, String>> {
+        val translatedMatcherNames = cnMatcherNames
+            .filterNot { it.equals(matcher.string, ignoreCase = true) }
+            .toSet()
+        val translatedAdvancedNames = cnAdvancedNames
+            .filterNot { matcher.advanced != null && it.equals(matcher.advanced, ignoreCase = true) }
+            .toSet()
+
+        if (translatedMatcherNames.isEmpty()) {
+            return emptyList()
+        }
+        if (matcher.advanced != null && translatedAdvancedNames.isEmpty()) {
+            // 如果 matcher 有 advanced, 则必须要有 cnAdvancedNames
+            return emptyList()
+        }
+
+        val finalCnAdvancedNames = translatedAdvancedNames.ifEmpty {
+            // 确保最少有一个, 保证后续笛卡尔积计算正确
+            setOf("")
+        }
+        return translatedMatcherNames.flatMap { cnStatName ->
+            finalCnAdvancedNames.map { cnAdvanced -> cnStatName to cnAdvanced }
+        }
+    }
+
+    internal fun doReplace(
         cnMatcherNames: Set<String>,
         cnAdvancedNames: Set<String>,
         stat: AptDataRepo.Stat,
         matcher: AptDataRepo.Stat.Matcher,
     ): Boolean {
-        if (cnMatcherNames.isEmpty() && cnAdvancedNames.isEmpty()) {
-            return false
-        }
-        if (matcher.advanced != null && cnAdvancedNames.isEmpty()) {
-            // 如果 matcher 有 advanced, 则必须要有 cnAdvancedNames
-            return false
-        }
-        val backupMatcherRawData = matcher.rawData.deepCopy()
+        val combinations = createCombinations(cnMatcherNames, cnAdvancedNames, matcher)
+        if (combinations.isEmpty()) return false
 
-        val finalCnAdvancedNames = cnAdvancedNames.ifEmpty {
-            // 确保最少有一个, 保证后续笛卡尔积计算正确
-            setOf("")
-        }
-        val combinations = cnMatcherNames.flatMap { cnStatName ->
-            finalCnAdvancedNames.map { cnAdvanced -> cnStatName to cnAdvanced }
-        }
+        val backupMatcherRawData = matcher.rawData.deepCopy()
 
         // 因为会出现同一个英文名在不同场景下有不同中文翻译的问题, 例如:
         // Adds {0} to {1} Cold Damage 可以被翻译为
@@ -88,7 +105,7 @@ object StatPatcher {
             } else {
                 val copied = matcher.copy(rawData = backupMatcherRawData.deepCopy())
                 copied.updateString(specialFix(cnStatName))
-                matcher.updateAdvancedIfExists(specialFix(cnAdvanced))
+                copied.updateAdvancedIfExists(specialFix(cnAdvanced))
                 stat.addMatcher(copied)
             }
         }
@@ -97,7 +114,7 @@ object StatPatcher {
     }
 
     private fun AptDataRepo.Stat.translateStringAndAdvanced(mapper: GameDataRepo.GameDataMapper): AptDataRepo.Stat {
-        matchers.forEach { matcher ->
+        val translatedMatchers = matchers.toList().flatMap { matcher ->
             if (refName == "+# to Level of all Raise Spectre Gems") {
                 println()
             }
@@ -134,13 +151,16 @@ object StatPatcher {
                 }
             }
 
-            doReplace(
-                cnMatcherNames = cnMatcherNames,
-                cnAdvancedNames = cnAdvancedNames,
-                stat = this,
-                matcher = matcher
-            )
+            createCombinations(cnMatcherNames, cnAdvancedNames, matcher).map { (cnStatName, cnAdvanced) ->
+                matcher.rawData.deepCopy().also { rawData ->
+                    rawData.addProperty("string", specialFix(cnStatName))
+                    if (rawData.has("advanced") && cnAdvanced.isNotBlank()) {
+                        rawData.addProperty("advanced", specialFix(cnAdvanced))
+                    }
+                }
+            }
         }
+        replaceMatchers(translatedMatchers.distinctBy { it.toString() })
         return this
     }
 
@@ -148,6 +168,53 @@ object StatPatcher {
         return when (this) {
             is AptDataRepo.Stat -> deepClone().translateStringAndAdvanced(mapper)
             is AptDataRepo.StatGroup -> deepClone().translateStringAndAdvanced(mapper)
+        }
+    }
+
+    private fun mergeTranslatedStats(
+        original: AptDataRepo.Stat,
+        translated: List<AptDataRepo.Stat>,
+    ): AptDataRepo.Stat {
+        val translatedMatchers = translated
+            .filter { it.hasMatchers() }
+            .flatMap { stat -> stat.matchers.map { it.rawData.deepCopy() } }
+            .distinctBy { it.toString() }
+
+        return original.deepClone().also { result ->
+            if (translatedMatchers.isNotEmpty()) {
+                result.replaceMatchers(translatedMatchers)
+            }
+        }
+    }
+
+    private fun mergeTranslatedStats(
+        original: AptDataRepo.StatGroup,
+        translated: List<AptDataRepo.StatGroup>,
+    ): AptDataRepo.StatGroup {
+        val translatedStats = original.stats.mapIndexed { index, stat ->
+            mergeTranslatedStats(
+                original = stat,
+                translated = translated.mapNotNull { it.stats.getOrNull(index) }
+            )
+        }
+        return AptDataRepo.StatGroup(translatedStats, original.rawData.deepCopy()).also {
+            it.syncToRawData()
+        }
+    }
+
+    private fun mergeMapperTranslations(
+        original: AptDataRepo.BaseStat,
+        translated: List<AptDataRepo.BaseStat>,
+    ): AptDataRepo.BaseStat {
+        return when (original) {
+            is AptDataRepo.Stat -> mergeTranslatedStats(
+                original,
+                translated.filterIsInstance<AptDataRepo.Stat>()
+            )
+            is AptDataRepo.StatGroup -> mergeTranslatedStats(
+                original,
+                translated.filterIsInstance<AptDataRepo.StatGroup>()
+            )
         }
     }
 
@@ -204,16 +271,13 @@ object StatPatcher {
             }
         }
 
-        for (index in AptDataRepo.enStatOrGroup.indices) {
-            val statOrGroup = AptDataRepo.enStatOrGroup[index]
-            val translated = translatedByMapper.map { it[index] }
-            if (translated.all { statOrGroup.rawData == it.rawData }) {
-                println("missing: ${statOrGroup.rawData}")
-            }
+        val merged = AptDataRepo.enStatOrGroup.mapIndexed { index, statOrGroup ->
+            mergeMapperTranslations(
+                original = statOrGroup,
+                translated = translatedByMapper.map { it[index] }
+            )
         }
-
-        val normalized = translatedByMapper
-            .flatMap(::mergeTrivialGroups)
+        val normalized = mergeTrivialGroups(merged)
             .distinctBy { it.rawData.toString() }
 
         outputFile.bufferedWriter().use { writer ->

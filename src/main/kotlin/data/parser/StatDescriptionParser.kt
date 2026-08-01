@@ -18,11 +18,13 @@ private val TEXT_LINE_PATTERN = Regex("^[^\"]*\"([^\"]*)\"")
 private val LANG_PATTERN = Regex("^lang\\s+\"([^\"]+)\"")
 
 /**
- * 解析器上下文，管理当前解析状态和数据
+ * 解析器上下文，管理当前解析状态和数据。
+ *
+ * unlabelledLanguage 用于没有显式 `lang` 标记的内容，解析器不会根据文本内容自动判断语言。
  */
-class ParserContext(private val defaultLang: String) {
+class ParserContext(private val unlabelledLanguage: String) {
     var currentId: String? = null
-    var currentLanguage: String = defaultLang
+    var currentLanguage: String = unlabelledLanguage
     val namesByLang = mutableMapOf<String, MutableList<String>>()
 
     val currentNamesContainer: MutableList<String>
@@ -33,7 +35,7 @@ class ParserContext(private val defaultLang: String) {
      */
     fun resetForNewBlock() {
         currentId = null
-        currentLanguage = defaultLang
+        currentLanguage = unlabelledLanguage
         namesByLang.clear()
     }
 
@@ -59,7 +61,7 @@ private enum class State {
  *
  * @return GameStatDescription对象的序列
  */
-private fun doParseStatDescriptions(dir: File, defaultLang: String): Sequence<GameStatDescription> = sequence {
+private fun doParseStatDescriptions(dir: File, unlabelledLanguage: String): Sequence<GameStatDescription> = sequence {
     dir.listFiles()?.forEach { file ->
         try {
             file.inputStream().use {
@@ -84,7 +86,7 @@ private fun doParseStatDescriptions(dir: File, defaultLang: String): Sequence<Ga
                             return next
                         }
                     }
-                    val context = ParserContext(defaultLang)
+                    val context = ParserContext(unlabelledLanguage)
 
                     var state = State.WAITING_DESCRIPTION
                     while (iterator.hasNext()) {
@@ -199,9 +201,12 @@ private fun String.unescape(): String {
 }
 
 object StatDescriptionParsers {
-    fun parse(descriptionsDir: File, defaultLang: String = "English"): List<GameStatDescription> {
-        return doParseStatDescriptions(descriptionsDir, defaultLang).onEach { description ->
-            val expectedCount = description.namesByLang[defaultLang]?.size ?: 0
+    /**
+     * @param unlabelledLanguage 没有 `lang` 标记的 description block 的归属语言
+     */
+    fun parse(descriptionsDir: File, unlabelledLanguage: String = "English"): List<GameStatDescription> {
+        return doParseStatDescriptions(descriptionsDir, unlabelledLanguage).onEach { description ->
+            val expectedCount = description.namesByLang[unlabelledLanguage]?.size ?: 0
             description.namesByLang.forEach { entry ->
                 if (expectedCount != entry.value.size) {
                     println("[WARNING] size not match, expected: $expectedCount, actual: ${entry.value.size}, lang: ${entry.key} at: ${description.uniqueId}")
@@ -211,6 +216,6 @@ object StatDescriptionParsers {
     }
 }
 
-fun parseStatDescriptions(descriptionsDir: File, defaultLang: String = "English"): List<GameStatDescription> {
-    return StatDescriptionParsers.parse(descriptionsDir, defaultLang)
+fun parseStatDescriptions(descriptionsDir: File, unlabelledLanguage: String = "English"): List<GameStatDescription> {
+    return StatDescriptionParsers.parse(descriptionsDir, unlabelledLanguage)
 }

@@ -16,20 +16,39 @@ object GameDataRepo {
     private val _mappers = mutableListOf<GameDataMapper>()
     val mappers: List<GameDataMapper> = _mappers
 
+    /**
+     * 注册一组源数据和目标数据。多个 mapper 彼此独立，因为不同目标导出可能使用不同的语言 key。
+     *
+     * @param sourceExportDirName `data_repo/exported` 下提供源 stat 描述的数据目录名，通常包含英文文案
+     * @param targetExportDirName `data_repo/exported` 下提供目标 table 和 stat 描述的数据目录名
+     * @param targetLanguageKey 目标导出中使用的语言 key。例如国际服将简体中文文案标记为 "Traditional Chinese"
+     * @param sourceStatUnlabelledLanguage 源 stat 描述中没有 `lang` 标记的内容所属语言，通常为 "English"
+     * @param targetStatUnlabelledLanguage 目标 stat 描述中没有 `lang` 标记的内容所属语言，可根据目标导出分别配置
+     */
     fun prepareMapper(
-        sourceBaseDirName: String,
-        targetBaseDir: String,
-        targetLang: String,
-        targetStatDefaultLang: String,
+        sourceExportDirName: String,
+        targetExportDirName: String,
+        targetLanguageKey: String,
+        sourceStatUnlabelledLanguage: String,
+        targetStatUnlabelledLanguage: String,
     ) {
-        _mappers.add(GameDataMapper(sourceBaseDirName, targetBaseDir, targetLang, targetStatDefaultLang))
+        _mappers.add(
+            GameDataMapper(
+                sourceExportDirName,
+                targetExportDirName,
+                targetLanguageKey,
+                sourceStatUnlabelledLanguage,
+                targetStatUnlabelledLanguage,
+            )
+        )
     }
 
     class GameDataMapper(
-        private val sourceBaseDirName: String,
-        private val targetBaseDir: String,
-        private val targetLang: String,
-        private val targetStatDefaultLang: String,
+        private val sourceExportDirName: String,
+        private val targetExportDirName: String,
+        private val targetLanguageKey: String,
+        private val sourceStatUnlabelledLanguage: String,
+        private val targetStatUnlabelledLanguage: String,
     ) {
 
         private inline fun <reified T : BaseTableItem> parseTableDataToMapper(
@@ -37,9 +56,9 @@ object GameDataRepo {
             predicate: (T) -> Boolean = { true }
         ): Map<T, T> = data.parser.parseExportedTableDataToMapper<T>(
             exportedDataDir = exportedDataDir,
-            gameBaseDir = targetBaseDir,
+            gameBaseDir = targetExportDirName,
             gameFileName = gameFileName,
-            cnLang = targetLang,
+            cnLang = targetLanguageKey,
             predicate = predicate
         )
 
@@ -130,10 +149,11 @@ object GameDataRepo {
                 putAll(rawSourceStatsFromStatDescriptions
                     .filter { it.id.startsWith("keystone_") }
                     .flatMap { stat ->
-                        stat.namesByLang[targetStatDefaultLang]!!.mapIndexed { index, enName ->
-                            var names = stat.namesByLang[targetLang]
+                        // Keystone 的英文 key 来自源数据，因此使用源文件无标记内容的语言。
+                        stat.namesByLang[sourceStatUnlabelledLanguage]!!.mapIndexed { index, enName ->
+                            var names = stat.namesByLang[targetLanguageKey]
                             if (names == null) {
-                                names = stat.namesByLang[targetStatDefaultLang]
+                                names = stat.namesByLang[targetStatUnlabelledLanguage]
                                 println("[WARNING] missing target language, fallback to default: $names")
                             }
                             enName to names!![index]
@@ -169,12 +189,15 @@ object GameDataRepo {
         }
 
         private val rawSourceStatsFromStatDescriptions by lazy {
-            val dir = File(exportedDataDir, "${sourceBaseDirName}/files")
-            StatDescriptionParsers.parse(dir)
+            val dir = File(exportedDataDir, "${sourceExportDirName}/files")
+            // 源文件提供英文 matcher 名称。
+            StatDescriptionParsers.parse(dir, sourceStatUnlabelledLanguage)
         }
         private val rawTargetStatsFromStatDescriptions by lazy {
-            val dir = File(exportedDataDir, "${targetBaseDir}/files")
-            StatDescriptionParsers.parse(dir, targetStatDefaultLang)
+            val dir = File(exportedDataDir, "${targetExportDirName}/files")
+            // 有些目标导出文件整体已经是本地化内容，因此没有 lang 标记；
+            // 这里需要为每个 mapper 单独指定这类内容的语言。
+            StatDescriptionParsers.parse(dir, targetStatUnlabelledLanguage)
         }
 
         val statsFromDescriptions: Map<String, Set<String>> by lazy {
@@ -187,9 +210,10 @@ object GameDataRepo {
                         it.id != "fishing_lure_type"
                     }
                     .forEach { sourceDesc ->
+                        // 源和目标可以来自不同导出目录，因此通过文件名和 id 匹配，不能依赖翻译后的文案。
                         val targetDesc = cnStatsFromGameById[sourceDesc.uniqueId]
-                        val sourceNames = sourceDesc.namesByLang["English"]
-                        val targetNames = targetDesc?.namesByLang?.get(targetLang)
+                        val sourceNames = sourceDesc.namesByLang[sourceStatUnlabelledLanguage]
+                        val targetNames = targetDesc?.namesByLang?.get(targetLanguageKey)
                         if (targetDesc == null
                             // 国际服中有些是已过期的, 而国服中没有对应字段, 直接跳过
                             || targetNames.isNullOrEmpty()
