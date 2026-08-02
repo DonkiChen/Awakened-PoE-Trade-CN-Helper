@@ -115,6 +115,12 @@ object GameDataRepo {
             }
         }
 
+        val mapAreas by lazy {
+            parseTableDataToTextMapper<BaseTableItem>("WorldAreas.json") {
+                it.id.startsWith("MapWorlds")
+            }
+        }
+
         val lakeRooms by lazy {
             parseTableDataToTextMapper<BaseTableItem>("LakeRooms.json")
         }

@@ -25,13 +25,30 @@ object ItemPatcher {
         return copy(rawData = rawData.deepCopy()).updateName(cnName ?: name)
     }
 
+    private fun AptDataRepo.Item.translateScryingOrbArea(
+        mapAreas: Map<String, String>
+    ): AptDataRepo.Item {
+        if (rawData["tradeDisc"]?.asString != "scrying_orb") {
+            return this
+        }
+
+        val disc = rawData["disc"]?.asJsonObject ?: return this
+        val area = disc["sectionText"]?.asString ?: return this
+        val translatedArea = mapAreas[area] ?: return this
+        disc.addProperty("sectionText", translatedArea)
+        return this
+    }
+
     fun patch(mappers: List<GameDataRepo.GameDataMapper>) {
         val allCandidates =
             mappers.map { mapper -> listOf(mapper.baseItems, mapper.activeSkills, mapper.words, mapper.monsters) }
         outputFile.bufferedWriter()
             .use { writer ->
                 for (item in AptDataRepo.enItems) {
-                    allCandidates.map { item.translate(it) }
+                    allCandidates.mapIndexed { index, candidates ->
+                        item.translate(candidates)
+                            .translateScryingOrbArea(mappers[index].mapAreas)
+                    }
                         .distinct()
                         .map { it.rawData.toString() }
                         .forEach(writer::appendLine)
