@@ -8,17 +8,26 @@ object Main {
     fun main(args: Array<String>) {
         // 每个 mapper 对应一个目标数据集。国际服将简体中文文案标记为 "Traditional Chinese"。
         GameDataRepo.prepareMapper(
+            sourceExportDirName = "intl_poedb",
+            targetExportDirName = "intl_poedb",
+            targetLanguageKey = "Traditional Chinese",
+            sourceStatUnlabelledLanguage = "English",
+            targetStatUnlabelledLanguage = "English"
+        )
+        GameDataRepo.prepareMapper(
             sourceExportDirName = "intl_amsco2",
             targetExportDirName = "intl_amsco2",
             targetLanguageKey = "Traditional Chinese",
             sourceStatUnlabelledLanguage = "English",
             targetStatUnlabelledLanguage = "English"
         )
+
         GameDataRepo.prepareMapper(
-            sourceExportDirName = "intl_poedb",
-            targetExportDirName = "intl_poedb",
-            targetLanguageKey = "Traditional Chinese",
+            sourceExportDirName = "tencent",
+            targetExportDirName = "tencent",
+            targetLanguageKey = "Simplified Chinese",
             sourceStatUnlabelledLanguage = "English",
+            // tencent 文件以未标记的英文内容开头，后续内容明确标记为简体中文。
             targetStatUnlabelledLanguage = "English"
         )
 
@@ -31,14 +40,7 @@ object Main {
             sourceStatUnlabelledLanguage = "English",
             targetStatUnlabelledLanguage = "Simplified Chinese"
         )
-        GameDataRepo.prepareMapper(
-            sourceExportDirName = "tencent",
-            targetExportDirName = "tencent",
-            targetLanguageKey = "Simplified Chinese",
-            sourceStatUnlabelledLanguage = "English",
-            // tencent 文件以未标记的英文内容开头，后续内容明确标记为简体中文。
-            targetStatUnlabelledLanguage = "English"
-        )
+
         ItemPatcher.patch(GameDataRepo.mappers)
         StatPatcher.patch(GameDataRepo.mappers)
     }

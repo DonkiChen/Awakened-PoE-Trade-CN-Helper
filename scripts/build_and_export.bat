@@ -16,13 +16,13 @@ set "PATCHER_EXE=%ROOT_DIR%\PoePatcherCli\publish\win-x64\PoePatcherCli.exe"
 set "DAT_VIEWER_LIB=%ROOT_DIR%\poe-dat-viewer\lib"
 set "DAT_RUNNER=%DAT_VIEWER_LIB%\dist\cli\run.js"
 set "EXPORTED_DIR=%ROOT_DIR%\data_repo\exported"
-set "INTL_TEMPLATE=%EXPORTED_DIR%\intl_config.json.template"
-set "TENCENT_TEMPLATE=%EXPORTED_DIR%\tencent_config.json.template"
+set "INTL_TEMPLATE=%EXPORTED_DIR%\intl_config.template.json"
+set "TENCENT_TEMPLATE=%EXPORTED_DIR%\tencent_config.template.json"
 
 set "INTL_RESTORE_PATTERN=.*国际服\[EPIC\]还原包\.zip$"
 set "INTL_PATCH_PATTERN=.*\[Poe1\]\[EPIC,解压覆盖同名文件\]国际服汉化\+功能补丁_\[方正准圆\]双切简体\(查价\)_v2\.0\.zip$"
 set "TENCENT_RESTORE_PATTERN=.*国服还原包\.zip$"
-set "TENCENT_PATCH_PATTERN=.*国服功能补丁\+简改\(v2\)\+查价_V.*_正式版\.zip$"
+set "TENCENT_PATCH_PATTERN=.*国服功能补丁\+简改\(v2\)\+查价_V.*_(正式版|抢先版)\.zip$"
 
 if not exist "%PATCH_DIR%" (
     echo [ERROR] Patch directory does not exist: "%PATCH_DIR%"

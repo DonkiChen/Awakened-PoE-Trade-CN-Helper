@@ -44,7 +44,7 @@
   ],
   "translations": [
     "English",
-    "Simplified Chinese"
+    "Traditional Chinese"
   ],
   "tables": [
     {
@@ -142,6 +142,20 @@
       "name": "ExpeditionFactions",
       "columns": [
         "Id",
+        "Name"
+      ]
+    },
+    {
+      "name": "MercenarySupports",
+      "columns": [
+        "Id",
+        "Name",
+        "Tier"
+      ]
+    },
+    {
+      "name": "MercenarySkills",
+      "columns": [
         "Name"
       ]
     }

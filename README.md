@@ -66,8 +66,8 @@ set "TENCENT_GAME_PATH=C:\Program Files (x86)\流放之路(511)"
 
 导出配置模板如下：
 
-- [intl_config.json.template](./data_repo/exported/intl_config.json.template)
-- [tencent_config.json.template](./data_repo/exported/tencent_config.json.template)
+- [intl_config.json.template](./data_repo/exported/intl_config.template.json)
+- [tencent_config.json.template](./data_repo/exported/tencent_config.template.json)
 
 脚本会根据模板生成各数据源目录中的 `config.json`。生成的配置属于本地环境配置，不要直接复制其他人的路径。
 

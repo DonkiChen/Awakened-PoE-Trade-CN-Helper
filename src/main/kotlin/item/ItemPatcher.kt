@@ -6,6 +6,10 @@ import java.io.File
 
 object ItemPatcher {
     private val outputFile = File(AptDataRepo.APT_PROJECT_DIR, "renderer/public/data/zh_CN/items.ndjson")
+    private val extraAreaNames = mapOf(
+        "Kishara's Rest" to "琪莎拉之息",
+        "Unremarkable Seabed" to "平凡海床",
+    )
 
     private fun AptDataRepo.Item.choose(candidates: List<Map<String, String>>): String? {
         candidates.forEach {
@@ -25,29 +29,17 @@ object ItemPatcher {
         return copy(rawData = rawData.deepCopy()).updateName(cnName ?: name)
     }
 
-    private fun AptDataRepo.Item.translateScryingOrbArea(
-        mapAreas: Map<String, String>
-    ): AptDataRepo.Item {
-        if (rawData["tradeDisc"]?.asString != "scrying_orb") {
-            return this
-        }
-
-        val disc = rawData["disc"]?.asJsonObject ?: return this
-        val area = disc["sectionText"]?.asString ?: return this
-        val translatedArea = mapAreas[area] ?: return this
-        disc.addProperty("sectionText", translatedArea)
-        return this
-    }
-
     fun patch(mappers: List<GameDataRepo.GameDataMapper>) {
-        val allCandidates =
-            mappers.map { mapper -> listOf(mapper.baseItems, mapper.activeSkills, mapper.words, mapper.monsters) }
         outputFile.bufferedWriter()
             .use { writer ->
                 for (item in AptDataRepo.enItems) {
-                    allCandidates.mapIndexed { index, candidates ->
+                    mappers.map { mapper ->
+                        val candidates = if (item.rawData["namespace"]?.asString == "AREA") {
+                            listOf(mapper.worldAreas, mapper.achievementItems, extraAreaNames)
+                        } else {
+                            listOf(mapper.baseItems, mapper.activeSkills, mapper.words, mapper.monsters)
+                        }
                         item.translate(candidates)
-                            .translateScryingOrbArea(mappers[index].mapAreas)
                     }
                         .distinct()
                         .map { it.rawData.toString() }

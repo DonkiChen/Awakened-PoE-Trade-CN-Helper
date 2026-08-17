@@ -303,10 +303,14 @@ object StatPatcher {
         }
 
         val merged = AptDataRepo.enStatOrGroup.mapIndexed { index, statOrGroup ->
-            mergeMapperTranslations(
+            val translated = mergeMapperTranslations(
                 original = statOrGroup,
                 translated = translatedByMapper.map { it[index] }
             )
+            if (translated.rawData == statOrGroup.rawData) {
+                println("missing: ${statOrGroup.rawData}")
+            }
+            translated
         }
         val normalized = mergeTrivialGroups(merged)
             .distinctBy { it.rawData.toString() }
