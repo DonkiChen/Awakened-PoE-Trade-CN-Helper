@@ -1,6 +1,8 @@
 package data
 
 import data.parser.BaseTableItem
+import data.parser.ClientString
+import data.parser.MercenarySupport
 import data.parser.StatDescriptionParsers
 import data.parser.parseExtraStats
 import java.io.File
@@ -134,7 +136,21 @@ object GameDataRepo {
         }
 
         val clientStrings by lazy {
-            parseTableDataToTextMapper<BaseTableItem>("ClientStrings.json")
+            parseTableDataToMapper<ClientString>("ClientStrings.json")
+                .map { (source, target) -> source.id to target.text }
+                .toMap()
+        }
+
+        val mercenarySkills by lazy {
+            parseTableDataToTextMapper<BaseTableItem>("MercenarySkills.json")
+        }
+
+        val mercenarySupports by lazy {
+            parseTableDataToMapper<MercenarySupport>("MercenarySupports.json")
+                .map { (source, target) ->
+                    source.name to MercenarySupportTranslation(target.name, target.tier)
+                }
+                .toMap()
         }
 
         val betrayalNpcs by lazy {
@@ -243,4 +259,9 @@ object GameDataRepo {
             }
         }
     }
+
+    data class MercenarySupportTranslation(
+        val name: String,
+        val tier: Int,
+    )
 }

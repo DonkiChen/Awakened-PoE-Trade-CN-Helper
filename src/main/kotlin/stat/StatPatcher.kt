@@ -114,6 +114,37 @@ object StatPatcher {
     }
 
     private fun AptDataRepo.Stat.translateStringAndAdvanced(mapper: GameDataRepo.GameDataMapper): AptDataRepo.Stat {
+        val mercenary = rawData["mercenary"]?.asJsonObject
+        if (mercenary != null) {
+            val translatedName: String
+            val tier: Int?
+            if (mercenary.has("tier")) {
+                val support = mapper.mercenarySupports[refName] ?: return this
+                translatedName = support.name
+                tier = support.tier
+            } else {
+                translatedName = mapper.mercenarySkills[refName] ?: return this
+                tier = null
+            }
+
+            val tierText = if (tier != null) {
+                mapper.clientStrings["ModDescriptionLineTier"]
+                    ?.replace("{0}", tier.toString())
+                    ?: error("Missing ClientString: ModDescriptionLineTier")
+            } else {
+                ""
+            }
+            replaceMatchers(matchers.map { matcher ->
+                matcher.rawData.deepCopy().also { rawData ->
+                    rawData.addProperty("string", translatedName)
+                    if (rawData.has("advanced")) {
+                        rawData.addProperty("advanced", translatedName + tierText)
+                    }
+                }
+            })
+            return this
+        }
+
         val translatedMatchers = matchers.toList().flatMap { matcher ->
             if (refName == "+# to Level of all Raise Spectre Gems") {
                 println()

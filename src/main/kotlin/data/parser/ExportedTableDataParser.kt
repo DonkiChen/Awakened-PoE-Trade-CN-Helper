@@ -36,4 +36,17 @@ open class BaseTableItem(
     val name: String
 )
 
+class ClientString(
+    id: String,
+    @SerializedName("Text")
+    val text: String,
+) : BaseTableItem(id, text)
+
+class MercenarySupport(
+    id: String,
+    name: String,
+    @SerializedName("Tier")
+    val tier: Int,
+) : BaseTableItem(id, name)
+
 // key: id, value: (lang, name)
