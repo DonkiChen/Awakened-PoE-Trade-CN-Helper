@@ -170,17 +170,17 @@ object GameDataRepo {
 
         val keystones by lazy {
             buildMap {
+                val targetStatsById = rawTargetStatsFromStatDescriptions.associateBy { it.uniqueId }
                 putAll(rawSourceStatsFromStatDescriptions
                     .filter { it.id.startsWith("keystone_") }
                     .flatMap { stat ->
-                        // Keystone 的英文 key 来自源数据，因此使用源文件无标记内容的语言。
+                        // Keystone 的英文 key 来自源数据，翻译名称必须从目标数据读取。
+                        val targetStat = targetStatsById[stat.uniqueId]
+                            ?: error("Missing target stat description: ${stat.uniqueId}")
+                        val targetNames = targetStat.namesByLang[targetLanguageKey]
+                            ?: error("Missing target language '$targetLanguageKey' at: ${targetStat.uniqueId}")
                         stat.namesByLang[sourceStatUnlabelledLanguage]!!.mapIndexed { index, enName ->
-                            var names = stat.namesByLang[targetLanguageKey]
-                            if (names == null) {
-                                names = stat.namesByLang[targetStatUnlabelledLanguage]
-                                println("[WARNING] missing target language, fallback to default: $names")
-                            }
-                            enName to names!![index]
+                            enName to targetNames[index]
                         }
                     }
                     .toMap()
@@ -245,7 +245,7 @@ object GameDataRepo {
                             return@forEach
                         } else {
                             if (sourceNames == null || (sourceNames.size != targetNames.size && targetNames.size > 1)) {
-                                println("[WARNING] source names size: ${sourceNames?.size}, target names size: ${targetNames.size} at: ${sourceDesc.uniqueId}")
+                                println("[WARNING] Building dictionary, source names size: ${sourceNames?.size}, target names size: ${targetNames.size} at: ${sourceDesc.uniqueId}")
                                 println(sourceNames)
                                 println(targetNames)
                                 return@forEach

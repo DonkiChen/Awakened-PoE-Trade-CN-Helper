@@ -209,7 +209,7 @@ object StatDescriptionParsers {
             val expectedCount = description.namesByLang[unlabelledLanguage]?.size ?: 0
             description.namesByLang.forEach { entry ->
                 if (expectedCount != entry.value.size) {
-                    println("[WARNING] size not match, expected: $expectedCount, actual: ${entry.value.size}, lang: ${entry.key} at: ${description.uniqueId}")
+                    println("[WARNING] Parsing stat desc files, size not match, expected: $expectedCount, actual: ${entry.value.size}, lang: ${entry.key} at: ${description.uniqueId}")
                 }
             }
         }.toList()

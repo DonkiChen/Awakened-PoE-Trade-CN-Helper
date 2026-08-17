@@ -107,11 +107,11 @@ GameDataRepo.prepareMapper(
 - `sourceStatUnlabelledLanguage`：源 stat 描述中没有 `lang` 标记的内容所属语言，通常为 `English`。
 - `targetStatUnlabelledLanguage`：目标 stat 描述中没有 `lang` 标记的内容所属语言。国际服通常为 `English`，国服中文-only 导出通常为 `Simplified Chinese`。
 
-如果需要生成国服简体中文数据，需要确保 `tencent` 和 `tencent_amsco2` 数据已经导出，并保留类似下面的 mapper：
+如果需要生成国服简体中文数据，需要确保 `intl_amsco2` 和 `tencent_amsco2` 数据已经导出，并保留类似下面的 mapper：
 
 ```kotlin
 GameDataRepo.prepareMapper(
-    sourceExportDirName = "tencent",
+    sourceExportDirName = "intl_amsco2",
     targetExportDirName = "tencent_amsco2",
     targetLanguageKey = "Simplified Chinese",
     sourceStatUnlabelledLanguage = "English",

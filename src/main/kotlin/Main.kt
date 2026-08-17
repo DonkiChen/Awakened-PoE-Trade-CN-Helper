@@ -31,10 +31,10 @@ object Main {
             targetStatUnlabelledLanguage = "English"
         )
 
-        // tencent_amsco2 的 stat 描述文件只有中文。使用 tencent 中的英文描述，
+        // tencent_amsco2 的 stat 描述文件只有中文。使用 intl_amsco2 中的英文描述，
         // 并仅对这个 mapper 将无语言标记的目标内容视为简体中文。
         GameDataRepo.prepareMapper(
-            sourceExportDirName = "tencent",
+            sourceExportDirName = "intl_amsco2",
             targetExportDirName = "tencent_amsco2",
             targetLanguageKey = "Simplified Chinese",
             sourceStatUnlabelledLanguage = "English",
