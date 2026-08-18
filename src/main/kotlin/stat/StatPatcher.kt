@@ -4,6 +4,7 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import data.AptDataRepo
 import data.GameDataRepo
+import data.parser.ExtraStat
 import java.io.File
 
 
@@ -78,6 +79,30 @@ object StatPatcher {
         return translatedMatcherNames.flatMap { cnStatName ->
             finalCnAdvancedNames.map { cnAdvanced -> cnStatName to cnAdvanced }
         }
+    }
+
+    internal fun collectExtraStatTranslations(
+        extraStats: List<ExtraStat>,
+        matcher: AptDataRepo.Stat.Matcher,
+    ): Pair<Set<String>, Set<String>> {
+        val cnMatcherNames = mutableSetOf<String>()
+        val cnAdvancedNames = mutableSetOf<String>()
+
+        extraStats.forEach { extraStat ->
+            val index = extraStat.en.indexOfFirst {
+                it.string.equals(matcher.string, true)
+            }
+            if (index < 0) return@forEach
+
+            extraStat.translationSets.forEach { texts ->
+                texts.getOrNull(index)?.let { text ->
+                    cnMatcherNames.add(text.string)
+                    text.advanced?.let(cnAdvancedNames::add)
+                }
+            }
+        }
+
+        return cnMatcherNames to cnAdvancedNames
     }
 
     internal fun doReplace(
@@ -165,22 +190,12 @@ object StatPatcher {
             }
 
             val extraStats = buildList {
-                if (mapper.extraStats[refName.uppercase()] != null) {
-                    add(mapper.extraStats[refName.uppercase()]!!)
-                }
-                if (mapper.extraStats[matcher.string.uppercase()] != null) {
-                    add(mapper.extraStats[matcher.string.uppercase()]!!)
-                }
-            }
-            extraStats.forEach { extraStat ->
-                val index = extraStat.en.indexOfFirst { it.string.equals(matcher.string, true) }
-                if (index >= 0 && extraStat.cn.size > index) {
-                    cnMatcherNames.add(extraStat.cn[index].string)
-                    if (extraStat.cn[index].advanced != null) {
-                        cnAdvancedNames.add(extraStat.cn[index].advanced!!)
-                    }
-                }
-            }
+                addAll(mapper.extraStats[refName.uppercase()].orEmpty())
+                addAll(mapper.extraStats[matcher.string.uppercase()].orEmpty())
+            }.distinct()
+            val (extraMatcherNames, extraAdvancedNames) = collectExtraStatTranslations(extraStats, matcher)
+            cnMatcherNames.addAll(extraMatcherNames)
+            cnAdvancedNames.addAll(extraAdvancedNames)
 
             createCombinations(cnMatcherNames, cnAdvancedNames, matcher).map { (cnStatName, cnAdvanced) ->
                 matcher.rawData.deepCopy().also { rawData ->

@@ -2,6 +2,11 @@ package stat
 
 import com.google.gson.JsonParser
 import data.AptDataRepo
+import data.GameDataRepo
+import data.parser.ExtraStat
+import data.parser.parseExtraStats
+import java.nio.file.Files
+import kotlin.io.path.writeText
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -113,6 +118,49 @@ class StatPatcherTest {
     }
 
     @Test
+    fun `collects every localized matcher set with matching negate`() {
+        val extraStat = extraStat(
+            """
+            [
+              {
+                "refName": "Spell critical chance",
+                "type": "DEFAULT",
+                "resolver": "MERGE",
+                "en": [
+                  {"string": "increased spell critical chance"},
+                  {"string": "reduced spell critical chance", "negate": true}
+                ],
+                "cns": [
+                  [
+                    {"string": "提高一"},
+                    {"string": "降低一", "negate": true}
+                  ],
+                  [
+                    {"string": "提高二"},
+                    {"string": "降低二", "negate": true}
+                  ]
+                ]
+              }
+            ]
+            """.trimIndent()
+        )
+        val negativeStat = stat(
+            ref = "Spell critical chance",
+            tradeType = "explicit",
+            matcherString = "reduced spell critical chance",
+            negate = true
+        )
+
+        val (matcherNames, advancedNames) = StatPatcher.collectExtraStatTranslations(
+            listOf(extraStat),
+            negativeStat.matchers.single()
+        )
+
+        assertEquals(setOf("降低一", "降低二"), matcherNames)
+        assertEquals(emptySet(), advancedNames)
+    }
+
+    @Test
     fun `rejects a replacement without a matcher translation`() {
         val stat = stat(
             ref = "Untranslated stat",
@@ -182,12 +230,14 @@ class StatPatcherTest {
         ref: String,
         tradeType: String,
         matcherString: String = "same matcher",
-        advanced: String? = null
+        advanced: String? = null,
+        negate: Boolean = false
     ): AptDataRepo.Stat {
+        val negateJson = if (negate) ", \"negate\": true" else ""
         val matcher = if (advanced == null) {
-            "{\"string\": \"$matcherString\"}"
+            "{\"string\": \"$matcherString\"$negateJson}"
         } else {
-            "{\"string\": \"$matcherString\", \"advanced\": \"$advanced\"}"
+            "{\"string\": \"$matcherString\", \"advanced\": \"$advanced\"$negateJson}"
         }
         val rawData = JsonParser.parseString(
             """
@@ -200,5 +250,18 @@ class StatPatcherTest {
             """.trimIndent()
         ).asJsonObject
         return AptDataRepo.Stat(ref, rawData)
+    }
+
+    private fun extraStat(content: String): ExtraStat {
+        val file = Files.createTempFile("extra-stats-patcher-test", ".json")
+        try {
+            file.writeText(content)
+            return parseExtraStats(
+                GameDataRepo.GameDataMapper("", "", "", "", ""),
+                file.toFile()
+            ).single()
+        } finally {
+            Files.deleteIfExists(file)
+        }
     }
 }

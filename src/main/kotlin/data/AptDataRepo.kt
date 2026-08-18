@@ -88,6 +88,9 @@ object AptDataRepo {
             val advanced: String?,
             val rawData: JsonObject,
         ) {
+            val negate: Boolean
+                get() = rawData["negate"]?.asBoolean ?: false
+
             fun updateString(newString: String) {
                 rawData.addProperty("string", newString)
             }

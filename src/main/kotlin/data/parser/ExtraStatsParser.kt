@@ -37,7 +37,7 @@ enum class Type {
 
 data class Text(
     val string: String,
-    val advanced: String?,
+    val advanced: String? = null,
 )
 
 data class ExtraStat private constructor(
@@ -46,10 +46,17 @@ data class ExtraStat private constructor(
     @SerializedName("resolver")
     private val _resolver: Resolver?,
     val en: List<Text>,
-    val cn: List<Text>
+    @SerializedName("cn")
+    val cn: List<Text>?,
+    @SerializedName("cns")
+    val cns: List<List<Text>>?,
 ) {
     val resolver: Resolver
         get() = _resolver ?: Resolver.FLATTEN
+
+    /** Old `cn` entries are one translation set; `cns` contains multiple sets. */
+    val translationSets: List<List<Text>>
+        get() = cns?.takeIf { it.isNotEmpty() } ?: listOfNotNull(cn)
 }
 
 private fun String.safeFormat(vararg args: String): String {
@@ -78,11 +85,19 @@ private fun resolvePlaceholder(stat: ExtraStat, items: Map<FormatArgs, FormatArg
                             advanced = text.advanced?.safeFormat(enName.advanced)
                         )
                     },
-                    cn = stat.cn.map { text ->
+                    cn = stat.cn?.map { text ->
                         text.copy(
                             string = text.string.safeFormat(cnName.string),
                             advanced = text.advanced?.safeFormat(cnName.advanced)
                         )
+                    },
+                    cns = stat.cns?.map { texts ->
+                        texts.map { text ->
+                            text.copy(
+                                string = text.string.safeFormat(cnName.string),
+                                advanced = text.advanced?.safeFormat(cnName.advanced)
+                            )
+                        }
                     }
                 )
             }
@@ -100,12 +115,22 @@ private fun resolvePlaceholder(stat: ExtraStat, items: Map<FormatArgs, FormatArg
                             )
                         }
                     },
-                    cn = stat.cn.flatMap { text ->
+                    cn = stat.cn?.flatMap { text ->
                         items.values.map { cnName ->
                             text.copy(
                                 string = text.string.safeFormat(cnName.string),
                                 advanced = text.advanced?.safeFormat(cnName.advanced)
                             )
+                        }
+                    },
+                    cns = stat.cns?.map { texts ->
+                        texts.flatMap { text ->
+                            items.values.map { cnName ->
+                                text.copy(
+                                    string = text.string.safeFormat(cnName.string),
+                                    advanced = text.advanced?.safeFormat(cnName.advanced)
+                                )
+                            }
                         }
                     }
                 )
@@ -140,7 +165,12 @@ fun parseExtraStats(mapper: GameDataRepo.GameDataMapper, file: File): List<Extra
                     .toArgs()
                 Type.CLUSTER_JEWEL -> {
                     val resolvedStats = stat.en.mapIndexed { index, text ->
-                        stat.copy(refName = text.string, en = listOf(text), cn = listOf(stat.cn[index]))
+                        stat.copy(
+                            refName = text.string,
+                            en = listOf(text),
+                            cn = stat.translationSets.firstOrNull()?.getOrNull(index)?.let(::listOf),
+                            cns = null
+                        )
                     }
                     result.addAll(resolvedStats)
                     return@forEach

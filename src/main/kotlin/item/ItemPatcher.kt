@@ -26,7 +26,13 @@ object ItemPatcher {
         if (cnName == null) {
             println("Missing $refName")
         }
-        return copy(rawData = rawData.deepCopy()).updateName(cnName ?: name)
+        val translatedName = cnName ?: name
+        val normalizedName = if (rawData["namespace"]?.asString == "AREA") {
+            translatedName.trim()
+        } else {
+            translatedName
+        }
+        return copy(rawData = rawData.deepCopy()).updateName(normalizedName)
     }
 
     fun patch(mappers: List<GameDataRepo.GameDataMapper>) {

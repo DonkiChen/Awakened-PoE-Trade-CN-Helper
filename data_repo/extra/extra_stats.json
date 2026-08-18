@@ -2806,6 +2806,40 @@
     ]
   },
   {
+    "refName": "#% increased Spell Critical Strike Chance",
+    "type": "DEFAULT",
+    "resolver": "MERGE",
+    "en": [
+      {
+        "string": "#% increased Spell Critical Strike Chance"
+      },
+      {
+        "string": "#% reduced Spell Critical Strike Chance",
+        "negate": true
+      }
+    ],
+    "cns": [
+      [
+        {
+          "string": "法术暴击几率提高 #%"
+        },
+        {
+          "string": "法术暴击几率降低 #%",
+          "negate": true
+        }
+      ],
+      [
+        {
+          "string": "法术暴击率提高 #%"
+        },
+        {
+          "string": "法术暴击率降低 #%",
+          "negate": true
+        }
+      ]
+    ]
+  },
+  {
     "refName": "#% chance to gain a Power, Frenzy or Endurance Charge on Kill",
     "type": "DEFAULT",
     "resolver": "MERGE",
@@ -3168,6 +3202,74 @@
       {
         "string": "有一个传奇怪物出现在你面前：%s"
       }
+    ]
+  },
+  {
+    "refName": "While a Pinnacle Atlas Boss is in your Presence, #% increased Spell Critical Strike Chance",
+    "type": "DEFAULT",
+    "resolver": "FLATTEN",
+    "en": [
+      {
+        "string": "While a Pinnacle Atlas Boss is in your Presence, #% increased Spell Critical Strike Chance"
+      },
+      {
+        "string": "While a Pinnacle Atlas Boss is in your Presence, #% reduced Spell Critical Strike Chance",
+        "negate": true
+      }
+    ],
+    "cns": [
+      [
+        {
+          "string": "有一个异界图鉴最终首领出现在你面前：法术暴击几率提高 #%"
+        },
+        {
+          "string": "有一个异界图鉴最终首领出现在你面前：法术暴击几率降低 #%",
+          "negate": true
+        }
+      ],
+      [
+        {
+          "string": "有一个异界图鉴最终首领出现在你面前：法术暴击率提高 #%"
+        },
+        {
+          "string": "有一个异界图鉴最终首领出现在你面前：法术暴击率降低 #%",
+          "negate": true
+        }
+      ]
+    ]
+  },
+  {
+    "refName": "While a Unique Enemy is in your Presence, #% increased Spell Critical Strike Chance",
+    "type": "DEFAULT",
+    "resolver": "FLATTEN",
+    "en": [
+      {
+        "string": "While a Unique Enemy is in your Presence, #% increased Spell Critical Strike Chance"
+      },
+      {
+        "string": "While a Unique Enemy is in your Presence, #% reduced Spell Critical Strike Chance",
+        "negate": true
+      }
+    ],
+    "cns": [
+      [
+        {
+          "string": "有一个传奇怪物出现在你面前：法术暴击几率提高 #%"
+        },
+        {
+          "string": "有一个传奇怪物出现在你面前：法术暴击几率降低 #%",
+          "negate": true
+        }
+      ],
+      [
+        {
+          "string": "有一个传奇怪物出现在你面前：法术暴击率提高 #%"
+        },
+        {
+          "string": "有一个传奇怪物出现在你面前：法术暴击率降低 #%",
+          "negate": true
+        }
+      ]
     ]
   },
   {

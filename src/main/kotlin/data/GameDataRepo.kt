@@ -209,7 +209,7 @@ object GameDataRepo {
          * 手动维护的数据
          */
         val extraStats by lazy {
-            parseExtraStats(this@GameDataMapper, extraStatsFile).associateBy { it.refName.uppercase() }
+            parseExtraStats(this@GameDataMapper, extraStatsFile).groupBy { it.refName.uppercase() }
         }
 
         private val rawSourceStatsFromStatDescriptions by lazy {
