@@ -5,6 +5,7 @@ import com.google.gson.JsonObject
 import data.AptDataRepo
 import data.GameDataRepo
 import data.parser.ExtraStat
+import util.removeMarkup
 import java.io.File
 
 
@@ -49,7 +50,9 @@ object StatPatcher {
     private fun specialFix(text: String): String {
         // 有些词缀在换行前会有空格, 例如: 以阿华纳（阿华纳 - 夏巴夸亚）的名义用 # 名祭品之血浸染 \n范围内的天赋被瓦尔抑制
         // 这里处理一下
-        return text.replace(Regex(" +\n"), "\n")
+        return text
+            .removeMarkup()
+            .replace(Regex(" +\n"), "\n")
     }
 
     private fun createCombinations(
@@ -161,9 +164,9 @@ object StatPatcher {
             }
             replaceMatchers(matchers.map { matcher ->
                 matcher.rawData.deepCopy().also { rawData ->
-                    rawData.addProperty("string", translatedName)
+                    rawData.addProperty("string", specialFix(translatedName))
                     if (rawData.has("advanced")) {
-                        rawData.addProperty("advanced", translatedName + tierText)
+                        rawData.addProperty("advanced", specialFix(translatedName + tierText))
                     }
                 }
             })

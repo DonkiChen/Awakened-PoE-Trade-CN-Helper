@@ -155,6 +155,10 @@ object GameDataRepo {
                 .toMap()
         }
 
+        val mercenaryBuilds by lazy {
+            parseTableDataToTextMapper<BaseTableItem>("MercenaryBuilds.json")
+        }
+
         val betrayalNpcs by lazy {
             parseTableDataToTextMapper<BaseTableItem>("NPCs.json") {
                 it.id.startsWith("Metadata/Monsters/LeagueBetrayal/Betrayal")

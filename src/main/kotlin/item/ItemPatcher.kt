@@ -2,6 +2,7 @@ package item
 
 import data.AptDataRepo
 import data.GameDataRepo
+import util.removeMarkup
 import java.io.File
 
 object ItemPatcher {
@@ -26,7 +27,7 @@ object ItemPatcher {
         if (cnName == null) {
             println("Missing $refName")
         }
-        val translatedName = cnName ?: name
+        val translatedName = (cnName ?: name).removeMarkup()
         val normalizedName = if (rawData["namespace"]?.asString == "AREA") {
             translatedName.trim()
         } else {
@@ -43,7 +44,7 @@ object ItemPatcher {
                         val candidates = if (item.rawData["namespace"]?.asString == "AREA") {
                             listOf(mapper.worldAreas, mapper.achievementItems, extraAreaNames)
                         } else {
-                            listOf(mapper.baseItems, mapper.activeSkills, mapper.words, mapper.monsters)
+                            listOf(mapper.baseItems, mapper.activeSkills, mapper.words, mapper.monsters, mapper.mercenaryBuilds)
                         }
                         item.translate(candidates)
                     }

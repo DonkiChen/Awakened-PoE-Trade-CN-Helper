@@ -158,6 +158,13 @@
       "columns": [
         "Name"
       ]
+    },
+    {
+      "name": "MercenaryBuilds",
+      "columns": [
+        "Id",
+        "Name"
+      ]
     }
   ]
 }
