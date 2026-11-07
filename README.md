@@ -10,7 +10,7 @@
 - 从 PoE 游戏文件中导出词缀描述、物品名称、技能名称等数据。
 - 根据游戏数据中的 ID 和名称建立翻译映射，减少手工维护翻译表的工作量。
 - 翻译 APT 的物品数据和词缀数据，同时尽量保留原始 NDJSON 结构。
-- 支持通过多个数据源生成映射，具体使用哪些数据源由维护者手动选择。
+- 支持通过多个数据源生成映射；当前使用的数据源和目标语言在 `Main.kt` 中配置。
 
 ## 工作流程
 
@@ -18,13 +18,13 @@
 PoE 游戏安装目录
         |
         v
-poe-dat-viewer 导出游戏数据
+scripts/build_and_export.bat 导出游戏数据
         |
         v
 data_repo/exported/<data-source>/{files,tables}
         |
         v
-Main.kt 生成英文到目标语言的映射
+scripts/generate_translations.bat（Gradle build + Main.kt）
         |
         v
 APT renderer/public/data/zh_CN/{items,stats}.ndjson
@@ -33,7 +33,7 @@ APT renderer/public/data/zh_CN/{items,stats}.ndjson
 ## 前置要求
 
 - Git
-- JDK（项目使用 JVM 8 toolchain）
+- JDK（Gradle Wrapper 为 8.5；Kotlin 使用 JVM 8 toolchain）
 - Node.js `>= 20`
 - Windows PowerShell（导出脚本使用 Windows 批处理和 PowerShell）
 - 已安装 Path of Exile 1，并能够访问需要导出的游戏数据
@@ -42,18 +42,13 @@ Node.js `>= 20` 是 `poe-dat-viewer/lib` 当前依赖声明的最低版本。项
 
 ## 快速开始
 
-以下命令均以 `Awakened-PoE-Trade-CN-Helper` 为当前工作目录。首次克隆时建议递归初始化子模块：
-
-```bash
-git clone --recurse-submodules <repository-url>
-cd Awakened-PoE-Trade-Simplified-Chinese/Awakened-PoE-Trade-CN-Helper
-```
-
-如果仓库已经克隆完成：
+首次克隆主仓时使用 `--recurse-submodules`，确保一并获取 `poe-dat-viewer`。如果主仓已经克隆，在主仓根目录初始化子模块：
 
 ```bash
 git submodule update --init --recursive
 ```
+
+除子模块初始化命令外，以下操作均在 `Awakened-PoE-Trade-CN-Helper` 根目录执行。
 
 ### 1. 配置游戏目录
 
@@ -66,8 +61,8 @@ set "TENCENT_GAME_PATH=C:\Program Files (x86)\流放之路(511)"
 
 导出配置模板如下：
 
-- [intl_config.json.template](./data_repo/exported/intl_config.template.json)
-- [tencent_config.json.template](./data_repo/exported/tencent_config.template.json)
+- [intl_config.template.json](./data_repo/exported/intl_config.template.json)
+- [tencent_config.template.json](./data_repo/exported/tencent_config.template.json)
 
 脚本会根据模板生成各数据源目录中的 `config.json`。生成的配置属于本地环境配置，不要直接复制其他人的路径。
 
@@ -79,25 +74,20 @@ set "TENCENT_GAME_PATH=C:\Program Files (x86)\流放之路(511)"
 .\scripts\build_and_export.bat
 ```
 
-仅检查发布工具、配置和补丁包匹配时，可执行 `.\scripts\build_and_export.bat --check`；该模式不会修改游戏文件。
+仅检查补丁器发布、配置模板文件是否存在及补丁包配对时，可执行 `.\scripts\build_and_export.bat --check`；该模式会发布补丁器，但会跳过游戏文件修改和数据导出。
 
 脚本会自动编译补丁器和 `poe-dat-viewer`，根据 ZIP 配对选择可用的数据源，完成补丁、导出和还原流程。国服会连续导出还原数据到 `tencent`，再导出功能补丁数据到 `tencent_amsco2`，最后还原游戏。生成的 `config.json` 会保留在各数据源目录中，但不会提交到 Git。
 
 ### 3. 选择 Main.kt 使用的数据
 
-打开 [`src/main/kotlin/Main.kt`](./src/main/kotlin/Main.kt)，手动配置一个或多个 `GameDataRepo.prepareMapper(...)`。
+打开 [`src/main/kotlin/Main.kt`](./src/main/kotlin/Main.kt)，通过一个或多个 `GameDataRepo.prepareMapper(...)` 配置本次生成使用的数据源和目标语言。当前代码配置如下：
 
-当前默认配置为使用 `intl_amsco2` 数据源，并以繁体中文作为目标语言：
-
-```kotlin
-GameDataRepo.prepareMapper(
-    sourceExportDirName = "intl_amsco2",
-    targetExportDirName = "intl_amsco2",
-    targetLanguageKey = "Traditional Chinese",
-    sourceStatUnlabelledLanguage = "English",
-    targetStatUnlabelledLanguage = "English"
-)
-```
+| 源数据目录 | 目标数据目录 | 目标语言 | 无语言标记的目标 stat 语言 |
+| --- | --- | --- | --- |
+| `intl_poedb` | `intl_poedb` | `Traditional Chinese` | `English` |
+| `intl_amsco2` | `intl_amsco2` | `Traditional Chinese` | `English` |
+| `tencent` | `tencent` | `Simplified Chinese` | `English` |
+| `intl_amsco2` | `tencent_amsco2` | `Simplified Chinese` | `Simplified Chinese` |
 
 这几个参数的含义如下：
 
@@ -105,21 +95,9 @@ GameDataRepo.prepareMapper(
 - `targetExportDirName`：`data_repo/exported` 下提供目标 table 和 stat 描述的数据目录名。
 - `targetLanguageKey`：目标数据中的语言 key，必须与 `config.json` 的 `translations` 配置一致。
 - `sourceStatUnlabelledLanguage`：源 stat 描述中没有 `lang` 标记的内容所属语言，通常为 `English`。
-- `targetStatUnlabelledLanguage`：目标 stat 描述中没有 `lang` 标记的内容所属语言。国际服通常为 `English`，国服中文-only 导出通常为 `Simplified Chinese`。
+- `targetStatUnlabelledLanguage`：目标 stat 描述中没有 `lang` 标记的内容所属语言。当前 `tencent` 数据开头包含无标记英文内容，因此设为 `English`；`tencent_amsco2` 的无标记 stat 内容为简体中文，因此设为 `Simplified Chinese`。
 
-如果需要生成国服简体中文数据，需要确保 `intl_amsco2` 和 `tencent_amsco2` 数据已经导出，并保留类似下面的 mapper：
-
-```kotlin
-GameDataRepo.prepareMapper(
-    sourceExportDirName = "intl_amsco2",
-    targetExportDirName = "tencent_amsco2",
-    targetLanguageKey = "Simplified Chinese",
-    sourceStatUnlabelledLanguage = "English",
-    targetStatUnlabelledLanguage = "Simplified Chinese"
-)
-```
-
-如果需要同时使用多个目标数据源，可以保留多个 `prepareMapper(...)` 调用；每个 mapper 可以独立指定目标语言和 stat 默认语言。
+当前 `Main.kt` 同时配置国际服 `Traditional Chinese` 语言键和国服 `Simplified Chinese` 语言键的数据。调整数据源时，请确认相应的导出目录已生成，并为每个 mapper 设置正确的语言参数。
 
 ### 4. 构建并生成翻译
 
@@ -129,7 +107,7 @@ GameDataRepo.prepareMapper(
 .\scripts\generate_translations.bat
 ```
 
-脚本会调用 Gradle 的 `generateTranslations` 任务，自动执行项目构建和 `Main.kt`，无需在 IntelliJ IDEA 中手动运行。任务会以辅助工具根目录作为工作目录，因此相对数据路径和 APT 输出路径均可正确解析。也可以在辅助工具根目录直接运行：
+脚本会调用 Gradle 的 `generateTranslations` 任务。该任务先执行 `build`，再运行 `Main.kt`，无需在 IntelliJ IDEA 中手动运行；工作目录为辅助工具根目录，因此相对数据路径可以正确解析。此脚本只构建并生成翻译，不会自动执行前一步的游戏数据导出。也可以在辅助工具根目录直接运行：
 
 ```powershell
 .\gradlew.bat generateTranslations
@@ -162,8 +140,13 @@ GameDataRepo.prepareMapper(
 ├── data_repo/
 │   ├── exported/   # 各数据源的配置和本地导出结果
 │   └── extra/      # 手工补充的词缀映射
+├── scripts/        # 数据导出、翻译生成脚本及补丁包目录
+├── PoePatcherCli/  # 游戏补丁工具
 ├── poe-dat-viewer/ # 游戏数据导出工具，Git submodule
+├── trade_data/     # 从 trade 拉取的 en/cn JSON 数据
+├── gradle/wrapper/ # Gradle Wrapper 配置
 ├── build.gradle.kts
+├── settings.gradle.kts
 └── gradlew.bat
 ```
 
@@ -175,17 +158,22 @@ GameDataRepo.prepareMapper(
 - `build_and_export.bat` 依赖补丁 ZIP 文件名匹配脚本中的规则；如果补丁命名发生变化，需要同步更新脚本。
 - `Main.kt` 当前需要手动选择要使用的数据源、目标目录和目标语言。
 - 生成过程依赖具体游戏版本；如果导出的游戏数据与 APT 当前数据版本不匹配，可能出现缺少翻译或名称无法匹配的情况。
-- `Main.kt` 的生成流程需要先完成游戏数据导出，再运行 `scripts/generate_translations.bat`。
 
 ## 开发与验证
 
-在辅助工具根目录执行：
+在辅助工具根目录执行基础构建和检查：
 
 ```powershell
 .\gradlew.bat build
 ```
 
-如修改了数据导出流程，请在构建前重新执行 `.\scripts\build_and_export.bat`，并检查生成的 `items.ndjson` 和 `stats.ndjson` 是否包含预期翻译。
+`build` 只编译项目并运行配置的检查，不会执行 `Main.kt`。要验证翻译生成流程，请确保游戏数据已导出，然后运行：
+
+```powershell
+.\scripts\generate_translations.bat
+```
+
+该脚本会执行 `build` 并运行 `Main.kt`，生成的中文数据会覆盖 `renderer/public/data/zh_CN/` 中的文件。如修改了数据导出流程，先运行 `scripts/build_and_export.bat` 完成导出，再运行上述生成脚本，并检查生成的 `items.ndjson` 和 `stats.ndjson` 是否符合预期。
 
 ## 相关项目与致谢
 
