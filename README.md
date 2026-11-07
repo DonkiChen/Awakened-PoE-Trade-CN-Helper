@@ -121,17 +121,19 @@ GameDataRepo.prepareMapper(
 
 如果需要同时使用多个目标数据源，可以保留多个 `prepareMapper(...)` 调用；每个 mapper 可以独立指定目标语言和 stat 默认语言。
 
-### 4. 构建并运行
+### 4. 构建并生成翻译
 
-先构建 Kotlin 项目：
+完成游戏数据导出后，在辅助工具根目录运行：
 
 ```powershell
-.\gradlew.bat build
+.\scripts\generate_translations.bat
 ```
 
-然后在 IntelliJ IDEA 等 Kotlin 开发环境中运行 [`Main.kt`](./src/main/kotlin/Main.kt) 的 `Main.main()`。
+脚本会调用 Gradle 的 `generateTranslations` 任务，自动执行项目构建和 `Main.kt`，无需在 IntelliJ IDEA 中手动运行。任务会以辅助工具根目录作为工作目录，因此相对数据路径和 APT 输出路径均可正确解析。也可以在辅助工具根目录直接运行：
 
-运行 `Main.main()` 时，请将工作目录设置为 `Awakened-PoE-Trade-CN-Helper` 根目录。项目中的数据路径和 APT 输出路径都是相对路径，工作目录错误会导致找不到导出数据或 APT 输入文件。
+```powershell
+.\gradlew.bat generateTranslations
+```
 
 ## 输出文件
 
@@ -173,7 +175,7 @@ GameDataRepo.prepareMapper(
 - `build_and_export.bat` 依赖补丁 ZIP 文件名匹配脚本中的规则；如果补丁命名发生变化，需要同步更新脚本。
 - `Main.kt` 当前需要手动选择要使用的数据源、目标目录和目标语言。
 - 生成过程依赖具体游戏版本；如果导出的游戏数据与 APT 当前数据版本不匹配，可能出现缺少翻译或名称无法匹配的情况。
-- 项目当前没有 Gradle `run` 任务，需要通过 IDE 运行 `Main.main()`。
+- `Main.kt` 的生成流程需要先完成游戏数据导出，再运行 `scripts/generate_translations.bat`。
 
 ## 开发与验证
 
