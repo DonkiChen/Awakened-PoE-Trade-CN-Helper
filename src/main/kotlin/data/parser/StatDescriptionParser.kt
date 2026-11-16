@@ -44,7 +44,8 @@ class ParserContext(private val unlabelledLanguage: String) {
      */
     fun createGameStatDescription(fileName: String): GameStatDescription? {
         return currentId?.let { id ->
-            GameStatDescription(fileName, id, namesByLang.toMap())
+            val fileNameWithoutExt = File(fileName).nameWithoutExtension
+            GameStatDescription(fileNameWithoutExt, id, namesByLang.toMap())
         }
     }
 }
