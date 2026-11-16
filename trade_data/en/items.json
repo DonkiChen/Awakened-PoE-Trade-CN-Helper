@@ -1588,16 +1588,16 @@
           }
         },
         {
-          "type": "Sapphire Ring",
-          "text": "Precursor's Emblem Sapphire Ring",
+          "type": "Topaz Ring",
+          "text": "Precursor's Emblem Topaz Ring",
           "name": "Precursor's Emblem",
           "flags": {
             "unique": true
           }
         },
         {
-          "type": "Topaz Ring",
-          "text": "Precursor's Emblem Topaz Ring",
+          "type": "Sapphire Ring",
+          "text": "Precursor's Emblem Sapphire Ring",
           "name": "Precursor's Emblem",
           "flags": {
             "unique": true
@@ -2520,6 +2520,14 @@
           "type": "Cloth Belt",
           "text": "Unholy Accomplice Cloth Belt",
           "name": "Unholy Accomplice",
+          "flags": {
+            "unique": true
+          }
+        },
+        {
+          "type": "Bone Ring",
+          "text": "Unwilling Embrace Bone Ring",
+          "name": "Unwilling Embrace",
           "flags": {
             "unique": true
           }
@@ -5247,8 +5255,8 @@
         },
         {
           "type": "Sadist Garb",
-          "text": "Doppelgänger Guise Sadist Garb",
-          "name": "Doppelgänger Guise",
+          "text": "Doppelg\u00e4nger Guise Sadist Garb",
+          "name": "Doppelg\u00e4nger Guise",
           "flags": {
             "unique": true
           }
@@ -5902,6 +5910,14 @@
           }
         },
         {
+          "type": "Exquisite Leather",
+          "text": "Hide of the Vendigo Exquisite Leather",
+          "name": "Hide of the Vendigo",
+          "flags": {
+            "unique": true
+          }
+        },
+        {
           "type": "Soldier Helmet",
           "text": "Honourhome Soldier Helmet",
           "name": "Honourhome",
@@ -6421,6 +6437,14 @@
           }
         },
         {
+          "type": "Twilight Regalia",
+          "text": "Mantle of Dreams Twilight Regalia",
+          "name": "Mantle of Dreams",
+          "flags": {
+            "unique": true
+          }
+        },
+        {
           "type": "Legion Boots",
           "text": "March of the Legion Legion Boots",
           "name": "March of the Legion",
@@ -6649,6 +6673,14 @@
           "type": "Eelskin Boots",
           "text": "Orbala's Stand Eelskin Boots",
           "name": "Orbala's Stand",
+          "flags": {
+            "unique": true
+          }
+        },
+        {
+          "type": "Walnut Spirit Shield",
+          "text": "Ordered Fate Walnut Spirit Shield",
+          "name": "Ordered Fate",
           "flags": {
             "unique": true
           }
@@ -8361,6 +8393,14 @@
           "type": "Bronzescale Gauntlets",
           "text": "Vaal Caress Bronzescale Gauntlets",
           "name": "Vaal Caress",
+          "flags": {
+            "unique": true
+          }
+        },
+        {
+          "type": "Callous Mask",
+          "text": "Veil of Flesh Callous Mask",
+          "name": "Veil of Flesh",
           "flags": {
             "unique": true
           }
@@ -10467,6 +10507,12 @@
           "type": "Lightless Astrolabe"
         },
         {
+          "type": "Feral Astrolabe"
+        },
+        {
+          "type": "Immortal Astrolabe"
+        },
+        {
           "type": "Fungal Astrolabe"
         },
         {
@@ -10483,6 +10529,9 @@
         },
         {
           "type": "Fruiting Astrolabe"
+        },
+        {
+          "type": "Royal Astrolabe"
         },
         {
           "type": "Timeless Astrolabe"
@@ -10605,7 +10654,7 @@
           "type": "Kalguuran Delirium Orb"
         },
         {
-          "type": "Skittering Delirium Orb"
+          "type": "Threaded Delirium Orb"
         },
         {
           "type": "Primal Delirium Orb"
@@ -11073,6 +11122,9 @@
           "type": "Deafening Essence of Torment"
         },
         {
+          "type": "Essence of Trickery"
+        },
+        {
           "type": "Whispering Essence of Woe"
         },
         {
@@ -11427,7 +11479,7 @@
           "type": "Maven's Chisel of Procurement"
         },
         {
-          "type": "Maven's Chisel of Scarabs"
+          "type": "Maven's Chisel of Threads"
         },
         {
           "type": "Divine Orb"
@@ -11550,6 +11602,9 @@
           "type": "Veiled Scarab"
         },
         {
+          "type": "Frayed Thread"
+        },
+        {
           "type": "Engineer's Orb"
         },
         {
@@ -11607,13 +11662,16 @@
           "type": "Coin of Desecration"
         },
         {
-          "type": "Coin of Knowledge"
+          "type": "Soul Core of Instability"
         },
         {
-          "type": "Coin of Skill"
+          "type": "Soul Core of Intellect"
         },
         {
-          "type": "Coin of Power"
+          "type": "Soul Core of Finesse"
+        },
+        {
+          "type": "Soul Core of Might"
         },
         {
           "type": "Memory of Trauma"
@@ -11650,6 +11708,9 @@
         },
         {
           "type": "Vaal Enshrouding Crystal"
+        },
+        {
+          "type": "Afarud Enshrouding Crystal"
         },
         {
           "type": "Templar Enshrouding Crystal"
@@ -11824,6 +11885,9 @@
         },
         {
           "type": "Singular Scouting Report"
+        },
+        {
+          "type": "Cryptic Astrolabe"
         },
         {
           "type": "Merrick's Ducat"
@@ -12081,7 +12145,43 @@
           "type": "Alchemical Chalice"
         },
         {
+          "type": "Allflame Ember of the Multitude"
+        },
+        {
+          "type": "Allflame Ember of Kulemak"
+        },
+        {
+          "type": "Allflame Ember of the Ethereal"
+        },
+        {
+          "type": "Allflame Ember of the Cloister"
+        },
+        {
+          "type": "Royal Visage"
+        },
+        {
           "type": "Crescent Splinter"
+        },
+        {
+          "type": "Allflame Ember of the Gilded"
+        },
+        {
+          "type": "Allflame Ember of Flesh"
+        },
+        {
+          "type": "Allflame Ember of the Divine"
+        },
+        {
+          "type": "Allflame Ember of Propagation"
+        },
+        {
+          "type": "Allflame Ember of Resplendence"
+        },
+        {
+          "type": "Allflame Ember of Toads"
+        },
+        {
+          "type": "Allflame Ember of the Wildwood"
         },
         {
           "type": "Primordial Fragment"
@@ -12153,6 +12253,11 @@
           "disc": "scrying_orb"
         },
         {
+          "type": "15108",
+          "text": "Scrying Orb (Armoury)",
+          "disc": "scrying_orb"
+        },
+        {
           "type": "15595",
           "text": "Scrying Orb (Primordial Blocks)",
           "disc": "scrying_orb"
@@ -12168,8 +12273,23 @@
           "disc": "scrying_orb"
         },
         {
+          "type": "17533",
+          "text": "Scrying Orb (Wasteland)",
+          "disc": "scrying_orb"
+        },
+        {
           "type": "17684",
           "text": "Scrying Orb (Crystal Ore)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "18545",
+          "text": "Scrying Orb (Underground Sea)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "18547",
+          "text": "Scrying Orb (Carcass)",
           "disc": "scrying_orb"
         },
         {
@@ -12183,8 +12303,18 @@
           "disc": "scrying_orb"
         },
         {
+          "type": "19828",
+          "text": "Scrying Orb (Pen)",
+          "disc": "scrying_orb"
+        },
+        {
           "type": "19999",
           "text": "Scrying Orb (Mesa)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "20216",
+          "text": "Scrying Orb (Underground River)",
           "disc": "scrying_orb"
         },
         {
@@ -12193,8 +12323,28 @@
           "disc": "scrying_orb"
         },
         {
+          "type": "2144",
+          "text": "Scrying Orb (Villa)",
+          "disc": "scrying_orb"
+        },
+        {
           "type": "22278",
           "text": "Scrying Orb (Channel)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "22593",
+          "text": "Scrying Orb (Shore)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "2279",
+          "text": "Scrying Orb (Necropolis)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "23253",
+          "text": "Scrying Orb (Bone Crypt)",
           "disc": "scrying_orb"
         },
         {
@@ -12218,6 +12368,11 @@
           "disc": "scrying_orb"
         },
         {
+          "type": "2545",
+          "text": "Scrying Orb (Ancient City)",
+          "disc": "scrying_orb"
+        },
+        {
           "type": "25747",
           "text": "Scrying Orb (Toxic Sewer)",
           "disc": "scrying_orb"
@@ -12230,6 +12385,16 @@
         {
           "type": "26468",
           "text": "Scrying Orb (Overgrown Shrine)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "26732",
+          "text": "Scrying Orb (Overgrown Ruin)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "27716",
+          "text": "Scrying Orb (Sepulchre)",
           "disc": "scrying_orb"
         },
         {
@@ -12343,6 +12508,11 @@
           "disc": "scrying_orb"
         },
         {
+          "type": "36357",
+          "text": "Scrying Orb (Castle Ruins)",
+          "disc": "scrying_orb"
+        },
+        {
           "type": "36556",
           "text": "Scrying Orb (Bazaar)",
           "disc": "scrying_orb"
@@ -12350,6 +12520,11 @@
         {
           "type": "36866",
           "text": "Scrying Orb (Arachnid Nest)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "36946",
+          "text": "Scrying Orb (Mud Geyser)",
           "disc": "scrying_orb"
         },
         {
@@ -12398,6 +12573,11 @@
           "disc": "scrying_orb"
         },
         {
+          "type": "41751",
+          "text": "Scrying Orb (Moon Temple)",
+          "disc": "scrying_orb"
+        },
+        {
           "type": "41763",
           "text": "Scrying Orb (Factory)",
           "disc": "scrying_orb"
@@ -12405,6 +12585,11 @@
         {
           "type": "42115",
           "text": "Scrying Orb (Marshes)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "42556",
+          "text": "Scrying Orb (Waste Pool)",
           "disc": "scrying_orb"
         },
         {
@@ -12420,6 +12605,11 @@
         {
           "type": "43016",
           "text": "Scrying Orb (Burial Chambers)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "43432",
+          "text": "Scrying Orb (Dig)",
           "disc": "scrying_orb"
         },
         {
@@ -12453,6 +12643,21 @@
           "disc": "scrying_orb"
         },
         {
+          "type": "4651",
+          "text": "Scrying Orb (Spider Forest)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "46524",
+          "text": "Scrying Orb (Maze)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "46612",
+          "text": "Scrying Orb (Crimson Temple)",
+          "disc": "scrying_orb"
+        },
+        {
           "type": "47088",
           "text": "Scrying Orb (Port)",
           "disc": "scrying_orb"
@@ -12468,8 +12673,23 @@
           "disc": "scrying_orb"
         },
         {
+          "type": "47897",
+          "text": "Scrying Orb (Defiled Cathedral)",
+          "disc": "scrying_orb"
+        },
+        {
           "type": "48831",
           "text": "Scrying Orb (Lookout)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "49159",
+          "text": "Scrying Orb (Coves)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "49687",
+          "text": "Scrying Orb (Barrows)",
           "disc": "scrying_orb"
         },
         {
@@ -12498,6 +12718,11 @@
           "disc": "scrying_orb"
         },
         {
+          "type": "53075",
+          "text": "Scrying Orb (Scriptorium)",
+          "disc": "scrying_orb"
+        },
+        {
           "type": "53116",
           "text": "Scrying Orb (Dunes)",
           "disc": "scrying_orb"
@@ -12518,6 +12743,11 @@
           "disc": "scrying_orb"
         },
         {
+          "type": "54575",
+          "text": "Scrying Orb (Academy)",
+          "disc": "scrying_orb"
+        },
+        {
           "type": "54757",
           "text": "Scrying Orb (Promenade)",
           "disc": "scrying_orb"
@@ -12525,6 +12755,16 @@
         {
           "type": "5647",
           "text": "Scrying Orb (Tropical Island)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "57536",
+          "text": "Scrying Orb (Racecourse)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "57690",
+          "text": "Scrying Orb (Peninsula)",
           "disc": "scrying_orb"
         },
         {
@@ -12583,6 +12823,11 @@
           "disc": "scrying_orb"
         },
         {
+          "type": "64256",
+          "text": "Scrying Orb (Dungeon)",
+          "disc": "scrying_orb"
+        },
+        {
           "type": "64414",
           "text": "Scrying Orb (Caldera)",
           "disc": "scrying_orb"
@@ -12598,8 +12843,18 @@
           "disc": "scrying_orb"
         },
         {
+          "type": "737",
+          "text": "Scrying Orb (Thicket)",
+          "disc": "scrying_orb"
+        },
+        {
           "type": "7465",
           "text": "Scrying Orb (Arachnid Tomb)",
+          "disc": "scrying_orb"
+        },
+        {
+          "type": "8544",
+          "text": "Scrying Orb (Cursed Crypt)",
           "disc": "scrying_orb"
         },
         {
@@ -13030,6 +13285,14 @@
           }
         },
         {
+          "type": "Basalt Flask",
+          "text": "Dreadmaidens' Sacrament Basalt Flask",
+          "name": "Dreadmaidens' Sacrament",
+          "flags": {
+            "unique": true
+          }
+        },
+        {
           "type": "Ruby Flask",
           "text": "Dying Sun Ruby Flask",
           "name": "Dying Sun",
@@ -13323,6 +13586,9 @@
         },
         {
           "type": "Arcane Cloak"
+        },
+        {
+          "type": "Arcane Link"
         },
         {
           "type": "Arcanist Brand"
@@ -15368,7 +15634,7 @@
         },
         {
           "type": "Summon Chaos Golem",
-          "text": "Summon Chaos Golem of the Maelström",
+          "text": "Summon Chaos Golem of the Maelstr\u00f6m",
           "disc": "alt_y"
         },
         {
@@ -15729,6 +15995,11 @@
         {
           "type": "Eye of Winter",
           "text": "Eye of Winter of Finality",
+          "disc": "alt_x"
+        },
+        {
+          "type": "Fireball",
+          "text": "Fireball of Radiation",
           "disc": "alt_x"
         },
         {
@@ -16302,6 +16573,11 @@
           "disc": "alt_x"
         },
         {
+          "type": "Vaal Fireball",
+          "text": "Vaal Fireball (Fireball of Radiation)",
+          "disc": "alt_x"
+        },
+        {
           "type": "Vaal Firestorm",
           "text": "Vaal Firestorm (Firestorm of Meteors)",
           "disc": "alt_x"
@@ -16456,6 +16732,9 @@
         },
         {
           "type": "Ghastly Eye Jewel"
+        },
+        {
+          "type": "Mycelium Core"
         },
         {
           "type": "Viridian Jewel"
@@ -17387,6 +17666,14 @@
           }
         },
         {
+          "type": "Mycelium Core",
+          "text": "Putrid Seed Mycelium Core",
+          "name": "Putrid Seed",
+          "flags": {
+            "unique": true
+          }
+        },
+        {
           "type": "Viridian Jewel",
           "text": "Quickening Covenant Viridian Jewel",
           "name": "Quickening Covenant",
@@ -18071,16 +18358,13 @@
           "type": "Echo of Loneliness"
         },
         {
-          "type": "Allflame Ember of Kulemak"
-        },
-        {
           "type": "Ancient Reliquary Key"
         },
         {
-          "type": "Allflame Ember of the Ethereal"
+          "type": "Simulacrum"
         },
         {
-          "type": "Simulacrum"
+          "type": "Cursed Poppet"
         },
         {
           "type": "Chayula's Breachstone"
@@ -18287,13 +18571,7 @@
           "type": "Mortal Grief"
         },
         {
-          "type": "Allflame Ember of the Gilded"
-        },
-        {
           "type": "Maven's Invitation: The Atlas"
-        },
-        {
-          "type": "Allflame Ember of Flesh"
         },
         {
           "type": "Mercenary Warrant"
@@ -18311,19 +18589,10 @@
           "type": "Writhing Invitation"
         },
         {
-          "type": "Allflame Ember of Propagation"
-        },
-        {
-          "type": "Allflame Ember of Resplendence"
-        },
-        {
           "type": "An Audience With The King"
         },
         {
           "type": "Blood-filled Vessel"
-        },
-        {
-          "type": "Allflame Ember of Toads"
         },
         {
           "type": "Reverent Reliquary Key"
@@ -18360,9 +18629,6 @@
         },
         {
           "type": "Voidborn Reliquary Key"
-        },
-        {
-          "type": "Allflame Ember of the Wildwood"
         },
         {
           "type": "Nightmare Map"
@@ -18967,6 +19233,36 @@
         },
         {
           "type": "Titanic Scarab of Legend"
+        },
+        {
+          "type": "Abyss Thread"
+        },
+        {
+          "type": "Bestiary Thread"
+        },
+        {
+          "type": "Betrayal Thread"
+        },
+        {
+          "type": "Blight Thread"
+        },
+        {
+          "type": "Breach Thread"
+        },
+        {
+          "type": "Expedition Thread"
+        },
+        {
+          "type": "Incursion Thread"
+        },
+        {
+          "type": "Legion Thread"
+        },
+        {
+          "type": "Ritual Thread"
+        },
+        {
+          "type": "Ultimatum Thread"
         },
         {
           "type": "Inscribed Ultimatum"
@@ -20382,6 +20678,11 @@
           "disc": "uberblighted"
         },
         {
+          "type": "AbyssalTemplar",
+          "text": "Mercenary Warrant (Chaplain of the Well)",
+          "disc": "mercenary_warrant"
+        },
+        {
           "type": "Map",
           "text": "Acton's Nightmare Map",
           "name": "Acton's Nightmare",
@@ -20416,6 +20717,11 @@
         {
           "type": "AurasMinionsTemplarSmiteNoble",
           "text": "Mercenary Warrant (Infamous Warpriest)",
+          "disc": "mercenary_warrant"
+        },
+        {
+          "type": "AurasMinionsTemplarSmiteRuckusNoble",
+          "text": "Mercenary Warrant (Infamous Warpriest of the Ruckus)",
           "disc": "mercenary_warrant"
         },
         {
@@ -20613,8 +20919,8 @@
         },
         {
           "type": "Map",
-          "text": "Maelström of Chaos Map",
-          "name": "Maelström of Chaos",
+          "text": "Maelstr\u00f6m of Chaos Map",
+          "name": "Maelstr\u00f6m of Chaos",
           "disc": "map",
           "flags": {
             "unique": true
@@ -21785,7 +22091,7 @@
           "type": "Ezomyte Staff"
         },
         {
-          "type": "Maelström Staff"
+          "type": "Maelstr\u00f6m Staff"
         },
         {
           "type": "Imperial Staff"
@@ -22282,6 +22588,14 @@
           }
         },
         {
+          "type": "Judgement Staff",
+          "text": "Bane of the Apostate Judgement Staff",
+          "name": "Bane of the Apostate",
+          "flags": {
+            "unique": true
+          }
+        },
+        {
           "type": "Eternal Sword",
           "text": "Beltimber Blade Eternal Sword",
           "name": "Beltimber Blade",
@@ -22482,6 +22796,14 @@
           }
         },
         {
+          "type": "Imbued Wand",
+          "text": "Corpse Rose Imbued Wand",
+          "name": "Corpse Rose",
+          "flags": {
+            "unique": true
+          }
+        },
+        {
           "type": "Jewelled Foil",
           "text": "Cospri's Malice Jewelled Foil",
           "name": "Cospri's Malice",
@@ -22554,8 +22876,8 @@
           }
         },
         {
-          "type": "Maelström Staff",
-          "text": "Disintegrator Maelström Staff",
+          "type": "Maelstr\u00f6m Staff",
+          "text": "Disintegrator Maelstr\u00f6m Staff",
           "name": "Disintegrator",
           "flags": {
             "unique": true
@@ -22650,8 +22972,8 @@
           }
         },
         {
-          "type": "Maelström Staff",
-          "text": "Duskdawn Maelström Staff",
+          "type": "Maelstr\u00f6m Staff",
+          "text": "Duskdawn Maelstr\u00f6m Staff",
           "name": "Duskdawn",
           "flags": {
             "unique": true
@@ -23217,8 +23539,8 @@
         },
         {
           "type": "Gavel",
-          "text": "Mjölner Gavel",
-          "name": "Mjölner",
+          "text": "Mj\u00f6lner Gavel",
+          "name": "Mj\u00f6lner",
           "flags": {
             "unique": true
           }
@@ -23647,8 +23969,8 @@
           }
         },
         {
-          "type": "Maelström Staff",
-          "text": "Replica Duskdawn Maelström Staff",
+          "type": "Maelstr\u00f6m Staff",
+          "text": "Replica Duskdawn Maelstr\u00f6m Staff",
           "name": "Replica Duskdawn",
           "flags": {
             "unique": true
@@ -24172,8 +24494,8 @@
           }
         },
         {
-          "type": "Maelström Staff",
-          "text": "Taryn's Shiver Maelström Staff",
+          "type": "Maelstr\u00f6m Staff",
+          "text": "Taryn's Shiver Maelstr\u00f6m Staff",
           "name": "Taryn's Shiver",
           "flags": {
             "unique": true
@@ -24255,6 +24577,14 @@
           "type": "Fiend Dagger",
           "text": "The Consuming Dark Fiend Dagger",
           "name": "The Consuming Dark",
+          "flags": {
+            "unique": true
+          }
+        },
+        {
+          "type": "Eye Gouger",
+          "text": "The Covetous Dark Eye Gouger",
+          "name": "The Covetous Dark",
           "flags": {
             "unique": true
           }
@@ -24569,6 +24899,14 @@
           "type": "Legion Sword",
           "text": "The Surging Thoughts Legion Sword",
           "name": "The Surging Thoughts",
+          "flags": {
+            "unique": true
+          }
+        },
+        {
+          "type": "Exquisite Blade",
+          "text": "The Sword of Ages Exquisite Blade",
+          "name": "The Sword of Ages",
           "flags": {
             "unique": true
           }
@@ -25374,7 +25712,7 @@
           "type": "Elder-Blessed Retch"
         },
         {
-          "type": "Black Mórrigan"
+          "type": "Black M\u00f3rrigan"
         },
         {
           "type": "Saqawine Rhex"
@@ -25846,6 +26184,9 @@
         },
         {
           "type": "Invading Crustacean"
+        },
+        {
+          "type": "Shield Crab"
         },
         {
           "type": "Bleached Crustacean"
@@ -27359,83 +27700,578 @@
         },
         {
           "type": "AbyssalPlain",
-          "text": "Sandy Seabed Chart (Abyssal Plain)",
-          "disc": "chart_sandy_seabed"
+          "text": "Chart (Abyssal Plain)",
+          "disc": "chart"
         },
         {
           "type": "Anchorfield",
-          "text": "Sandy Seabed Chart (Anchorfield)",
-          "disc": "chart_sandy_seabed"
+          "text": "Chart (Anchorfield)",
+          "disc": "chart"
         },
         {
           "type": "BrineKingsDomain",
-          "text": "Coral Reef Chart (Brine King's Domain)",
-          "disc": "chart_coral_reef"
+          "text": "Chart (Brine King's Domain)",
+          "disc": "chart"
         },
         {
           "type": "ClamInfestedShelf",
-          "text": "Coral Reef Chart (Clam-infested Shelf)",
-          "disc": "chart_coral_reef"
+          "text": "Chart (Clam-infested Shelf)",
+          "disc": "chart"
         },
         {
           "type": "DivingShoals",
-          "text": "Coral Reef Chart (Diving Shoals)",
-          "disc": "chart_coral_reef"
+          "text": "Chart (Diving Shoals)",
+          "disc": "chart"
         },
         {
           "type": "EldritchDepths",
-          "text": "Coral Forest Chart (Eldritch Depths)",
-          "disc": "chart_coral_forest"
+          "text": "Chart (Eldritch Depths)",
+          "disc": "chart"
         },
         {
           "type": "HazardousDepths",
-          "text": "Sandy Seabed Chart (Hazardous Depths)",
-          "disc": "chart_sandy_seabed"
+          "text": "Chart (Hazardous Depths)",
+          "disc": "chart"
         },
         {
           "type": "InfestedBathyspheres",
-          "text": "Sandy Seabed Chart (Infested Bathyspheres)",
-          "disc": "chart_sandy_seabed"
+          "text": "Chart (Infested Bathyspheres)",
+          "disc": "chart"
         },
         {
           "type": "KisharasRest",
-          "text": "Sandy Seabed Chart (Kishara's Rest)",
-          "disc": "chart_sandy_seabed"
+          "text": "Chart (Kishara's Rest)",
+          "disc": "chart"
         },
         {
           "type": "LostRuins",
-          "text": "Coral Forest Chart (Lost Ruins)",
-          "disc": "chart_coral_forest"
+          "text": "Chart (Lost Ruins)",
+          "disc": "chart"
         },
         {
           "type": "PelagicAbyss",
-          "text": "Coral Forest Chart (Pelagic Abyss)",
-          "disc": "chart_coral_forest"
+          "text": "Chart (Pelagic Abyss)",
+          "disc": "chart"
         },
         {
           "type": "SeafloorRidges",
-          "text": "Coral Reef Chart (Seafloor Ridges)",
-          "disc": "chart_coral_reef"
+          "text": "Chart (Seafloor Ridges)",
+          "disc": "chart"
         },
         {
           "type": "SeaPillars",
-          "text": "Coral Forest Chart (Sea Pillars)",
-          "disc": "chart_coral_forest"
+          "text": "Chart (Sea Pillars)",
+          "disc": "chart"
         },
         {
           "type": "SunkenTotems",
-          "text": "Coral Reef Chart (Sunken Totems)",
-          "disc": "chart_coral_reef"
+          "text": "Chart (Sunken Totems)",
+          "disc": "chart"
         },
         {
           "type": "UnderseaGroves",
-          "text": "Coral Forest Chart (Undersea Groves)",
-          "disc": "chart_coral_forest"
+          "text": "Chart (Undersea Groves)",
+          "disc": "chart"
         },
         {
           "type": "UnremarkableSeabed",
-          "text": "Sandy Seabed Chart (Unremarkable Seabed)",
-          "disc": "chart_sandy_seabed"
+          "text": "Chart (Unremarkable Seabed)",
+          "disc": "chart"
+        }
+      ]
+    },
+    {
+      "id": "viscera",
+      "label": "Viscera",
+      "entries": [
+        {
+          "type": "Flaming Goat Hoof"
+        },
+        {
+          "type": "Primate Foot"
+        },
+        {
+          "type": "Al-Hezmin's Head"
+        },
+        {
+          "type": "Bandit Witch's Head"
+        },
+        {
+          "type": "Galvanic Tentacle"
+        },
+        {
+          "type": "Bear Head"
+        },
+        {
+          "type": "Boar Head"
+        },
+        {
+          "type": "Stag Head"
+        },
+        {
+          "type": "Spider Queen's Head"
+        },
+        {
+          "type": "Templar Skull"
+        },
+        {
+          "type": "Bloodied Arm"
+        },
+        {
+          "type": "Prosthetic Leg"
+        },
+        {
+          "type": "Champion's Banner"
+        },
+        {
+          "type": "Baran's Head"
+        },
+        {
+          "type": "Gladiator's Heart"
+        },
+        {
+          "type": "Chimeral Eye"
+        },
+        {
+          "type": "Arachnid Fangs"
+        },
+        {
+          "type": "Osseous Scythe"
+        },
+        {
+          "type": "Chitinous Leg"
+        },
+        {
+          "type": "Necromancer's Mask"
+        },
+        {
+          "type": "Bonestalker's Ribcage"
+        },
+        {
+          "type": "Lithic Haunches"
+        },
+        {
+          "type": "Hollowed Skull"
+        },
+        {
+          "type": "Pit Fighter's Helm"
+        },
+        {
+          "type": "Sea Witch's Tentacle"
+        },
+        {
+          "type": "Warden's Arm"
+        },
+        {
+          "type": "Calcified Leg"
+        },
+        {
+          "type": "Cutthroat's Head"
+        },
+        {
+          "type": "Aristocrat's Torso"
+        },
+        {
+          "type": "Soldier's Head"
+        },
+        {
+          "type": "Heretical Tome"
+        },
+        {
+          "type": "Skeletal Warrior's Leg"
+        },
+        {
+          "type": "Gelid Fangs"
+        },
+        {
+          "type": "Chimera's Head"
+        },
+        {
+          "type": "Coagulated Essence"
+        },
+        {
+          "type": "Constrictor's Head"
+        },
+        {
+          "type": "Coven Queen's Crown"
+        },
+        {
+          "type": "Swordmaster's Blade"
+        },
+        {
+          "type": "Hag's Head"
+        },
+        {
+          "type": "Inquisitor's Head"
+        },
+        {
+          "type": "Witch's Head"
+        },
+        {
+          "type": "Scout's Bow"
+        },
+        {
+          "type": "Hag's Stomach"
+        },
+        {
+          "type": "Despot's Fist"
+        },
+        {
+          "type": "Flayed Arm"
+        },
+        {
+          "type": "Drox's Head"
+        },
+        {
+          "type": "Crustacean's Claw"
+        },
+        {
+          "type": "Eater of Worlds' Head"
+        },
+        {
+          "type": "Scarecrow's Pitchfork"
+        },
+        {
+          "type": "Elder's Head"
+        },
+        {
+          "type": "Enslaver's Head"
+        },
+        {
+          "type": "Eradicator's Head"
+        },
+        {
+          "type": "Mariner's Tricorne"
+        },
+        {
+          "type": "Severed Stinger"
+        },
+        {
+          "type": "Scorched Arm"
+        },
+        {
+          "type": "Skeleton Wheel"
+        },
+        {
+          "type": "Severed Scythe-hand"
+        },
+        {
+          "type": "Desert Queen's Crown"
+        },
+        {
+          "type": "Gemling Torso"
+        },
+        {
+          "type": "Voltaic Skull"
+        },
+        {
+          "type": "General's Head"
+        },
+        {
+          "type": "Golemic Stone"
+        },
+        {
+          "type": "Scholar's Leg"
+        },
+        {
+          "type": "Voltaic Apparatus"
+        },
+        {
+          "type": "Gargantuan Claws"
+        },
+        {
+          "type": "Ornate Torso"
+        },
+        {
+          "type": "Blackened Lungs"
+        },
+        {
+          "type": "Captain's Leg"
+        },
+        {
+          "type": "Pocked Arm"
+        },
+        {
+          "type": "Lunar Bow"
+        },
+        {
+          "type": "Resplendent Sceptre"
+        },
+        {
+          "type": "Molten Core"
+        },
+        {
+          "type": "Armoured Leg"
+        },
+        {
+          "type": "Infested Torso"
+        },
+        {
+          "type": "Vulture's Gut"
+        },
+        {
+          "type": "Hydra's Head"
+        },
+        {
+          "type": "Incarnation of Dread's Head"
+        },
+        {
+          "type": "Incarnation of Fear's Head"
+        },
+        {
+          "type": "Incarnation of Neglect's Cube"
+        },
+        {
+          "type": "Skeletal Archer's Arm"
+        },
+        {
+          "type": "Justicar's Helm"
+        },
+        {
+          "type": "Blazing Skull"
+        },
+        {
+          "type": "Ravenous Skull"
+        },
+        {
+          "type": "Brute's Arm"
+        },
+        {
+          "type": "Bandit Rogue's Head"
+        },
+        {
+          "type": "Totemic Visage"
+        },
+        {
+          "type": "Broken Bust"
+        },
+        {
+          "type": "Crescent Blade"
+        },
+        {
+          "type": "Corrupted Carapace"
+        },
+        {
+          "type": "Inquisitor's Claw"
+        },
+        {
+          "type": "Defaced Bust"
+        },
+        {
+          "type": "Flaming Furnace"
+        },
+        {
+          "type": "Maven's Orrery"
+        },
+        {
+          "type": "Siren's Tentacle"
+        },
+        {
+          "type": "Desert Sword"
+        },
+        {
+          "type": "Minotaur's Head"
+        },
+        {
+          "type": "Chaos Golem's Core"
+        },
+        {
+          "type": "Blackguard's Leg"
+        },
+        {
+          "type": "Nightmarish Wings of Catarina"
+        },
+        {
+          "type": "Nightmarish Book of Depravity"
+        },
+        {
+          "type": "Nightmarish Wings of Lycia"
+        },
+        {
+          "type": "Nightmarish Head of Uhtred"
+        },
+        {
+          "type": "Nightmarish Core of the Unbreakable"
+        },
+        {
+          "type": "Bandit Warrior's Head"
+        },
+        {
+          "type": "Ghostly Claw"
+        },
+        {
+          "type": "Severed Rhoa Head"
+        },
+        {
+          "type": "Overseer's Whip"
+        },
+        {
+          "type": "Spined Claws"
+        },
+        {
+          "type": "Phoenix's Head"
+        },
+        {
+          "type": "Thaumaturge's Head"
+        },
+        {
+          "type": "Engorged Eye"
+        },
+        {
+          "type": "Pocked Leg"
+        },
+        {
+          "type": "Infected Leg"
+        },
+        {
+          "type": "Diseased Wing"
+        },
+        {
+          "type": "Adherent's Crown"
+        },
+        {
+          "type": "Purifier's Head"
+        },
+        {
+          "type": "Ursine Flesh"
+        },
+        {
+          "type": "Conjoined Hound Head"
+        },
+        {
+          "type": "Charred Leg"
+        },
+        {
+          "type": "Noble's Head"
+        },
+        {
+          "type": "Arachnid Egg Sac"
+        },
+        {
+          "type": "Searing Exarch's Descry"
+        },
+        {
+          "type": "Cobra Tail"
+        },
+        {
+          "type": "Scorpion Stinger"
+        },
+        {
+          "type": "Shaper's Head"
+        },
+        {
+          "type": "Flayed Visage"
+        },
+        {
+          "type": "Lion's Claws"
+        },
+        {
+          "type": "Bat's Wings"
+        },
+        {
+          "type": "Sirus' Head"
+        },
+        {
+          "type": "Skeletal Tail"
+        },
+        {
+          "type": "Osseous Talon"
+        },
+        {
+          "type": "Solar Shield"
+        },
+        {
+          "type": "Elemental Essence"
+        },
+        {
+          "type": "Sun-bleached Breastplate"
+        },
+        {
+          "type": "Poacher's Leg"
+        },
+        {
+          "type": "Flesh-fused Lantern"
+        },
+        {
+          "type": "Spectral Hood"
+        },
+        {
+          "type": "Statue Leg"
+        },
+        {
+          "type": "Flaming Ribbon"
+        },
+        {
+          "type": "Voidbearer's Leg"
+        },
+        {
+          "type": "Vendigo Claws"
+        },
+        {
+          "type": "Spiked Carapace"
+        },
+        {
+          "type": "Golden Ankh"
+        },
+        {
+          "type": "Carved Haunches"
+        },
+        {
+          "type": "Dessicated Head"
+        },
+        {
+          "type": "Scholar's Arm"
+        },
+        {
+          "type": "King Crab's Claw"
+        },
+        {
+          "type": "Ancestor's Club"
+        },
+        {
+          "type": "Devourer's Antenna"
+        },
+        {
+          "type": "Skeletal Beast Leg"
+        },
+        {
+          "type": "Distended Stomach"
+        },
+        {
+          "type": "Goatman's Horn"
+        },
+        {
+          "type": "Vaal Appendage"
+        },
+        {
+          "type": "Artificial Appendage"
+        },
+        {
+          "type": "Construct's Head"
+        },
+        {
+          "type": "Venarius' Scripture"
+        },
+        {
+          "type": "Veritania's Head"
+        },
+        {
+          "type": "Smouldering Leg"
+        },
+        {
+          "type": "Templar Banner"
+        },
+        {
+          "type": "Wraith Claws"
+        },
+        {
+          "type": "Smuggler's Hand"
+        },
+        {
+          "type": "Arachnid Leg"
+        },
+        {
+          "type": "Terrifying Maw"
         }
       ]
     }
