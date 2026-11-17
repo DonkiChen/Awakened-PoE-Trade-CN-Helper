@@ -257,7 +257,7 @@ class StatPatcherTest {
         try {
             file.writeText(content)
             return parseExtraStats(
-                GameDataRepo.GameDataMapper("", "", "", "", ""),
+                GameDataRepo.GameDataMapper("", "", "", "", "", ""),
                 file.toFile()
             ).single()
         } finally {
