@@ -28,6 +28,7 @@ object GameDataRepo {
      * @param targetStatUnlabelledLanguage 目标 stat 描述中没有 `lang` 标记的内容所属语言，可根据目标导出分别配置
      */
     fun prepareMapper(
+        id: String,
         sourceExportDirName: String,
         targetExportDirName: String,
         targetLanguageKey: String,
@@ -36,16 +37,19 @@ object GameDataRepo {
     ) {
         _mappers.add(
             GameDataMapper(
-                sourceExportDirName,
-                targetExportDirName,
-                targetLanguageKey,
-                sourceStatUnlabelledLanguage,
-                targetStatUnlabelledLanguage,
+                id = id,
+                sourceExportDirName = sourceExportDirName,
+                targetExportDirName = targetExportDirName,
+                targetLanguageKey = targetLanguageKey,
+                sourceStatUnlabelledLanguage = sourceStatUnlabelledLanguage,
+                targetStatUnlabelledLanguage = targetStatUnlabelledLanguage,
             )
         )
     }
 
     class GameDataMapper(
+        // for debug
+        val id: String,
         private val sourceExportDirName: String,
         private val targetExportDirName: String,
         private val targetLanguageKey: String,

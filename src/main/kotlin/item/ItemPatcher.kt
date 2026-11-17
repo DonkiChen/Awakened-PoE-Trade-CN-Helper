@@ -22,10 +22,13 @@ object ItemPatcher {
         return null
     }
 
-    private fun AptDataRepo.Item.translate(candidates: List<Map<String, String>>): AptDataRepo.Item {
+    private fun AptDataRepo.Item.translate(
+        mapper: GameDataRepo.GameDataMapper,
+        candidates: List<Map<String, String>>
+    ): AptDataRepo.Item {
         val cnName = choose(candidates)
         if (cnName == null) {
-            println("Missing $refName")
+            println("[${mapper.id}] missing $refName")
         }
         val translatedName = (cnName ?: name).removeMarkup()
         val normalizedName = if (rawData["namespace"]?.asString == "AREA") {
@@ -44,9 +47,16 @@ object ItemPatcher {
                         val candidates = if (item.rawData["namespace"]?.asString == "AREA") {
                             listOf(mapper.worldAreas, mapper.achievementItems, extraAreaNames)
                         } else {
-                            listOf(mapper.baseItems, mapper.activeSkills, mapper.words, mapper.monsters, mapper.mercenaryBuilds)
+                            listOf(
+                                mapper.baseItems,
+                                mapper.activeSkills,
+                                mapper.words,
+                                mapper.monsters,
+                                mapper.mercenaryBuilds,
+                                mapper.achievementItems
+                            )
                         }
-                        item.translate(candidates)
+                        item.translate(mapper, candidates)
                     }
                         .distinct()
                         .map { it.rawData.toString() }
