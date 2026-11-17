@@ -156,9 +156,8 @@ object StatPatcher {
             }
 
             val tierText = if (tier != null) {
-                mapper.clientStrings["ModDescriptionLineTier"]
-                    ?.replace("{0}", tier.toString())
-                    ?: error("Missing ClientString: ModDescriptionLineTier")
+                mapper.clientStrings["ModDescriptionLineTier"]!!
+                    .second.text.replace("{0}", tier.toString())
             } else {
                 ""
             }
@@ -180,11 +179,11 @@ object StatPatcher {
             val cnMatcherNames = mutableSetOf<String>()
             val cnAdvancedNames = mutableSetOf<String>()
 
-            if (mapper.statsFromDescriptions[matcher.string.uppercase()] != null) {
-                cnMatcherNames.addAll(mapper.statsFromDescriptions[matcher.string.uppercase()]!!)
+            if (mapper.preferredStats[matcher.string.uppercase()] != null) {
+                cnMatcherNames.addAll(mapper.preferredStats[matcher.string.uppercase()]!!)
             }
-            if (matcher.advanced != null && mapper.statsFromDescriptions[matcher.advanced.uppercase()] != null) {
-                cnAdvancedNames.addAll(mapper.statsFromDescriptions[matcher.advanced.uppercase()]!!)
+            if (matcher.advanced != null && mapper.preferredStats[matcher.advanced.uppercase()] != null) {
+                cnAdvancedNames.addAll(mapper.preferredStats[matcher.advanced.uppercase()]!!)
             }
 
             if (matcher.advanced != null && cnAdvancedNames.isEmpty()) {
@@ -193,8 +192,8 @@ object StatPatcher {
             }
 
             val extraStats = buildList {
-                addAll(mapper.extraStats[refName.uppercase()].orEmpty())
-                addAll(mapper.extraStats[matcher.string.uppercase()].orEmpty())
+                addAll(mapper.secondaryStats[refName.uppercase()].orEmpty())
+                addAll(mapper.secondaryStats[matcher.string.uppercase()].orEmpty())
             }.distinct()
             val (extraMatcherNames, extraAdvancedNames) = collectExtraStatTranslations(extraStats, matcher)
             cnMatcherNames.addAll(extraMatcherNames)

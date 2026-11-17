@@ -3329,21 +3329,6 @@
     ]
   },
   {
-    "refName": "Supported by Level 1 %s",
-    "type": "INDEXABLE_SUPPORT_GEM",
-    "resolver": "FLATTEN",
-    "en": [
-      {
-        "string": "Supported by Level 1 %s"
-      }
-    ],
-    "cn": [
-      {
-        "string": "被等级 1 的 %s 辅助"
-      }
-    ]
-  },
-  {
     "refName": "Socketed Gems are Supported by Level # %s (Random Support Gem)",
     "type": "INDEXABLE_SUPPORT_GEM_WITH_ADVANCED",
     "resolver": "FLATTEN",

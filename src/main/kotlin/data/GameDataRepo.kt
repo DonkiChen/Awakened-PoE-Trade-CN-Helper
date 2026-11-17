@@ -141,9 +141,10 @@ object GameDataRepo {
             parseTableDataToTextMapper<BaseTableItem>("ExpeditionFactions.json")
         }
 
-        val clientStrings by lazy {
+        // id to pair
+        val clientStrings: Map<String, Pair<ClientString, ClientString>> by lazy {
             parseTableDataToMapper<ClientString>("ClientStrings.json")
-                .map { (source, target) -> source.id to target.text }
+                .map { it.key.id to (it.key to it.value) }
                 .toMap()
         }
 
@@ -227,10 +228,29 @@ object GameDataRepo {
             }
         }
 
+        // Supported by Level 1 {0}
+        private val builtinSupportGems by lazy {
+            val (enClientString, cnClientString) = clientStrings["ItemDisplayBuiltInSupport"]!!
+            indexableSupportGems.map {
+                enClientString.text.replace("{0}", it.key) to cnClientString.text.replace("{0}", it.value)
+            }.toMap()
+        }
+
+        // Socketed Gems are Supported by Level {1} {0}
+        private val builtinSupportGemsWithLevel by lazy {
+            val (enClientString, cnClientString) = clientStrings["ModGrantsSupportEffectWithLevel"] ?: return@lazy emptyMap()
+            val enTemplate = enClientString.text.replace("{1}", "#")
+            val cnTemplate = cnClientString.text.replace("{1}", "#")
+            indexableSupportGems.map {
+                enTemplate
+                    .replace("{0}", it.key) to cnTemplate.replace("{0}", it.value)
+            }.toMap()
+        }
+
         /**
          * 手动维护的数据
          */
-        val extraStats by lazy {
+        private val extraStats by lazy {
             parseExtraStats(this@GameDataMapper, extraStatsFile).groupBy { it.refName.uppercase() }
         }
 
@@ -246,7 +266,7 @@ object GameDataRepo {
             StatDescriptionParsers.parse(dir, targetStatUnlabelledLanguage)
         }
 
-        val statsFromDescriptions: Map<String, Set<String>> by lazy {
+        private val statsFromDescriptions: Map<String, Set<String>> by lazy {
             val enStatsFromGame = rawSourceStatsFromStatDescriptions
             val cnStatsFromGameById = rawTargetStatsFromStatDescriptions.associateBy { it.uniqueId }
             buildMap<String, MutableSet<String>> statsMap@{
@@ -281,6 +301,18 @@ object GameDataRepo {
                         }
                     }
             }
+        }
+
+        val preferredStats by lazy {
+            buildMap {
+                putAll(statsFromDescriptions)
+                putAll(builtinSupportGems.map { it.key.uppercase() to setOf(it.value) }.toMap())
+                putAll(builtinSupportGemsWithLevel.map { it.key.uppercase() to setOf(it.value) }.toMap())
+            }
+        }
+
+        val secondaryStats by lazy {
+            extraStats
         }
     }
 

@@ -21,7 +21,7 @@ enum class Resolver {
 enum class Type {
     ACTIVE_SKILL,
     PASSIVE_SKILL,
-    INDEXABLE_SUPPORT_GEM,
+    @Deprecated("军帽目前没有 advanced 词缀, 且 深水遗迹之珠 未进核心库; 只是为了兼容而存在")
     INDEXABLE_SUPPORT_GEM_WITH_ADVANCED,
     CLUSTER_JEWEL,
     EXPEDITION_AREA,
@@ -177,30 +177,25 @@ fun parseExtraStats(mapper: GameDataRepo.GameDataMapper, file: File): List<Extra
                     result.addAll(resolvedStats)
                     return@forEach
                 }
-                Type.INDEXABLE_SUPPORT_GEM,
                 Type.INDEXABLE_SUPPORT_GEM_WITH_ADVANCED -> {
                     val firstGemPair = mapper.sortedRawIndexableSupportGems.first()
                     val lastGemPair = mapper.sortedRawIndexableSupportGems.last()
-                    if (stat.type == Type.INDEXABLE_SUPPORT_GEM_WITH_ADVANCED) {
-                        // 处理军帽词缀, 避免写死技能: 插入的技能石被 # 级的附加混沌伤害(高阶多重投射-圣化)辅助;
-                        mapper.indexableSupportGems
-                            .map {
-                                val en = FormatArgs(
-                                    refName = it.key,
-                                    string = it.key,
-                                    advanced = "${it.key}(${firstGemPair.first.name}-${lastGemPair.first.name})"
-                                )
-                                val cn = FormatArgs(
-                                    refName = it.value,
-                                    string = it.value,
-                                    advanced = "${it.value}(${firstGemPair.second.name}-${lastGemPair.second.name})"
-                                )
-                                en to cn
-                            }
-                            .toMap()
-                    } else {
-                        mapper.indexableSupportGems.toArgs()
-                    }
+                    // 处理军帽词缀, 避免写死技能: 插入的技能石被 # 级的附加混沌伤害(高阶多重投射-圣化)辅助;
+                    mapper.indexableSupportGems
+                        .map {
+                            val en = FormatArgs(
+                                refName = it.key,
+                                string = it.key,
+                                advanced = "${it.key}(${firstGemPair.first.name}-${lastGemPair.first.name})"
+                            )
+                            val cn = FormatArgs(
+                                refName = it.value,
+                                string = it.value,
+                                advanced = "${it.value}(${firstGemPair.second.name}-${lastGemPair.second.name})"
+                            )
+                            en to cn
+                        }
+                        .toMap()
                 }
                 Type.ELDER_GUARDIAN -> mapper.elderGuardians.toArgs()
                 Type.ATLAS_EXILE -> mapper.atlasExiles.toArgs()

@@ -56,6 +56,32 @@ private enum class State {
     PARSING_CONTENT,
 }
 
+private val normalizeRules = listOf<Pair<Any, String>>(
+    pairOf("{0:+d}", "#"),
+    pairOf(Regex("\\+?\\{\\d?}"), "#"),
+    pairOf(Regex("[{}]+"), ""),
+    pairOf(Regex("<[^>]+>"), ""),
+    // 处理带有 tips 的词缀
+    // [AssassinsMarkTriggeredAssassin::{0}|Assassin's Mark] => Assassin's Mark
+    // [PlayerItemRarity|Rarity] => Rarity
+    // [Rarity] => Rarity
+    pairOf(Regex("\\[([^|]+\\|)?([^]]+)]"), "$2"),
+)
+
+private fun <T, D> pairOf(first: T, second: D): Pair<T, D> {
+    return first to second
+}
+
+private fun String.normalize(): String {
+    return normalizeRules.fold(unescape()) { str, rule ->
+        when (val pattern = rule.first) {
+            is String -> str.replace(pattern, rule.second)
+            is Regex -> str.replace(pattern, rule.second)
+            else -> error("Unknown pattern type")
+        }
+    }
+}
+
 /**
  * 使用状态机模式解析游戏本地化文件stat_descriptions.txt
  * 使用流式处理避免内存溢出，支持大型文件解析
@@ -120,12 +146,11 @@ private fun doParseStatDescriptions(dir: File, unlabelledLanguage: String): Sequ
 
                                 for (i in 0 until count) {
                                     val captured = TEXT_LINE_PATTERN.find(iterator.next().trim())!!.groupValues[1]
-                                    val text = captured
-                                        .unescape()
-                                        .replace("{0:+d}", "#")
-                                        .replace(Regex("\\+?\\{\\d?}"), "#")
-                                        .replace(Regex("[{}]+"), "")
-                                        .replace(Regex("<[^>]+>"), "")
+                                    val text = if (captured.startsWith("[DNT]")) {
+                                        captured
+                                    } else {
+                                        captured.normalize()
+                                    }
                                     context.currentNamesContainer.add(text)
                                 }
                                 val next = runCatching { iterator.next().trim() }.getOrNull()
