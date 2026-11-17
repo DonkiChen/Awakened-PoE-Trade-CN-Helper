@@ -32,6 +32,8 @@ enum class Type {
     ASCENDANCY,
     KEYSTONE,
     EXARCH_EATER,
+    ELDER_GUARDIAN,
+    ATLAS_EXILE,
     DEFAULT
 }
 
@@ -200,6 +202,8 @@ fun parseExtraStats(mapper: GameDataRepo.GameDataMapper, file: File): List<Extra
                         mapper.indexableSupportGems.toArgs()
                     }
                 }
+                Type.ELDER_GUARDIAN -> mapper.elderGuardians.toArgs()
+                Type.ATLAS_EXILE -> mapper.atlasExiles.toArgs()
             }
 
             val resolvedStats = resolvePlaceholder(stat, map)

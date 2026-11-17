@@ -3389,6 +3389,36 @@
     ]
   },
   {
+    "refName": "Map contains %s's Citadel",
+    "type": "ATLAS_EXILE",
+    "resolver": "FLATTEN",
+    "en": [
+      {
+        "string": "Map contains %s's Citadel"
+      }
+    ],
+    "cn": [
+      {
+        "string": "地图中包含 %s要塞"
+      }
+    ]
+  },
+  {
+    "refName": "Map is occupied by %s",
+    "type": "ELDER_GUARDIAN",
+    "resolver": "FLATTEN",
+    "en": [
+      {
+        "string": "Map is occupied by %s"
+      }
+    ],
+    "cn": [
+      {
+        "string": "地图被 %s 占据"
+      }
+    ]
+  },
+  {
     "refName": "Skills Socketed in your Boots are Supported by level # %s",
     "type": "INDEXABLE_SUPPORT_GEM_WITH_ADVANCED",
     "resolver": "FLATTEN",

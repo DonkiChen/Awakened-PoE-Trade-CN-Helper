@@ -213,6 +213,20 @@ object GameDataRepo {
             }
         }
 
+        // 裂界守卫
+        val elderGuardians by lazy {
+            parseTableDataToTextMapper<BaseTableItem>("WorldAreas.json") {
+                it.id.startsWith("MavenElderGuardian")
+            }
+        }
+
+        // 征服者守卫
+        val atlasExiles by lazy {
+            parseTableDataToTextMapper<BaseTableItem>("NPCs.json") {
+                it.id.startsWith("Metadata/Monsters/AtlasExiles/AtlasExile")
+            }
+        }
+
         /**
          * 手动维护的数据
          */
