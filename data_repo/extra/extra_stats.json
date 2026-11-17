@@ -2359,6 +2359,21 @@
     ]
   },
   {
+    "refName": "1 added passive skill is %s",
+    "type": "PASSIVE_SKILL",
+    "resolver": "FLATTEN",
+    "en": [
+      {
+        "string": "1 added passive skill is %s"
+      }
+    ],
+    "cn": [
+      {
+        "string": "其中 1 个增加的天赋为 %s"
+      }
+    ]
+  },
+  {
     "refName": "Added Small Passive Skills grant: #",
     "type": "CLUSTER_JEWEL",
     "resolver": "FLATTEN",
