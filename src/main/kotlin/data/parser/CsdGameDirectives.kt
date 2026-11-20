@@ -111,12 +111,25 @@ internal fun gameCsdDirectives(tables: File): Map<String, CsdDirective> = buildM
                 }
             }
     }
-    // The second argument supplies the support level to the client formatter. It does not
-    // change the displayed support name, so leave that numeric domain unconstrained.
-    lookup("display_indexable_support", 2) {
-        tables.readRows<IndexableSupport>("IndexableSupportGems").map {
-            val index = requireNotNull(it.index) { "missing Index in IndexableSupportGems" }
-            CsdLookupRow(listOf(point(index), allStatValues), it.name.orEmpty())
+    fun indexableSupport(name: String, table: String) {
+        // The second argument is the level, which does not affect the support name.
+        lookup(name, 2) {
+            tables.readRows<IndexableSupport>(table).map {
+                val index = requireNotNull(it.index) { "missing Index in $table" }
+                CsdLookupRow(listOf(point(index), allStatValues), it.name.orEmpty())
+            }
+        }
+    }
+    indexableSupport("display_indexable_support", "IndexableSupportGems")
+    indexableSupport("display_indexable_non_active_support", "IndexableNonActiveSupportGems")
+
+    lookup("pelagic_pearl_slot", 1) {
+        val strings = tables.readRows<PearlClientString>("ClientStrings").associate { it.id to it.text }
+        listOf("Helmet", "Gloves", "Boots", "PassiveTree").mapIndexed { index, slot ->
+            val id = "PelagicPearlSlotType$slot"
+            val text = strings[id]?.takeIf(String::isNotBlank)
+            requireNotNull(text) { "missing text for $id in ${tables.resolve("ClientStrings.json")}" }
+            CsdLookupRow(listOf(point(index + 1)), text)
         }
     }
 }
@@ -144,4 +157,9 @@ private data class AlternateTreeKeystone(
 private data class IndexableSupport(
     @SerializedName("Index") val index: Int?,
     @SerializedName("Name") val name: String?,
+)
+
+private data class PearlClientString(
+    @SerializedName("Id") val id: String?,
+    @SerializedName("Text") val text: String?,
 )

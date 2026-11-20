@@ -133,6 +133,13 @@
       ]
     },
     {
+      "name": "IndexableNonActiveSupportGems",
+      "columns": [
+        "Index",
+        "Name"
+      ]
+    },
+    {
       "name": "LakeRooms",
       "columns": [
         "Id",

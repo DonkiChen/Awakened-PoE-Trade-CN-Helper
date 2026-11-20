@@ -100,15 +100,6 @@ object GameDataRepo {
             parseTableDataToTextMapper<BaseTableItem>("IndexableSupportGems.json")
         }
 
-        val sortedRawIndexableSupportGems by lazy {
-            parseTableDataToMapper<BaseTableItem>("IndexableSupportGems.json")
-                .toSortedMap { o1, o2 ->
-                    o1.id.toInt()
-                        .compareTo(o2.id.toInt())
-                }
-                .toList()
-        }
-
         val monsters by lazy {
             parseTableDataToTextMapper<BaseTableItem>("MonsterVarieties.json") {
                 // 有些怪物在中文中的灵体名和野兽名不一样...

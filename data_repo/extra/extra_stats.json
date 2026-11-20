@@ -3344,23 +3344,6 @@
     ]
   },
   {
-    "refName": "Socketed Gems are Supported by Level # %s (Random Support Gem)",
-    "type": "INDEXABLE_SUPPORT_GEM_WITH_ADVANCED",
-    "resolver": "FLATTEN",
-    "en": [
-      {
-        "string": "Socketed Gems are supported by Level # %s",
-        "advanced": "Socketed Gems are Supported by Level # %s"
-      }
-    ],
-    "cn": [
-      {
-        "string": "插入的技能石被 # 级的%s辅助",
-        "advanced": "插入的技能石被 # 级的%s辅助"
-      }
-    ]
-  },
-  {
     "refName": "Unique Monsters (Blood-Filled Vessel): #",
     "type": "DEFAULT",
     "en": [
@@ -3415,74 +3398,6 @@
     "cn": [
       {
         "string": "地图被 %s 占据"
-      }
-    ]
-  },
-  {
-    "refName": "Skills Socketed in your Boots are Supported by level # %s",
-    "type": "INDEXABLE_SUPPORT_GEM_WITH_ADVANCED",
-    "resolver": "FLATTEN",
-    "en": [
-      {
-        "string": "Skills Socketed in your Boots are Supported by level # %s",
-        "advanced": "Skills Socketed in your Boots are Supported by level # %s"
-      }
-    ],
-    "cn": [
-      {
-        "string": "你鞋子中镶嵌的技能由 # 级的%s辅助",
-        "advanced": "你鞋子中镶嵌的技能由 # 级的%s辅助"
-      }
-    ]
-  },
-  {
-    "refName": "Skills Socketed in your Gloves are Supported by level # %s",
-    "type": "INDEXABLE_SUPPORT_GEM_WITH_ADVANCED",
-    "resolver": "FLATTEN",
-    "en": [
-      {
-        "string": "Skills Socketed in your Gloves are Supported by level # %s",
-        "advanced": "Skills Socketed in your Gloves are Supported by level # %s"
-      }
-    ],
-    "cn": [
-      {
-        "string": "你手套中镶嵌的技能由 # 级的%s辅助",
-        "advanced": "你手套中镶嵌的技能由 # 级的%s辅助"
-      }
-    ]
-  },
-  {
-    "refName": "Skills Socketed in your Helmet are Supported by level # %s",
-    "type": "INDEXABLE_SUPPORT_GEM_WITH_ADVANCED",
-    "resolver": "FLATTEN",
-    "en": [
-      {
-        "string": "Skills Socketed in your Helmet are Supported by level # %s",
-        "advanced": "Skills Socketed in your Helmet are Supported by level # %s"
-      }
-    ],
-    "cn": [
-      {
-        "string": "你头盔中镶嵌的技能由 # 级的%s辅助",
-        "advanced": "你头盔中镶嵌的技能由 # 级的%s辅助"
-      }
-    ]
-  },
-  {
-    "refName": "Skills granted by your Passive Tree are Supported by level # %s",
-    "type": "INDEXABLE_SUPPORT_GEM_WITH_ADVANCED",
-    "resolver": "FLATTEN",
-    "en": [
-      {
-        "string": "Skills granted by your Passive Tree are Supported by level # %s",
-        "advanced": "Skills granted by your Passive Tree are Supported by level # %s"
-      }
-    ],
-    "cn": [
-      {
-        "string": "你天赋树赋予的技能由 # 级的%s辅助",
-        "advanced": "你天赋树赋予的技能由 # 级的%s辅助"
       }
     ]
   }

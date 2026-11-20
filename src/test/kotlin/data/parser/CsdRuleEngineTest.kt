@@ -81,20 +81,87 @@ class CsdRuleEngineTest {
     }
 
     @Test
-    fun `support table and a non-jewel numeric formatter work through the same registry`() = withDirectory { dir ->
-        dir.resolve("IndexableSupportGems.json").writeText("""[{"Index":12,"Name":"Unleash"}]""")
-        val rules = parse(dir, """
+    fun `random support gem rules pair localized names by gem index and keep the level variable`() = withDirectory { dir ->
+        val en = File(dir, "en").apply { mkdir() }
+        val cn = File(dir, "cn").apply { mkdir() }
+        en.resolve("IndexableSupportGems.json").writeText("""
+            [{"_index":0,"Index":12,"Name":"Unleash"},{"_index":1,"Index":128,"Name":"Added Chaos Damage"}]
+        """.trimIndent())
+        cn.resolve("IndexableSupportGems.json").writeText("""
+            [{"_index":0,"Index":128,"Name":"附加混沌伤害"},{"_index":1,"Index":12,"Name":"释出"}]
+        """.trimIndent())
+        val description = parse(dir, """
             description
-                2 level support
+                2 local_random_support_gem_level local_random_support_gem_index
+                1
+                    # # "Socketed Gems are Supported by Level {0} {1}" display_indexable_support 2 1
+                lang "Traditional Chinese"
+                1
+                    # # "插入的技能石被 {0} 级的{1}辅助" display_indexable_support 2 1
+        """).single()
+        val source = gameCsdEngine(en) { error(it) }
+        val target = gameCsdEngine(cn) { error(it) }
+        assertEquals(mapOf(
+            "Socketed Gems are Supported by Level # Unleash" to "插入的技能石被 # 级的释出辅助",
+            "Socketed Gems are Supported by Level # Added Chaos Damage" to "插入的技能石被 # 级的附加混沌伤害辅助",
+        ), CsdMatcherTranslations(source, target) { error(it) }
+            .pair(description, "English", description, "Traditional Chinese").toMap())
+        assertEquals(
+            "插入的技能石被 20 级的释出辅助",
+            target.displayText(description.rulesByLang.getValue("Traditional Chinese").single(), listOf(20, 12)),
+        )
+    }
+
+    @Test
+    fun `pelagic pearl rules pair slot and support indexes and prefer literal translations`() = withDirectory { dir ->
+        val en = File(dir, "en").apply { mkdir() }
+        val cn = File(dir, "cn").apply { mkdir() }
+        fun writeTables(tables: File, slots: List<String>, support: String) {
+            val rows = listOf("Helmet", "Gloves", "Boots", "PassiveTree").zip(slots).map { (id, text) ->
+                """{"Id":"PelagicPearlSlotType$id","Text":"$text"}"""
+            }
+            tables.resolve("ClientStrings.json").writeText(rows.reversed().joinToString(",", "[", "]"))
+            tables.resolve("IndexableNonActiveSupportGems.json").writeText("""[{"Index":126,"Name":"$support"}]""")
+            tables.resolve("IndexableSupportGems.json").writeText("""[{"Index":126,"Name":"Wrong Table"}]""")
+        }
+        writeTables(en, listOf("Helmet", "Gloves", "Boots", "Passive Tree"), "Added Chaos Damage")
+        writeTables(cn, listOf("头盔", "手套", "靴子", "天赋树"), "附加混沌伤害")
+        val description = parse(dir, """
+            description
+                3 local_pearl_random_support_gem_1_slot_index local_pearl_random_support_gem_1_index local_pearl_random_support_gem_1_level
                 2
-                    # # "Supported by Level {0} {1}" display_indexable_support 2 1
-                    # # "Cooldown: {0:+d}s" milliseconds_to_seconds_2dp 1 reminderstring ReminderTextExample
-        """).single().rulesByLang.getValue("English")
+                    4 # # "Skills granted by your {0} are Supported by level {2} {1}" pelagic_pearl_slot 1 display_indexable_non_active_support 2 3
+                    # # # "Skills Socketed in your {0} are Supported by level {2} {1}" pelagic_pearl_slot 1 display_indexable_non_active_support 2 3
+                lang "Traditional Chinese"
+                4
+                    4 # # "{0} 给予你的技能由 {2} 级的 {1} 辅助" pelagic_pearl_slot 1 display_indexable_non_active_support 2 3
+                    # # # "你的 {0} 中镶嵌的技能由 {2} 级的 {1} 辅助" pelagic_pearl_slot 1 display_indexable_non_active_support 2 3
+                    3 # # "你鞋子中镶嵌的技能由 {2} 级的{1}辅助" display_indexable_non_active_support 2 3
+                    4 # # "你天赋树赋予的技能由 {2} 级的{1}辅助" display_indexable_non_active_support 2 3
+        """).single()
+        val source = gameCsdEngine(en) { error(it) }
+        val target = gameCsdEngine(cn) { error(it) }
+        assertEquals(mapOf(
+            "Skills Socketed in your Helmet are Supported by level # Added Chaos Damage" to "你的 头盔 中镶嵌的技能由 # 级的 附加混沌伤害 辅助",
+            "Skills Socketed in your Gloves are Supported by level # Added Chaos Damage" to "你的 手套 中镶嵌的技能由 # 级的 附加混沌伤害 辅助",
+            "Skills Socketed in your Boots are Supported by level # Added Chaos Damage" to "你鞋子中镶嵌的技能由 # 级的附加混沌伤害辅助",
+            "Skills granted by your Passive Tree are Supported by level # Added Chaos Damage" to "你天赋树赋予的技能由 # 级的附加混沌伤害辅助",
+            "Skills Socketed in your Passive Tree are Supported by level # Added Chaos Damage" to "你天赋树赋予的技能由 # 级的附加混沌伤害辅助",
+        ), CsdMatcherTranslations(source, target) { error(it) }
+            .pair(description, "English", description, "Traditional Chinese").toMap())
+    }
+
+    @Test
+    fun `numeric formatter keeps precision for display but uses a wildcard for matching`() = withDirectory { dir ->
+        val rule = parse(dir, """
+            description
+                1 cooldown
+                1
+                    # "Cooldown: {0:+d}s" milliseconds_to_seconds_2dp 1 reminderstring ReminderTextExample
+        """).single().rulesByLang.getValue("English").single()
         val engine = gameCsdEngine(dir) { error(it) }
-        assertEquals("Supported by Level # Unleash", engine.tradeMatchers(rules[0]).single().text)
-        assertEquals("Supported by Level 20 Unleash", engine.displayText(rules[0], listOf(20, 12)))
-        assertEquals("Cooldown: +1.50s", engine.displayText(rules[1], listOf(1500, 0)))
-        assertEquals("Cooldown: #s", engine.tradeMatchers(rules[1]).single().text)
+        assertEquals("Cooldown: +1.50s", engine.displayText(rule, listOf(1500)))
+        assertEquals("Cooldown: #s", engine.tradeMatchers(rule).single().text)
     }
 
     @Test

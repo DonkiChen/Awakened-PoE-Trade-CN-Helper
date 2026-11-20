@@ -117,7 +117,13 @@ internal class CsdMatcherTranslations(
         if (candidate.domains != other.domains) return true
         val candidateConditions = candidate.rule.conditions.map { it.intersect(allStatValues) }
         val otherConditions = other.rule.conditions.map { it.intersect(allStatValues) }
-        return candidateConditions != otherConditions && contains(otherConditions, candidateConditions)
+        if (candidateConditions != otherConditions) return contains(otherConditions, candidateConditions)
+        // Both rules may already constrain the slot to the same value. A literal
+        // translation that replaces a lookup at that slot still overrides the default.
+        val replacedLookups = other.lookupSlots - candidate.lookupSlots
+        return replacedLookups.isNotEmpty() &&
+            other.lookupSlots.containsAll(candidate.lookupSlots) &&
+            replacedLookups.all { candidate.domains[it].isPoint() }
     }
 
     private fun contains(outer: List<List<IntRange>>, inner: List<List<IntRange>>) =
