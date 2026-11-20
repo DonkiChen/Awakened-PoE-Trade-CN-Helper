@@ -49,4 +49,13 @@ class MercenarySupport(
     val tier: Int,
 ) : BaseTableItem(id, name)
 
-// key: id, value: (lang, name)
+class IncursionRoom(
+    id: String,
+    name: String,
+    @SerializedName("Tier")
+    val tier: Int,
+    @SerializedName("FlavourText")
+    val flavourText: String?,
+    @SerializedName("Description")
+    val description: String?,
+) : BaseTableItem(id, name)

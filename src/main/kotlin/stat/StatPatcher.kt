@@ -219,9 +219,28 @@ object StatPatcher {
         }
     }
 
+    private fun findReminderTranslation(source: String, translations: Map<String, String>): String? {
+        translations[source]?.let { return it }
+
+        // 部分神庙提示只保留完整房间描述的末尾几行。
+        val sourceLines = source.lines()
+        if (sourceLines.size < 2) return null
+        return translations.mapNotNull { (english, chinese) ->
+            val englishLines = english.lines()
+            if (englishLines.size <= sourceLines.size ||
+                englishLines.takeLast(sourceLines.size) != sourceLines
+            ) return@mapNotNull null
+
+            val chineseLines = chinese.lines()
+            if (chineseLines.size != englishLines.size) return@mapNotNull null
+            chineseLines.takeLast(sourceLines.size).joinToString("\n")
+        }.distinct().singleOrNull()
+    }
+
     private fun mergeTranslatedStats(
         original: AptDataRepo.Stat,
         translated: List<AptDataRepo.Stat>,
+        reminderTexts: Sequence<Map<String, String>>,
     ): AptDataRepo.Stat {
         val translatedMatchers = translated
             .filter { it.hasMatchers() }
@@ -232,17 +251,29 @@ object StatPatcher {
             if (translatedMatchers.isNotEmpty()) {
                 result.replaceMatchers(translatedMatchers)
             }
+            // 提示文本独立于 matcher，按 mapper 顺序取第一条有效翻译。
+            val source = original.reminderText
+            if (!source.isNullOrBlank()) {
+                val localized = reminderTexts
+                    .mapNotNull { findReminderTranslation(source, it)?.let(::specialFix) }
+                    .firstOrNull { it.isNotBlank() && it != source }
+                if (localized != null) {
+                    result.rawData.addProperty("reminderText", localized)
+                }
+            }
         }
     }
 
     private fun mergeTranslatedStats(
         original: AptDataRepo.StatGroup,
         translated: List<AptDataRepo.StatGroup>,
+        reminderTexts: Sequence<Map<String, String>>,
     ): AptDataRepo.StatGroup {
         val translatedStats = original.stats.mapIndexed { index, stat ->
             mergeTranslatedStats(
                 original = stat,
-                translated = translated.mapNotNull { it.stats.getOrNull(index) }
+                translated = translated.mapNotNull { it.stats.getOrNull(index) },
+                reminderTexts = reminderTexts
             )
         }
         return AptDataRepo.StatGroup(translatedStats, original.rawData.deepCopy()).also {
@@ -250,18 +281,21 @@ object StatPatcher {
         }
     }
 
-    private fun mergeMapperTranslations(
+    internal fun mergeMapperTranslations(
         original: AptDataRepo.BaseStat,
         translated: List<AptDataRepo.BaseStat>,
+        reminderTexts: Sequence<Map<String, String>>,
     ): AptDataRepo.BaseStat {
         return when (original) {
             is AptDataRepo.Stat -> mergeTranslatedStats(
                 original,
-                translated.filterIsInstance<AptDataRepo.Stat>()
+                translated.filterIsInstance<AptDataRepo.Stat>(),
+                reminderTexts
             )
             is AptDataRepo.StatGroup -> mergeTranslatedStats(
                 original,
-                translated.filterIsInstance<AptDataRepo.StatGroup>()
+                translated.filterIsInstance<AptDataRepo.StatGroup>(),
+                reminderTexts
             )
         }
     }
@@ -318,11 +352,13 @@ object StatPatcher {
                 statOrGroup.translate(mapper)
             }
         }
+        val reminderTexts = mappers.asSequence().map { it.reminderTexts }
 
         val merged = AptDataRepo.enStatOrGroup.mapIndexed { index, statOrGroup ->
             val translated = mergeMapperTranslations(
                 original = statOrGroup,
-                translated = translatedByMapper.map { it[index] }
+                translated = translatedByMapper.map { it[index] },
+                reminderTexts = reminderTexts
             )
             if (translated.rawData == statOrGroup.rawData) {
                 println("missing: ${statOrGroup.rawData}")

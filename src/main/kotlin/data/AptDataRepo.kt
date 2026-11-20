@@ -53,6 +53,9 @@ object AptDataRepo {
         override val associateKey: String
             get() = refName
 
+        val reminderText: String?
+            get() = rawData["reminderText"]?.takeUnless { it.isJsonNull }?.asString
+
         val matchers: List<Matcher>
             get() = rawData.getAsJsonArray("matchers")
                 .map {

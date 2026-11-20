@@ -135,7 +135,10 @@
       "name": "IncursionRooms",
       "columns": [
         "Id",
-        "Name"
+        "Name",
+        "Tier",
+        "FlavourText",
+        "Description"
       ]
     },
     {

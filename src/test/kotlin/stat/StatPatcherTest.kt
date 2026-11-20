@@ -1,9 +1,12 @@
 package stat
 
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import data.AptDataRepo
 import data.GameDataRepo
 import data.parser.ExtraStat
+import data.parser.IncursionRoom
 import data.parser.parseExtraStats
 import java.nio.file.Files
 import kotlin.io.path.writeText
@@ -13,6 +16,75 @@ import kotlin.test.assertFalse
 import kotlin.test.assertIs
 
 class StatPatcherTest {
+    @Test
+    fun `translates room reminder on a grouped stat even without localized matchers`() {
+        val english = "Contains an Unstable Breach."
+        val room = stat("Has Room: Anomaly Research Lab (Tier 1)", "pseudo").also {
+            it.rawData.addProperty("reminderText", english)
+        }
+        val group = AptDataRepo.StatGroup(listOf(room), JsonObject()).also { it.syncToRawData() }
+        val exportedRoom = Gson().fromJson(
+            """{"Id":"Breach1","Name":"异象研究实验室","Description":"含有<breach>{裂痕}。"}""",
+            IncursionRoom::class.java
+        )
+        assertEquals("含有<breach>{裂痕}。", exportedRoom.description)
+
+        val merged = assertIs<AptDataRepo.StatGroup>(StatPatcher.mergeMapperTranslations(
+            original = group,
+            translated = emptyList(),
+            reminderTexts = sequenceOf(
+                mapOf(english to english),
+                mapOf(english to checkNotNull(exportedRoom.description)),
+                mapOf(english to "另一条翻译")
+            )
+        ))
+
+        val mergedRoom = merged.rawData.getAsJsonArray("stats").single().asJsonObject
+        assertEquals("含有裂痕。", mergedRoom.get("reminderText").asString)
+        assertEquals(room.rawData.get("matchers"), mergedRoom.get("matchers"))
+        assertEquals(english, room.reminderText)
+    }
+
+    @Test
+    fun `translates only the corresponding trailing lines of a shortened reminder`() {
+        val room = stat("Has Room: Defense Research Lab (Tier 3)", "pseudo").also {
+            it.rawData.addProperty("reminderText", "Adds traps.\nMay contain a casket.")
+        }
+        val fullEnglish = "Monsters have increased area of effect.\nAdds traps.\nMay contain a casket."
+        val merged = assertIs<AptDataRepo.Stat>(
+            StatPatcher.mergeMapperTranslations(
+                original = room,
+                translated = emptyList(),
+                reminderTexts = sequenceOf(
+                    mapOf(fullEnglish to "这个版本的行数不一致。"),
+                    mapOf(fullEnglish to "怪物效果区域扩大。\r\n布满陷阱。\r\n可能含有密棺。")
+                )
+            )
+        )
+
+        assertEquals("布满陷阱。\n可能含有密棺。", merged.reminderText)
+    }
+
+    @Test
+    fun `preserves missing blank and untranslated reminders`() {
+        val noReminder = stat("No reminder", "pseudo")
+        val blankReminder = stat("Blank reminder", "pseudo").also {
+            it.rawData.addProperty("reminderText", "")
+        }
+        val unknownReminder = stat("Unknown reminder", "pseudo").also {
+            it.rawData.addProperty("reminderText", "Untranslated reminder")
+        }
+
+        for (original in listOf(noReminder, blankReminder, unknownReminder)) {
+            val merged = StatPatcher.mergeMapperTranslations(
+                original = original,
+                translated = emptyList(),
+                reminderTexts = sequenceOf(mapOf("" to "不应填入", "Untranslated reminder" to " "))
+            )
+            assertEquals(original.rawData, merged.rawData)
+        }
+    }
+
     @Test
     fun `merges configured localized matcher collision`() {
         val general = stat(

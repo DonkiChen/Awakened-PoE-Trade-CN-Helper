@@ -1,10 +1,6 @@
 package data
 
-import data.parser.BaseTableItem
-import data.parser.ClientString
-import data.parser.MercenarySupport
-import data.parser.StatDescriptionParsers
-import data.parser.parseExtraStats
+import data.parser.*
 import java.io.File
 import kotlin.math.min
 
@@ -100,8 +96,10 @@ object GameDataRepo {
         val sortedRawIndexableSupportGems by lazy {
             parseTableDataToMapper<BaseTableItem>("IndexableSupportGems.json")
                 .toSortedMap { o1, o2 ->
-                    o1.id.toInt().compareTo(o2.id.toInt())
-                }.toList()
+                    o1.id.toInt()
+                        .compareTo(o2.id.toInt())
+                }
+                .toList()
         }
 
         val monsters by lazy {
@@ -134,7 +132,14 @@ object GameDataRepo {
         }
 
         val incursionRooms by lazy {
-            parseTableDataToTextMapper<BaseTableItem>("IncursionRooms.json")
+            parseTableDataToTextMapper<IncursionRoom>("IncursionRooms.json")
+        }
+
+        private val incursionRoomReminderTexts by lazy {
+            parseTableDataToMapper<IncursionRoom>("IncursionRooms.json")
+                .filter { !it.key.description.isNullOrBlank() && !it.value.description.isNullOrBlank() }
+                .map { it.key.description!! to it.value.description!! }
+                .toMap()
         }
 
         val logbookFactions by lazy {
@@ -238,7 +243,8 @@ object GameDataRepo {
 
         // Socketed Gems are Supported by Level {1} {0}
         private val grantsSupportEffectWithLevel by lazy {
-            val (enClientString, cnClientString) = clientStrings["ModGrantsSupportEffectWithLevel"] ?: return@lazy emptyMap()
+            val (enClientString, cnClientString) = clientStrings["ModGrantsSupportEffectWithLevel"]
+                ?: return@lazy emptyMap()
             val enTemplate = enClientString.text.replace("{1}", "#")
             val cnTemplate = cnClientString.text.replace("{1}", "#")
             buildMap {
@@ -332,6 +338,10 @@ object GameDataRepo {
 
         val secondaryStats by lazy {
             extraStats
+        }
+
+        val reminderTexts by lazy {
+            incursionRoomReminderTexts
         }
     }
 
