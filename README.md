@@ -59,12 +59,7 @@ set "INTL_GAME_PATH=C:\Program Files\Epic Games\PathOfExile"
 set "TENCENT_GAME_PATH=C:\Program Files (x86)\流放之路(511)"
 ```
 
-导出配置模板如下：
-
-- [intl_config.template.json](./data_repo/exported/intl_config.template.json)
-- [tencent_config.template.json](./data_repo/exported/tencent_config.template.json)
-
-脚本会根据模板生成各数据源目录中的 `config.json`。生成的配置属于本地环境配置，不要直接复制其他人的路径。
+国际服和国服共用 [config.template.json](./data_repo/exported/config.template.json)。脚本会填入游戏路径和目标语言（国际服为 `Traditional Chinese`，国服为 `Simplified Chinese`），生成各数据源目录中的 `config.json`。两者都保留 `English`。生成的配置属于本地环境配置，不要直接复制其他人的路径。
 
 ### 2. 自动导出游戏数据
 

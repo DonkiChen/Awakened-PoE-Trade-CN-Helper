@@ -16,8 +16,7 @@ set "PATCHER_EXE=%ROOT_DIR%\PoePatcherCli\publish\win-x64\PoePatcherCli.exe"
 set "DAT_VIEWER_LIB=%ROOT_DIR%\poe-dat-viewer\lib"
 set "DAT_RUNNER=%DAT_VIEWER_LIB%\dist\cli\run.js"
 set "EXPORTED_DIR=%ROOT_DIR%\data_repo\exported"
-set "INTL_TEMPLATE=%EXPORTED_DIR%\intl_config.template.json"
-set "TENCENT_TEMPLATE=%EXPORTED_DIR%\tencent_config.template.json"
+set "CONFIG_TEMPLATE_PATH=%EXPORTED_DIR%\config.template.json"
 
 set "INTL_RESTORE_PATTERN=.*国际服\[EPIC\]还原包\.zip$"
 set "INTL_PATCH_PATTERN=.*\[Poe1\]\[EPIC,解压覆盖同名文件\]国际服汉化\+功能补丁_\[方正准圆\]双切简体\(查价\)_v\d\.0\.zip$"
@@ -32,12 +31,8 @@ if not exist "%PATCHER_PUBLISH_SCRIPT%" (
     echo [ERROR] Patcher publish script does not exist: "%PATCHER_PUBLISH_SCRIPT%"
     exit /b 1
 )
-if not exist "%INTL_TEMPLATE%" (
-    echo [ERROR] International config template does not exist: "%INTL_TEMPLATE%"
-    exit /b 1
-)
-if not exist "%TENCENT_TEMPLATE%" (
-    echo [ERROR] Tencent config template does not exist: "%TENCENT_TEMPLATE%"
+if not exist "%CONFIG_TEMPLATE_PATH%" (
+    echo [ERROR] Config template does not exist: "%CONFIG_TEMPLATE_PATH%"
     exit /b 1
 )
 
@@ -99,10 +94,10 @@ if not exist "%DAT_RUNNER%" (
 )
 
 if defined HAS_INTL (
-    call :process_source "intl_amsco2" "intl" "%INTL_GAME_PATH%" "%INTL_TEMPLATE%" "%INTL_RESTORE_ZIP%" "amsco" "%INTL_PATCH_ZIP%"
+    call :process_source "intl_amsco2" "intl" "%INTL_GAME_PATH%" "Traditional Chinese" "%INTL_RESTORE_ZIP%" "amsco" "%INTL_PATCH_ZIP%"
     if errorlevel 1 exit /b 1
 
-    call :process_source "intl_poedb" "intl" "%INTL_GAME_PATH%" "%INTL_TEMPLATE%" "%INTL_RESTORE_ZIP%" "poedb" ""
+    call :process_source "intl_poedb" "intl" "%INTL_GAME_PATH%" "Traditional Chinese" "%INTL_RESTORE_ZIP%" "poedb" ""
     if errorlevel 1 exit /b 1
 )
 
@@ -146,14 +141,14 @@ exit /b 0
 set "SOURCE_DIR=%~1"
 set "SOURCE_GAME=%~2"
 set "SOURCE_GAME_PATH=%~3"
-set "SOURCE_TEMPLATE=%~4"
+set "SOURCE_LANGUAGE=%~4"
 set "SOURCE_RESTORE_ZIP=%~5"
 set "SOURCE_PATCH_SOURCE=%~6"
 set "SOURCE_PATCH_ZIP=%~7"
 set "SOURCE_STATUS=0"
 
 echo [INFO] Preparing %SOURCE_DIR% config...
-call :prepare_source_config "%SOURCE_DIR%" "%SOURCE_TEMPLATE%" "%SOURCE_GAME_PATH%"
+call :prepare_source_config "%SOURCE_DIR%" "%SOURCE_GAME_PATH%" "%SOURCE_LANGUAGE%"
 if errorlevel 1 exit /b 1
 
 echo [INFO] Restoring %SOURCE_GAME% game files before %SOURCE_DIR%...
@@ -196,9 +191,9 @@ set "SOURCE_RESTORE_ZIP=%TENCENT_RESTORE_ZIP%"
 set "SOURCE_STATUS=0"
 
 echo [INFO] Preparing tencent configs...
-call :prepare_source_config "tencent" "%TENCENT_TEMPLATE%" "%SOURCE_GAME_PATH%"
+call :prepare_source_config "tencent" "%SOURCE_GAME_PATH%" "Simplified Chinese"
 if errorlevel 1 exit /b 1
-call :prepare_source_config "tencent_amsco2" "%TENCENT_TEMPLATE%" "%SOURCE_GAME_PATH%"
+call :prepare_source_config "tencent_amsco2" "%SOURCE_GAME_PATH%" "Simplified Chinese"
 if errorlevel 1 exit /b 1
 
 echo [INFO] Restoring tencent game files before clean export...
@@ -237,12 +232,12 @@ exit /b %ERRORLEVEL%
 
 :prepare_source_config
 set "PREPARE_SOURCE_DIR=%~1"
-set "PREPARE_TEMPLATE=%~2"
-set "PREPARE_GAME_PATH=%~3"
+set "CONFIG_GAME_PATH=%~2"
+set "CONFIG_TARGET_LANGUAGE=%~3"
 set "PREPARE_SOURCE_CONFIG=%EXPORTED_DIR%\%PREPARE_SOURCE_DIR%\config.json"
 if not exist "%EXPORTED_DIR%\%PREPARE_SOURCE_DIR%" mkdir "%EXPORTED_DIR%\%PREPARE_SOURCE_DIR%"
 if not exist "%EXPORTED_DIR%\%PREPARE_SOURCE_DIR%" exit /b 1
-call :generate_config "%PREPARE_TEMPLATE%" "%PREPARE_SOURCE_CONFIG%" "%PREPARE_GAME_PATH%"
+call :generate_config "%PREPARE_SOURCE_CONFIG%"
 exit /b %ERRORLEVEL%
 
 :export_source
@@ -255,10 +250,8 @@ popd
 exit /b %EXPORT_STATUS%
 
 :generate_config
-set "CONFIG_TEMPLATE_PATH=%~1"
-set "CONFIG_OUTPUT_PATH=%~2"
-set "CONFIG_GAME_PATH=%~3"
-powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -Command "$template = [IO.File]::ReadAllText($env:CONFIG_TEMPLATE_PATH); $placeholder = [char]34 + '__GAME_PATH__' + [char]34; if (-not $template.Contains($placeholder)) { throw 'Config template does not contain the __GAME_PATH__ placeholder.' }; $jsonPath = ConvertTo-Json -InputObject $env:CONFIG_GAME_PATH -Compress; $content = $template.Replace($placeholder, $jsonPath); [IO.File]::WriteAllText($env:CONFIG_OUTPUT_PATH, $content, [Text.UTF8Encoding]::new($false))"
+set "CONFIG_OUTPUT_PATH=%~1"
+powershell.exe -NoLogo -NoProfile -ExecutionPolicy Bypass -Command "$config = Get-Content -LiteralPath $env:CONFIG_TEMPLATE_PATH -Raw -Encoding UTF8 | ConvertFrom-Json -ErrorAction Stop; if ($config.steam -cne '__GAME_PATH__' -or $config.translations[1] -cne '__TARGET_LANGUAGE__') { throw 'Config template is missing the game path or target language placeholder.' }; $config.steam = $env:CONFIG_GAME_PATH; $config.translations[1] = $env:CONFIG_TARGET_LANGUAGE; $content = ConvertTo-Json -InputObject $config -Depth 10; [IO.File]::WriteAllText($env:CONFIG_OUTPUT_PATH, $content, [Text.UTF8Encoding]::new($false))"
 if errorlevel 1 (
     echo [ERROR] Failed to generate config: "%CONFIG_OUTPUT_PATH%"
     exit /b 1

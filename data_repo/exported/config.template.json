@@ -44,7 +44,7 @@
   ],
   "translations": [
     "English",
-    "Traditional Chinese"
+    "__TARGET_LANGUAGE__"
   ],
   "tables": [
     {
