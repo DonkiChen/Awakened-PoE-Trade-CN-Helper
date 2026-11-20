@@ -237,11 +237,28 @@ object GameDataRepo {
         }
 
         // Socketed Gems are Supported by Level {1} {0}
-        private val builtinSupportGemsWithLevel by lazy {
+        private val grantsSupportEffectWithLevel by lazy {
             val (enClientString, cnClientString) = clientStrings["ModGrantsSupportEffectWithLevel"] ?: return@lazy emptyMap()
             val enTemplate = enClientString.text.replace("{1}", "#")
             val cnTemplate = cnClientString.text.replace("{1}", "#")
-            indexableSupportGems.map {
+            buildMap {
+                supportGems.map {
+                    // e.g. explicit.effect_1673391040
+                    // Socketed Gems are Supported by Level # Added Chaos Damage Support
+                    // ->
+                    // 镶嵌的宝石被 # 级 附加混沌伤害（辅） 辅助
+                    enTemplate
+                        .replace("{0}", it.key) to cnTemplate.replace("{0}", it.value)
+                }.toMap(this)
+            }
+        }
+
+        // Grants Level {1} {0}
+        private val grantsEffectWithLevel by lazy {
+            val (enClientString, cnClientString) = clientStrings["ModGrantsEffectWithLevel"] ?: return@lazy emptyMap()
+            val enTemplate = enClientString.text.replace("{1}", "#")
+            val cnTemplate = cnClientString.text.replace("{1}", "#")
+            activeSkills.map {
                 enTemplate
                     .replace("{0}", it.key) to cnTemplate.replace("{0}", it.value)
             }.toMap()
@@ -305,9 +322,11 @@ object GameDataRepo {
 
         val preferredStats by lazy {
             buildMap {
-                putAll(statsFromDescriptions)
                 putAll(builtinSupportGems.map { it.key.uppercase() to setOf(it.value) }.toMap())
-                putAll(builtinSupportGemsWithLevel.map { it.key.uppercase() to setOf(it.value) }.toMap())
+                putAll(grantsSupportEffectWithLevel.map { it.key.uppercase() to setOf(it.value) }.toMap())
+                putAll(grantsEffectWithLevel.map { it.key.uppercase() to setOf(it.value) }.toMap())
+                // 放在最后, 有些名词在不同地方翻译不同(例如: Caustic Retribution), 先以 stat_descriptions 为准
+                putAll(statsFromDescriptions)
             }
         }
 
