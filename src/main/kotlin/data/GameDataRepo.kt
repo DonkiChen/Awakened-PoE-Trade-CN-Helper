@@ -1,6 +1,7 @@
 package data
 
 import data.parser.*
+import util.fromJson
 import java.io.File
 import kotlin.math.min
 
@@ -52,6 +53,13 @@ object GameDataRepo {
         private val sourceStatUnlabelledLanguage: String,
         private val targetStatUnlabelledLanguage: String,
     ) {
+
+        internal fun readModNameTables(): Pair<List<ModNameRow>, List<ModNameRow>> {
+            val tables = File(exportedDataDir, "$targetExportDirName/tables")
+            fun read(language: String): List<ModNameRow> =
+                File(tables, "$language/Mods.json").reader().use { fromJson(it) }
+            return read("English") to read(targetLanguageKey)
+        }
 
         private inline fun <reified T : BaseTableItem> parseTableDataToMapper(
             gameFileName: String,

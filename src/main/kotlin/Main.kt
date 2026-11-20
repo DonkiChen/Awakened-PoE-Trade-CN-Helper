@@ -1,11 +1,16 @@
 import data.GameDataRepo
 import item.ItemPatcher
+import stat.ModNamePatcher
 import stat.StatPatcher
 import java.io.File
 
 object Main {
     @JvmStatic
     fun main(args: Array<String>) {
+        val mode = args.singleOrNull()
+        require(args.isEmpty() || mode == "--mod-names-only" || mode == "--check-mod-names") {
+            "Usage: generateTranslations [--args=--mod-names-only | --args=--check-mod-names]"
+        }
         // 每个 mapper 对应一个目标数据集。国际服将简体中文文案标记为 "Traditional Chinese"。
         GameDataRepo.prepareMapper(
             id = "intl_poedb_patched",
@@ -45,7 +50,10 @@ object Main {
             targetStatUnlabelledLanguage = "Simplified Chinese"
         )
 
-        ItemPatcher.patch(GameDataRepo.mappers)
-        StatPatcher.patch(GameDataRepo.mappers)
+        ModNamePatcher.patch(GameDataRepo.mappers, checkOnly = mode == "--check-mod-names")
+        if (mode == null) {
+            ItemPatcher.patch(GameDataRepo.mappers)
+            StatPatcher.patch(GameDataRepo.mappers)
+        }
     }
 }

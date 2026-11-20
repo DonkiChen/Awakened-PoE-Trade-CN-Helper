@@ -36,6 +36,11 @@ open class BaseTableItem(
     val name: String
 )
 
+internal data class ModNameRow(
+    @SerializedName("Id") val id: String,
+    @SerializedName("Name") val name: String?,
+)
+
 class ClientString(
     id: String,
     @SerializedName("Text")

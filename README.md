@@ -1,7 +1,7 @@
 # Awakened PoE Trade 中文数据生成工具
 
 这个工具用于为 [Awakened PoE Trade](../README.md) 生成中文物品名称和词缀数据。
-它会读取《流放之路》的游戏数据，建立英文名称与目标语言名称之间的映射，然后将翻译结果写入 APT 的 `items.ndjson` 和 `stats.ndjson`。
+它会读取《流放之路》的游戏数据，为 APT 生成简中 `items.ndjson`、`stats.ndjson`，以及解析器用来识别词缀所属机制的 `client_strings.js` 中的 `*_MODS` 区块。
 
 > 这是一个面向维护者和翻译数据生成的开发工具，不是独立运行的 APT 客户端。
 
@@ -27,7 +27,8 @@ data_repo/exported/<data-source>/{files,tables}
 scripts/generate_translations.bat（Gradle build + Main.kt）
         |
         v
-APT renderer/public/data/zh_CN/{items,stats}.ndjson
+APT renderer/public/data/zh_CN/
+  items.ndjson、stats.ndjson、client_strings.js（仅 *_MODS）
 ```
 
 ## 前置要求
@@ -59,7 +60,7 @@ set "INTL_GAME_PATH=C:\Program Files\Epic Games\PathOfExile"
 set "TENCENT_GAME_PATH=C:\Program Files (x86)\流放之路(511)"
 ```
 
-国际服和国服共用 [config.template.json](./data_repo/exported/config.template.json)。脚本会填入游戏路径和目标语言（国际服为 `Traditional Chinese`，国服为 `Simplified Chinese`），生成各数据源目录中的 `config.json`。两者都保留 `English`。生成的配置属于本地环境配置，不要直接复制其他人的路径。
+国际服和国服共用 [config.template.json](./data_repo/exported/config.template.json)。脚本会填入游戏路径和目标语言（国际服为 `Traditional Chinese`，国服为 `Simplified Chinese`），生成各数据源目录中的 `config.json`。两者都保留 `English`。模板已包含 `Mods` 表及其 `Id`、`Name` 列；如果旧导出缺少这张表，请用新模板重新导出。生成的配置属于本地环境配置，不要直接复制其他人的路径。
 
 ### 2. 自动导出游戏数据
 
@@ -108,20 +109,30 @@ set "TENCENT_GAME_PATH=C:\Program Files (x86)\流放之路(511)"
 .\gradlew.bat generateTranslations
 ```
 
-## 输出文件
+### 5. 单独更新简中词缀机制名称
 
-工具会读取上级 APT 项目的英文数据，并生成以下文件：
+完整生成流程已包含这一步。若只需要更新或校验词缀机制名称，不改动 `items.ndjson` 和 `stats.ndjson`：
 
-```text
-../renderer/public/data/en/items.ndjson
-../renderer/public/data/en/stats.ndjson
-        |
-        v
-../renderer/public/data/zh_CN/items.ndjson
-../renderer/public/data/zh_CN/stats.ndjson
+```powershell
+.\gradlew.bat generateTranslations --args=--mod-names-only
+.\gradlew.bat generateTranslations --args=--check-mod-names
 ```
 
-生成的 `items.ndjson` 和 `stats.ndjson` 会直接覆盖 APT 项目中的 `zh_CN` 数据。实际写入的语言取决于 `Main.kt` 中配置的 `targetLanguageKey`。运行工具前请确认 APT 英文输入文件存在，并在需要时备份现有的中文输出文件。
+更新命令只改写 `../renderer/public/data/zh_CN/client_strings.js` 中标记为生成的 `*_MODS` 区块，校验命令不写入翻译文件。生成器从英文 `client_strings.js` 读取机制分类，在每份导出中按英文 `Name` 匹配所有词缀，再用 `Id` 关联到中文 `Name`，最后合并并去重。不合并旧版译名，只使用当前导出中的词缀名称。
+
+每个 mapper 都从 `data_repo/exported/<targetExportDirName>/tables/` 读取 `English/Mods.json` 和 `<targetLanguageKey>/Mods.json`，不使用 `sourceExportDirName`。国际服导出中的 `Traditional Chinese` 是简中补丁使用的语言槽，不会用于更新 `cmn-Hant`。这里的“当前导出”指本机最近一次导出的游戏数据，不是运行时联网更新；游戏更新后应先重新导出，再生成翻译。不要手改生成区块。
+
+## 输出文件
+
+完整生成流程读取上级 APT 项目 `renderer/public/data/en/` 中的对应英文文件，并更新 `renderer/public/data/zh_CN/`：
+
+| 文件 | 更新范围 |
+| --- | --- |
+| `items.ndjson` | 整个文件 |
+| `stats.ndjson` | 整个文件 |
+| `client_strings.js` | 只替换 `BEGIN GENERATED MOD NAMES` 和 `END GENERATED MOD NAMES` 之间的 `*_MODS` |
+
+`Main.kt` 中的 `targetLanguageKey` 只决定读取导出中的哪个语言目录，不改变 renderer 的输出目录。运行工具前请确认英文输入和简中 `client_strings.js` 都存在。
 
 ## 项目结构
 
@@ -168,7 +179,7 @@ set "TENCENT_GAME_PATH=C:\Program Files (x86)\流放之路(511)"
 .\scripts\generate_translations.bat
 ```
 
-该脚本会执行 `build` 并运行 `Main.kt`，生成的中文数据会覆盖 `renderer/public/data/zh_CN/` 中的文件。如修改了数据导出流程，先运行 `scripts/build_and_export.bat` 完成导出，再运行上述生成脚本，并检查生成的 `items.ndjson` 和 `stats.ndjson` 是否符合预期。
+如修改了数据导出流程，先运行 `scripts/build_and_export.bat` 完成导出，再运行上述生成脚本并检查三个输出的差异。可用 `.\gradlew.bat generateTranslations --args=--check-mod-names` 核对简中 `*_MODS` 与当前导出是否一致，再到上级项目的 `renderer` 目录运行 `npm run test:affix-recognition`，验证词缀解析和机制归类。
 
 ## 相关项目与致谢
 

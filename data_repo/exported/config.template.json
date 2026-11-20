@@ -168,6 +168,13 @@
         "Id",
         "Name"
       ]
+    },
+    {
+      "name": "Mods",
+      "columns": [
+        "Id",
+        "Name"
+      ]
     }
   ]
 }
