@@ -21,9 +21,9 @@ class StatDescriptionParserTest {
 
         assertEquals(
             listOf("简体中文文案"),
-            description.namesByLang["Simplified Chinese"]
+            description.rulesByLang["Simplified Chinese"]?.map { it.template }
         )
-        assertNull(description.namesByLang["English"])
+        assertNull(description.rulesByLang["English"])
     }
 
     @Test
@@ -41,10 +41,10 @@ class StatDescriptionParserTest {
             unlabelledLanguage = "English"
         )
 
-        assertEquals(listOf("English text"), description.namesByLang["English"])
+        assertEquals(listOf("English text"), description.rulesByLang["English"]?.map { it.template })
         assertEquals(
             listOf("简体中文文案"),
-            description.namesByLang["Simplified Chinese"]
+            description.rulesByLang["Simplified Chinese"]?.map { it.template }
         )
     }
 

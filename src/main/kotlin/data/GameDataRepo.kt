@@ -3,7 +3,6 @@ package data
 import data.parser.*
 import util.fromJson
 import java.io.File
-import kotlin.math.min
 
 
 private val dataRepoDir = File("data_repo")
@@ -192,18 +191,12 @@ object GameDataRepo {
 
         val keystones by lazy {
             buildMap {
-                val targetStatsById = rawTargetStatsFromStatDescriptions.associateBy { it.uniqueId }
+                val targetStatsById = rawTargetStatsFromStatDescriptions.associateBy { it.dictionaryKey() }
                 putAll(rawSourceStatsFromStatDescriptions
                     .filter { it.id.startsWith("keystone_") }
                     .flatMap { stat ->
-                        // Keystone 的英文 key 来自源数据，翻译名称必须从目标数据读取。
-                        val targetStat = targetStatsById[stat.uniqueId]
-                            ?: error("Missing target stat description: ${stat.uniqueId}")
-                        val targetNames = targetStat.namesByLang[targetLanguageKey]
-                            ?: error("Missing target language '$targetLanguageKey' at: ${targetStat.uniqueId}")
-                        stat.namesByLang[sourceStatUnlabelledLanguage]!!.mapIndexed { index, enName ->
-                            enName to targetNames[index]
-                        }
+                        val targetStat = targetStatsById[stat.dictionaryKey()] ?: return@flatMap emptyList()
+                        pairStatDescriptions(stat, targetStat)
                     }
                     .toMap()
                 )
@@ -288,18 +281,35 @@ object GameDataRepo {
         private val rawSourceStatsFromStatDescriptions by lazy {
             val dir = File(exportedDataDir, "${sourceExportDirName}/files")
             // 源文件提供英文 matcher 名称。
-            StatDescriptionParsers.parse(dir, sourceStatUnlabelledLanguage)
+            StatDescriptionParsers.parse(dir, sourceStatUnlabelledLanguage, setOf(sourceStatUnlabelledLanguage))
         }
         private val rawTargetStatsFromStatDescriptions by lazy {
             val dir = File(exportedDataDir, "${targetExportDirName}/files")
             // 有些目标导出文件整体已经是本地化内容，因此没有 lang 标记；
             // 这里需要为每个 mapper 单独指定这类内容的语言。
-            StatDescriptionParsers.parse(dir, targetStatUnlabelledLanguage)
+            StatDescriptionParsers.parse(dir, targetStatUnlabelledLanguage, setOf(targetLanguageKey))
         }
+
+        private fun GameStatDescription.dictionaryKey() = uniqueId to identifier
+
+        private fun reportCsd(message: String) {
+            println("[WARNING] CSD [$id] $message")
+        }
+
+        private val csdTranslations by lazy {
+            CsdMatcherTranslations(
+                gameCsdEngine(File(exportedDataDir, "$sourceExportDirName/tables/$sourceStatUnlabelledLanguage"), ::reportCsd),
+                gameCsdEngine(File(exportedDataDir, "$targetExportDirName/tables/$targetLanguageKey"), ::reportCsd),
+                ::reportCsd,
+            )
+        }
+
+        private fun pairStatDescriptions(source: GameStatDescription, target: GameStatDescription) =
+            csdTranslations.pair(source, sourceStatUnlabelledLanguage, target, targetLanguageKey)
 
         private val statsFromDescriptions: Map<String, Set<String>> by lazy {
             val enStatsFromGame = rawSourceStatsFromStatDescriptions
-            val cnStatsFromGameById = rawTargetStatsFromStatDescriptions.associateBy { it.uniqueId }
+            val cnStatsFromGameById = rawTargetStatsFromStatDescriptions.associateBy { it.dictionaryKey() }
             buildMap<String, MutableSet<String>> statsMap@{
                 enStatsFromGame
                     .filter {
@@ -308,27 +318,9 @@ object GameDataRepo {
                     }
                     .forEach { sourceDesc ->
                         // 源和目标可以来自不同导出目录，因此通过文件名和 id 匹配，不能依赖翻译后的文案。
-                        val targetDesc = cnStatsFromGameById[sourceDesc.uniqueId]
-                        val sourceNames = sourceDesc.namesByLang[sourceStatUnlabelledLanguage]
-                        val targetNames = targetDesc?.namesByLang?.get(targetLanguageKey)
-                        if (targetDesc == null
-                            // 国际服中有些是已过期的, 而国服中没有对应字段, 直接跳过
-                            || targetNames.isNullOrEmpty()
-                        ) {
-                            return@forEach
-                        } else {
-                            if (sourceNames == null || (sourceNames.size != targetNames.size && targetNames.size > 1)) {
-                                println("[WARNING] Building dictionary, source names size: ${sourceNames?.size}, target names size: ${targetNames.size} at: ${sourceDesc.uniqueId}")
-                                println(sourceNames)
-                                println(targetNames)
-                                return@forEach
-                            }
-
-                            sourceNames.forEachIndexed { index, enName ->
-                                val set = getOrPut(enName.uppercase()) { mutableSetOf() }
-                                // 如果 cn 不够, 则统一用最后一个兜底
-                                set.add(targetNames[min(index, targetNames.size - 1)])
-                            }
+                        val targetDesc = cnStatsFromGameById[sourceDesc.dictionaryKey()] ?: return@forEach
+                        pairStatDescriptions(sourceDesc, targetDesc).forEach { (source, target) ->
+                            getOrPut(source.uppercase()) { mutableSetOf() }.add(target)
                         }
                     }
             }

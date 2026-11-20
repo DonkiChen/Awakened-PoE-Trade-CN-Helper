@@ -62,6 +62,8 @@ set "TENCENT_GAME_PATH=C:\Program Files (x86)\流放之路(511)"
 
 国际服和国服共用 [config.template.json](./data_repo/exported/config.template.json)。脚本会填入游戏路径和目标语言（国际服为 `Traditional Chinese`，国服为 `Simplified Chinese`），生成各数据源目录中的 `config.json`。两者都保留 `English`。模板已包含 `Mods` 表及其 `Id`、`Name` 列；如果旧导出缺少这张表，请用新模板重新导出。生成的配置属于本地环境配置，不要直接复制其他人的路径。
 
+永恒珠宝还需要新模板中的 `AlternateTreeVersions` 和 `AlternateTreeVersionKeystones`。用旧导出生成时，缺表的动态规则会被跳过，日志会列出导出文件路径和 `.csd` 行号；普通词缀不依赖这些表。
+
 ### 2. 自动导出游戏数据
 
 将补丁 ZIP 放入 [`scripts/patch`](./scripts/patch)，关闭正在运行的游戏，然后执行：
@@ -133,6 +135,12 @@ set "TENCENT_GAME_PATH=C:\Program Files (x86)\流放之路(511)"
 | `client_strings.js` | 只替换 `BEGIN GENERATED MOD NAMES` 和 `END GENERATED MOD NAMES` 之间的 `*_MODS` |
 
 `Main.kt` 中的 `targetLanguageKey` 只决定读取导出中的哪个语言目录，不改变 renderer 的输出目录。运行工具前请确认英文输入和简中 `client_strings.js` 都存在。
+
+## `.csd` 规则
+
+`StatDescriptionParser.kt` 读取规则，`CsdRuleEngine.kt` 求值并生成 matcher，`CsdMatcherTranslations.kt` 负责英中配对。在 `CsdGameDirectives.kt` 注册新的数值转换、查表或元数据指令即可扩展，不需要修改文件解析器。查表指令的参数是从 1 开始的 stat 索引；模板则从 `{0}` 开始编号。查表的第一项参数是输出槽，其余参数可参与过滤（例如永恒珠宝的阵营和内部修订号）。
+
+动态 matcher 根据 stat 值域配对；能覆盖同一变体的旧版字面规则也可以作为译文。不支持的指令、缺表、冲突或只覆盖部分值域的动态译文会报告并跳过。普通规则保留旧的文案归一化和配对行为。独立的 `include` 不递归展开，`reminderstring` 等元数据也不拼入 matcher。
 
 ## 项目结构
 

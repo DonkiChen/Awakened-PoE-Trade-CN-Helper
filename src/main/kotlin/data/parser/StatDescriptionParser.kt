@@ -1,247 +1,149 @@
 package data.parser
 
+import java.io.BufferedReader
 import java.io.File
-import java.io.InputStreamReader
+
+data class CsdLocation(val file: String, val line: Int) {
+    override fun toString(): String = "$file:$line"
+}
+
+data class StatCondition(val token: String) {
+    private val negated get() = token.startsWith('!')
+    internal val bounds: IntRange?
+        get() {
+            val condition = token.removePrefix("!")
+            if (condition == "#") return Int.MIN_VALUE..Int.MAX_VALUE
+            val parts = condition.split('|', limit = 2)
+            if (parts.size == 1) return parts[0].toIntOrNull()?.let { it..it }
+            val min = if (parts[0] == "#") Int.MIN_VALUE else parts[0].toIntOrNull() ?: return null
+            val max = if (parts[1] == "#") Int.MAX_VALUE else parts[1].toIntOrNull() ?: return null
+            return (min..max).takeUnless { it.isEmpty() }
+        }
+
+    internal fun contains(value: Int): Boolean = bounds?.let { (value in it) != negated } ?: false
+
+    internal fun intersect(range: IntRange): List<IntRange> {
+        val bounds = bounds ?: return emptyList()
+        if (!negated) return listOf(maxOf(bounds.first, range.first)..minOf(bounds.last, range.last))
+            .filterNot { it.isEmpty() }
+        return buildList {
+            if (range.first < bounds.first) add(range.first..minOf(range.last, bounds.first - 1))
+            if (range.last > bounds.last) add(maxOf(range.first, bounds.last + 1)..range.last)
+        }
+    }
+}
+
+data class StatDescriptionRule(
+    val conditions: List<StatCondition>,
+    val restrictions: List<String>,
+    val template: String,
+    // Keep the suffix lossless at token level. The registry, not the parser, knows instruction arities.
+    val directiveTokens: List<String>,
+    val location: CsdLocation,
+)
 
 data class GameStatDescription(
     val fileName: String,
-    val id: String,
-    val namesByLang: Map<String, List<String>>,
+    val statIds: List<String>,
+    val rulesByLang: Map<String, List<StatDescriptionRule>>,
+    val location: CsdLocation,
+    val identifier: String?,
 ) {
-
+    val id = statIds.joinToString(" ")
     val uniqueId = "${fileName}_${id}"
 }
 
-// 预编译正则表达式以提高性能
-private val ID_LINE_PATTERN = Regex("^\\d+\\s+(.+)$")
-private val TEXT_LINE_PATTERN = Regex("^[^\"]*\"([^\"]*)\"")
-private val LANG_PATTERN = Regex("^lang\\s+\"([^\"]+)\"")
-
-/**
- * 解析器上下文，管理当前解析状态和数据。
- *
- * unlabelledLanguage 用于没有显式 `lang` 标记的内容，解析器不会根据文本内容自动判断语言。
- */
-class ParserContext(private val unlabelledLanguage: String) {
-    var currentId: String? = null
-    var currentLanguage: String = unlabelledLanguage
-    val namesByLang = mutableMapOf<String, MutableList<String>>()
-
-    val currentNamesContainer: MutableList<String>
-        get() = namesByLang.getOrPut(currentLanguage) { mutableListOf() }
-
-    /**
-     * 为新的description块重置上下文
-     */
-    fun resetForNewBlock() {
-        currentId = null
-        currentLanguage = unlabelledLanguage
-        namesByLang.clear()
-    }
-
-    /**
-     * 生成当前块的GameStatDescription对象
-     */
-    fun createGameStatDescription(fileName: String): GameStatDescription? {
-        return currentId?.let { id ->
-            val fileNameWithoutExt = File(fileName).nameWithoutExtension
-            GameStatDescription(fileNameWithoutExt, id, namesByLang.toMap())
-        }
-    }
-}
-
-private enum class State {
-    WAITING_DESCRIPTION,
-    PARSING_ID,
-    PARSING_CONTENT,
-}
-
-private val normalizeRules = listOf<Pair<Any, String>>(
-    pairOf("{0:+d}", "#"),
-    pairOf(Regex("\\+?\\{\\d?}"), "#"),
-    pairOf(Regex("[{}]+"), ""),
-    pairOf(Regex("<[^>]+>"), ""),
-    // 处理带有 tips 的词缀
-    // [AssassinsMarkTriggeredAssassin::{0}|Assassin's Mark] => Assassin's Mark
-    // [PlayerItemRarity|Rarity] => Rarity
-    // [Rarity] => Rarity
-    pairOf(Regex("\\[([^|]+\\|)?([^]]+)]"), "$2"),
-)
-
-private fun <T, D> pairOf(first: T, second: D): Pair<T, D> {
-    return first to second
-}
-
-private fun String.normalize(): String {
-    return normalizeRules.fold(unescape()) { str, rule ->
-        when (val pattern = rule.first) {
-            is String -> str.replace(pattern, rule.second)
-            is Regex -> str.replace(pattern, rule.second)
-            else -> error("Unknown pattern type")
-        }
-    }
-}
-
-/**
- * 使用状态机模式解析游戏本地化文件stat_descriptions.txt
- * 使用流式处理避免内存溢出，支持大型文件解析
- *
- * @return GameStatDescription对象的序列
- */
-private fun doParseStatDescriptions(dir: File, unlabelledLanguage: String): Sequence<GameStatDescription> = sequence {
-    dir.listFiles()?.forEach { file ->
-        try {
-            file.inputStream().use {
-                val missingIds = mutableListOf<String?>()
-                InputStreamReader(it, Charsets.UTF_16).useLines { lines ->
-                    var expectedCount = 0
-
-                    val iterator = object : Iterator<String> {
-                        private val origin = lines.iterator()
-
-                        // for debug
-                        var line = 0
-
-                        override fun hasNext(): Boolean = origin.hasNext()
-
-                        override fun next(): String {
-                            line++
-                            val next = origin.next()
-                            if (next.trim() == "description") {
-                                expectedCount++
-                            }
-                            return next
-                        }
-                    }
-                    val context = ParserContext(unlabelledLanguage)
-
-                    var state = State.WAITING_DESCRIPTION
-                    while (iterator.hasNext()) {
-                        when (state) {
-                            State.WAITING_DESCRIPTION -> {
-                                while (iterator.hasNext() && iterator.next().trim() != "description") {
-                                    // loop
-                                }
-                                state = State.PARSING_ID
-                            }
-
-                            State.PARSING_ID -> {
-                                val idMatch = ID_LINE_PATTERN.find(iterator.next().trim())
-                                val id = idMatch?.groupValues?.get(1)?.trim()
-                                missingIds.add(id)
-                                context.currentId = id
-                                state = State.PARSING_CONTENT
-                            }
-
-                            State.PARSING_CONTENT -> {
-                                val line = iterator.next().trim()
-                                if (line.isEmpty()) {
-                                    continue
-                                }
-                                val count = line.toIntOrNull()
-                                if (count == null) {
-                                    state = State.WAITING_DESCRIPTION
-                                    continue
-                                }
-
-                                for (i in 0 until count) {
-                                    val captured = TEXT_LINE_PATTERN.find(iterator.next().trim())!!.groupValues[1]
-                                    val text = if (captured.startsWith("[DNT]")) {
-                                        captured
-                                    } else {
-                                        captured.normalize()
-                                    }
-                                    context.currentNamesContainer.add(text)
-                                }
-                                val next = runCatching { iterator.next().trim() }.getOrNull()
-                                if (next != null && next.matches(LANG_PATTERN)) {
-                                    context.currentLanguage = LANG_PATTERN.find(next)!!.groupValues[1]
-                                    // 国服在同一条 stat_description 上偶尔会有两个一样的中文翻译, 例如:
-                                    // 	lang "Simplified Chinese"
-                                    //	1
-                                    //		# "超然飞升" reminderstring ReminderTextPrismaticBulwark
-                                    //	lang "Simplified Chinese"
-                                    //	1
-                                    //		# "超然飞升" reminderstring ReminderTextPrismaticBulwark
-                                    // 会导致重复添加, 导致数量对不上, 所以在这里清空一下
-                                    context.currentNamesContainer.clear()
-                                    continue
-                                }
-
-                                context.createGameStatDescription(file.name)?.let { desc ->
-                                    context.resetForNewBlock()
-                                    missingIds.remove(desc.id)
-                                    expectedCount--
-                                    yield(desc)
-                                }
-                                state = when (next) {
-                                    null -> return@useLines
-                                    "description" -> State.PARSING_ID
-                                    else -> State.WAITING_DESCRIPTION
-                                }
-                            }
-                        }
-                    }
-                    if (expectedCount > 0) {
-                        error("expected remains: $expectedCount")
-                    }
-                }
-                if (missingIds.isNotEmpty()) {
-                    error("missing ids: $missingIds")
-                }
-            }
-        } catch (e: Throwable) {
-            println("parsing file: $file")
-            throw e
-        }
-    }
-}
-
-/**
- * 高效的字符串反转义函数
- */
-private fun String.unescape(): String {
-    val input = this
-    val result = StringBuilder(input.length)
-    var i = 0
-    while (i < input.length) {
-        if (input[i] == '\\' && i + 1 < input.length) {
-            when (input[i + 1]) {
-                'n' -> result.append('\n')
-                't' -> result.append('\t')
-                'r' -> result.append('\r')
-                '\\' -> result.append('\\')
-                '"' -> result.append('"')
-                else -> {
-                    result.append(input[i])
-                    result.append(input[i + 1])
-                }
-            }
-            i += 2
-        } else {
-            result.append(input[i])
-            i++
-        }
-    }
-    return result.toString()
-}
+private val whitespace = Regex("\\s+")
+private val languageHeader = Regex("lang\\s+\"([^\"]+)\"")
+private fun String.tokens() = if (isBlank()) emptyList() else trim().split(whitespace)
 
 object StatDescriptionParsers {
     /**
-     * @param unlabelledLanguage 没有 `lang` 标记的 description block 的归属语言
+     * [languages] limits the rules retained in memory, not the language blocks read.
+     * Includes are not followed: the exporter already supplies individual files, identified by filename.
      */
-    fun parse(descriptionsDir: File, unlabelledLanguage: String = "English"): List<GameStatDescription> {
-        return doParseStatDescriptions(descriptionsDir, unlabelledLanguage).onEach { description ->
-            val expectedCount = description.namesByLang[unlabelledLanguage]?.size ?: 0
-            description.namesByLang.forEach { entry ->
-                if (expectedCount != entry.value.size) {
-                    println("[WARNING] Parsing stat desc files, size not match, expected: $expectedCount, actual: ${entry.value.size}, lang: ${entry.key} at: ${description.uniqueId}")
+    fun parse(
+        descriptionsDir: File,
+        unlabelledLanguage: String = "English",
+        languages: Set<String>? = null,
+    ): List<GameStatDescription> = buildList {
+        descriptionsDir.listFiles()
+            ?.filter { it.isFile && (it.extension.equals("csd", true) || it.extension.equals("txt", true)) }
+            ?.sortedBy { it.name }
+            ?.forEach { file ->
+                file.bufferedReader(Charsets.UTF_16).use { reader ->
+                    addAll(parseFile(CsdReader(file, reader), unlabelledLanguage, languages))
                 }
             }
-        }.toList()
     }
-}
 
-fun parseStatDescriptions(descriptionsDir: File, unlabelledLanguage: String = "English"): List<GameStatDescription> {
-    return StatDescriptionParsers.parse(descriptionsDir, unlabelledLanguage)
+    private fun parseFile(input: CsdReader, defaultLanguage: String, languages: Set<String>?) = sequence {
+        var line = input.next()
+        while (line != null) {
+            val header = line.tokens()
+            if (header.firstOrNull() != "description") {
+                line = input.next()
+                continue
+            }
+            val location = input.location
+            require(header.size <= 2) { "$location: invalid description header: $line" }
+            val ids = input.required("stat IDs").tokens()
+            val count = ids.firstOrNull()?.toIntOrNull()
+            require(count != null && count > 0 && count == ids.size - 1) {
+                "${input.location}: invalid stat ID count: $ids"
+            }
+            val rulesByLang = linkedMapOf<String, List<StatDescriptionRule>>()
+            var language = defaultLanguage
+            do {
+                val rowCount = input.required("row count").toIntOrNull()
+                require(rowCount != null && rowCount >= 0) { "${input.location}: invalid row count" }
+                val keep = languages == null || language in languages
+                val rules = if (keep) ArrayList<StatDescriptionRule>(rowCount) else null
+                repeat(rowCount) {
+                    val row = input.required("rule for $language")
+                    if (rules != null) rules.add(parseRow(row, count, input.location))
+                }
+                // Some Tencent extracts repeat a language section. Keep the last one, as before.
+                if (rules != null) rulesByLang[language] = rules
+                line = input.next()
+                val lang = line?.let(languageHeader::matchEntire) ?: break
+                language = lang.groupValues[1]
+            } while (true)
+            yield(GameStatDescription(input.file.nameWithoutExtension, ids.drop(1), rulesByLang, location, header.getOrNull(1)))
+        }
+    }
+
+    private fun parseRow(row: String, statCount: Int, location: CsdLocation): StatDescriptionRule {
+        val start = row.indexOf('"')
+        require(start >= 0) { "$location: missing quoted template: $row" }
+        var end = start + 1
+        while (end < row.length && row[end] != '"') {
+            end += if (row[end] == '\\') 2 else 1
+        }
+        require(end < row.length) { "$location: unterminated template: $row" }
+        val prefix = row.substring(0, start).tokens()
+        require(prefix.size >= statCount) { "$location: expected $statCount stat conditions: $row" }
+        return StatDescriptionRule(
+            prefix.take(statCount).map(::StatCondition),
+            prefix.drop(statCount),
+            row.substring(start + 1, end),
+            row.substring(end + 1).tokens(),
+            location,
+        )
+    }
+
+    private class CsdReader(val file: File, private val reader: BufferedReader) {
+        private var lineNumber = 0
+        val location get() = CsdLocation(file.path, lineNumber)
+
+        fun next(): String? {
+            while (true) {
+                val line = reader.readLine() ?: return null
+                lineNumber++
+                if (line.isNotBlank()) return line.trim()
+            }
+        }
+
+        fun required(field: String): String = next() ?: error("$location: expected $field before end of file")
+    }
 }

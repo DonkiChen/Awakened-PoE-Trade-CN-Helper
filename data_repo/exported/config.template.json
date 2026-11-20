@@ -48,6 +48,14 @@
   ],
   "tables": [
     {
+      "name": "AlternateTreeVersions",
+      "columns": ["Id", "Name"]
+    },
+    {
+      "name": "AlternateTreeVersionKeystones",
+      "columns": ["Version", "StatValue", "Conqueror", "InternalVersion"]
+    },
+    {
       "name": "ActiveSkills",
       "columns": [
         "Id",
