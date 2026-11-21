@@ -1,16 +1,14 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
-The root project is a Kotlin/JVM tool that generates translated `items.ndjson` and `stats.ndjson` for Awakened PoE Trade. Main code lives in `src/main/kotlin`, split by concern: `data/` for parsing and repository access, `item/` and `stat/` for patching, and `util/` for shared helpers. Runtime export inputs live in `data_repo/`; local source paths are configured in `data_repo/exported/*/config.json`. `poe-dat-viewer/` is a submodule used to export game data, with `lib/` for the CLI library and `viewer/` for the Vue UI. Generated output in `build/`, `bin/`, and `data_repo/exported/*/{files,tables}` is not source.
+## Build and verification
 
-## Build, Test, and Development Commands
-Use `.\gradlew.bat build` to compile the Kotlin project and run all configured checks. Use `.\gradlew.bat test` for root JVM tests only. Run `.\scripts\build_and_export.bat` to rebuild `poe-dat-viewer/lib` and export patch data before running `src/main/kotlin/Main.kt`; use `.\scripts\build_and_export.bat --check` to validate the required tools and patch packages without modifying game files. For the viewer, use `cd poe-dat-viewer/viewer && npm install`, then `npm run dev` for local development, `npm run lint` for ESLint, and `npm run build` for lint, type-checking, and production output. If you clone fresh, initialize submodules first with `git submodule update --init --recursive`.
+- Run commands from the helper root: the generator resolves `data_repo/` locally and `../renderer/` in the parent checkout. The Gradle wrapper is 8.5, with a JVM 8 compilation toolchain.
+- `.\gradlew.bat build` compiles and runs JUnit Platform tests in `src/test/kotlin`; it does not run the generator or require game exports. For a focused run: `.\gradlew.bat test --tests stat.TradeStatResolverTest`.
+- `.\gradlew.bat generateTranslations` builds first, then runs `src/main/kotlin/Main.kt` using existing local exports. It does not export game data. `--args=--mod-names-only` writes only the marked `*_MODS` block; `--args=--check-mod-names` checks that block without writing it. For a read-only ID-vs-legacy stat audit: `.\gradlew.bat -q generateTranslations --args=--audit-stats --console=plain`. These modes still need exports.
 
-## Coding Style & Naming Conventions
-Follow existing Kotlin style: 4-space indentation, `PascalCase` for objects and classes, `camelCase` for functions and properties, and package-based organization by feature. Keep parser and patcher logic in their existing folders instead of introducing broad utility files at the root. In `poe-dat-viewer/viewer`, Vue components use `PascalCase` filenames such as `Workbench.vue`; utility modules use descriptive lowercase names. ESLint is configured in `poe-dat-viewer/viewer/eslint.config.js`; match current formatting instead of adding a separate formatter.
+## Export and translation inputs
 
-## Testing Guidelines
-The root build uses Kotlin `test` with JUnit Platform, but there is currently no populated `src/test/kotlin` tree. Add focused unit tests there when changing parsing or patch logic. The viewer has no dedicated test runner configured, so frontend changes should at minimum pass `npm run lint` and `npm run build`. There is no enforced coverage threshold; rely on targeted tests plus sample export verification.
-
-## Commit & Pull Request Guidelines
-Recent commits use short, imperative subjects in either Chinese or English, for example `add support for imbued gems`. Keep commit messages brief, scoped to one change, and avoid mixing refactors with data updates. Pull requests should describe the affected data source or module, list any edited config files, and include sample output or screenshots when `poe-dat-viewer/viewer` changes. Call out machine-specific path changes in `data_repo/exported/*/config.json` so reviewers can verify they are intentional.
+- `.\scripts\build_and_export.bat` modifies and restores installed PoE files. Run a full export only when intended, with the game closed, local paths configured, and matching patch/restore ZIPs in `scripts/patch/`. `--check` publishes the patcher and checks the template exists and ZIPs pair up, but exits before building the exporter or touching game files.
+- Both `PoePatcherCli/` (.NET 8 SDK) and `poe-dat-viewer/` are nested submodules. The export script builds `poe-dat-viewer/lib` (`npm install`, then `npx tsc`, Node ≥20); `viewer/` is a separate UI, not part of export.
+- Add required tables and columns in `data_repo/exported/config.template.json` and re-export. Per-source `config.json`, `files/`, and `tables/` are ignored local outputs. A successful partial export is not necessarily enough: `Main.kt` selects four mappers, and `tencent_amsco2` uses English stat descriptions from `intl_amsco2`.
+- For CSD directives, start in `data/parser/CsdGameDirectives.kt` under `src/main/kotlin`; directive stat indices are 1-based, template slots 0-based. Keep manual compatibility mappings in `data_repo/extra/`. See [README.md](README.md) for mapper language settings and audit record format.
