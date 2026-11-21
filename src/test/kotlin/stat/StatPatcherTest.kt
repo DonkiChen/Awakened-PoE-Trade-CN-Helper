@@ -14,6 +14,7 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
+import kotlin.test.assertTrue
 
 class StatPatcherTest {
     @Test
@@ -230,6 +231,9 @@ class StatPatcherTest {
 
         assertEquals(setOf("降低一", "降低二"), matcherNames)
         assertEquals(emptySet(), advancedNames)
+        val scoped = StatPatcher.refScopedAliases(listOf(extraStat), negativeStat.matchers.single())
+        assertEquals(setOf("降低一", "降低二"), scoped.map { it["string"].asString }.toSet())
+        assertTrue(scoped.all { it["negate"].asBoolean })
     }
 
     @Test

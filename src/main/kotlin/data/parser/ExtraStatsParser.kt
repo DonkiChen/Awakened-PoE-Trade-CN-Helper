@@ -19,19 +19,7 @@ enum class Resolver {
 }
 
 enum class Type {
-    ACTIVE_SKILL,
-    PASSIVE_SKILL,
-    CLUSTER_JEWEL,
     EXPEDITION_AREA,
-    LAKE_ROOM,
-    INCURSION_ROOM,
-    LOGBOOK_FACTION,
-    BETRAYAL_NPC,
-    ASCENDANCY,
-    KEYSTONE,
-    EXARCH_EATER,
-    ELDER_GUARDIAN,
-    ATLAS_EXILE,
     DEFAULT
 }
 
@@ -151,50 +139,9 @@ fun parseExtraStats(mapper: GameDataRepo.GameDataMapper, file: File): List<Extra
                     return@forEach
                 }
 
-                Type.ACTIVE_SKILL -> mapper.activeSkills.toArgs()
-                Type.PASSIVE_SKILL -> mapper.passiveSkills.toArgs()
                 Type.EXPEDITION_AREA -> mapper.expeditionAreas.toArgs()
-                Type.LAKE_ROOM -> mapper.lakeRooms.toArgs()
-                Type.INCURSION_ROOM -> mapper.incursionRooms.toArgs()
-                Type.LOGBOOK_FACTION -> mapper.logbookFactions.toArgs()
-                Type.BETRAYAL_NPC -> mapper.betrayalNpcs.toArgs()
-                Type.ASCENDANCY -> mapper.ascendancies.toArgs()
-                Type.KEYSTONE -> mapper.keystones.toArgs()
-                // FIXME: 偷懒直接拿第一个
-                Type.EXARCH_EATER -> mapper.exarchEaterMods.mapValues { it.value.first() }
-                    .toArgs()
-                Type.CLUSTER_JEWEL -> {
-                    val resolvedStats = stat.en.mapIndexed { index, text ->
-                        stat.copy(
-                            refName = text.string,
-                            en = listOf(text),
-                            cn = stat.translationSets.firstOrNull()?.getOrNull(index)?.let(::listOf),
-                            cns = null
-                        )
-                    }
-                    result.addAll(resolvedStats)
-                    return@forEach
-                }
-                Type.ELDER_GUARDIAN -> mapper.elderGuardians.toArgs()
-                Type.ATLAS_EXILE -> mapper.atlasExiles.toArgs()
             }
-
-            val resolvedStats = resolvePlaceholder(stat, map)
-            when (stat.type) {
-                Type.INCURSION_ROOM -> {
-                    resolvedStats.flatMapTo(result) { resolvedStat ->
-                        (1..3).map { i ->
-                            resolvedStat.copy(
-                                refName = "${resolvedStat.refName} (Tier ${i})",
-                                en = resolvedStat.en.map { it.copy(string = "${it.string} (Tier ${i})") }
-                            )
-                        }
-                    }
-                }
-
-                else -> {}
-            }
-            result.addAll(resolvedStats)
+            result.addAll(resolvePlaceholder(stat, map))
         }
     return result
 }

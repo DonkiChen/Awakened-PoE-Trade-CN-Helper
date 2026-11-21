@@ -10,6 +10,65 @@ import kotlin.test.assertTrue
 
 class CsdRuleEngineTest {
     @Test
+    fun `lookup directives use the configured row key and skip non-Tempest mods`() = withDirectory { dir ->
+        fun table(name: String, json: String) = dir.resolve("$name.json").writeText(json)
+        table("FishingHookTypes", """[{"_index":0,"Index":4,"Name":"Iron Hook"}]""")
+        table("ShaperApparitionAbility", """[{"_index":0,"Index":2,"Name":"Ire"}]""")
+        table("MinionDoublingStatTypes", """[{"_index":0,"Index":6,"Name":"Zombies"}]""")
+        table("ItemClasses", """[{"_index":7,"Name":"Bows"}]""")
+        table("AfflictionRewardTypeVisuals", """[{"_index":5,"Name":"Currency"}]""")
+        table("BaseItemTypes", """[{"_index":13,"Name":"Club"}]""")
+        table("WeaponPassiveTreeUniqueBaseTypes", """[{"_index":11,"UniqueBase":13}]""")
+        table("Mods", """[{"_index":1,"GenerationType":1,"Name":"Prefix"},{"_index":12,"GenerationType":8,"Name":"Tempest"}]""")
+        val engine = gameCsdEngine(dir) { error(it) }
+        val examples = listOf(
+            Triple("fishing_hook_type", 4, "Iron Hook"),
+            Triple("shaper_apparition_ability", 3, "Ire"),
+            Triple("minion_doubling_type", 7, "Zombies"),
+            Triple("mod_value_to_item_class", 7, "Bows"),
+            Triple("affliction_reward_type", 5, "Currency"),
+            Triple("weapon_tree_unique_base_type_name", 12, "Club"),
+            Triple("tempest_mod_text", 12, "Tempest"),
+        )
+        for ((name, key, text) in examples) {
+            val rule = StatDescriptionRule(listOf(StatCondition("#")), emptyList(), "{0}", listOf(name, "1"), CsdLocation("test", 1))
+            assertEquals(text, engine.displayText(rule, listOf(key)), name)
+            assertEquals(listOf(text), engine.tradeMatchers(rule).map { it.text }, name)
+        }
+    }
+
+    @Test
+    fun `jewel radius keeps both the localized lookup template and the literal override`() = withDirectory { dir ->
+        val en = File(dir, "en").apply { mkdir() }
+        val cn = File(dir, "cn").apply { mkdir() }
+        val sizes = listOf("Small", "Medium", "Large", "VeryLarge", "Massive")
+        fun writeSizes(tables: File, names: List<String>) = tables.resolve("ClientStrings.json").writeText(
+            sizes.zip(names).joinToString(",", "[", "]") { (size, name) ->
+                """{"Id":"JewelRadius$size","Text":"$name"}"""
+            },
+        )
+        writeSizes(en, listOf("Small", "Medium", "Large", "Very Large", "Massive"))
+        writeSizes(cn, listOf("小", "中", "大", "很大", "庞大"))
+        val desc = parse(dir, """
+            description
+                1 ring_radius
+                1
+                    # "Only affects Passives in {0} Ring" passive_jewel_radius 1
+                lang "Simplified Chinese"
+                2
+                    # "只影响 {0} 环形范围内的天赋" passive_jewel_radius 1
+                    5 "只影响巨型圈内的天赋"
+        """).single()
+        val pairs = CsdMatcherTranslations(gameCsdEngine(en) { error(it) }, gameCsdEngine(cn) { error(it) }) {
+            error(it)
+        }.pair(desc, "English", desc, "Simplified Chinese")
+        assertEquals(listOf("只影响 庞大 环形范围内的天赋", "只影响巨型圈内的天赋"),
+            pairs.filter { it.first == "Only affects Passives in Massive Ring" }.map { it.second })
+        assertEquals(listOf("Only affects Passives in Small Ring" to "只影响 小 环形范围内的天赋"),
+            pairs.filter { it.first == "Only affects Passives in Small Ring" })
+    }
+
+    @Test
     fun `parse keeps named descriptions and ordered rules including unknown instructions`() = withDirectory { dir ->
         val rules = parse(dir, """
             include "Metadata/StatDescriptions/shared.csd"
@@ -81,6 +140,34 @@ class CsdRuleEngineTest {
     }
 
     @Test
+    fun `elder guardian lookup uses the general template and falls back to uncovered literals`() = withDirectory { dir ->
+        val en = File(dir, "en").apply { mkdir() }
+        val cn = File(dir, "cn").apply { mkdir() }
+        en.resolve("ElderGuardians.json").writeText(
+            """[{"_index":1,"Name":"The Eradicator"},{"_index":3,"Name":"The Purifier"}]""",
+        )
+        cn.resolve("ElderGuardians.json").writeText("""[{"_index":3,"Name":"裂界守卫：净世"}]""")
+        val description = parse(dir, """
+            description
+                1 map_elder_boss_variation
+                1
+                    # "Map is occupied by {0}" elder_guardian_index 1
+                lang "Simplified Chinese"
+                3
+                    # "地图被 {0} 占据" elder_guardian_index 1
+                    2 "该地图被裂界守卫：寂灭占据"
+                    4 "该地图被裂界守卫：净世占据"
+        """).single()
+        val pairs = CsdMatcherTranslations(gameCsdEngine(en) { error(it) }, gameCsdEngine(cn) { error(it) }) {
+            error(it)
+        }.pair(description, "English", description, "Simplified Chinese")
+        assertEquals(mapOf(
+            "Map is occupied by The Eradicator" to "该地图被裂界守卫：寂灭占据",
+            "Map is occupied by The Purifier" to "地图被 裂界守卫：净世 占据",
+        ), pairs.toMap())
+    }
+
+    @Test
     fun `random support gem rules pair localized names by gem index and keep the level variable`() = withDirectory { dir ->
         val en = File(dir, "en").apply { mkdir() }
         val cn = File(dir, "cn").apply { mkdir() }
@@ -149,6 +236,64 @@ class CsdRuleEngineTest {
             "Skills Socketed in your Passive Tree are Supported by level # Added Chaos Damage" to "你天赋树赋予的技能由 # 级的附加混沌伤害辅助",
         ), CsdMatcherTranslations(source, target) { error(it) }
             .pair(description, "English", description, "Traditional Chinese").toMap())
+    }
+
+    @Test
+    fun `random skill gem lookup accepts its selector as a literal rather than a stat index`() = withDirectory { dir ->
+        val en = File(dir, "en").apply { mkdir() }
+        val cn = File(dir, "cn").apply { mkdir() }
+        en.resolve("IndexableSkillGems.json").writeText("""[{"Index":37,"Name1":"Fireball","Name2":"Wrong"}]""")
+        cn.resolve("IndexableSkillGems.json").writeText("""[{"Index":37,"Name1":"火球","Name2":"错误"}]""")
+        val description = parse(dir, """
+            description
+                2 random_skill_gem_level_+_level random_skill_gem_level_+_index
+                1
+                    1|# # "+{0} to Level of all {1} Gems" display_indexable_skill 2 0
+                lang "Traditional Chinese"
+                1
+                    1|# # "所有 {1} 宝石等级 +{0}" display_indexable_skill 2 0
+        """).single()
+        val source = gameCsdEngine(en) { error(it) }
+        val target = gameCsdEngine(cn) { error(it) }
+        assertEquals(
+            listOf("# to Level of all Fireball Gems" to "所有 火球 宝石等级 #"),
+            CsdMatcherTranslations(source, target) { error(it) }
+                .pair(description, "English", description, "Traditional Chinese"),
+        )
+        val rule = description.rulesByLang.getValue("English").single()
+        assertEquals("+2 to Level of all Fireball Gems", source.displayText(rule, listOf(2, 37)))
+        val diagnostics = mutableListOf<String>()
+        assertTrue(gameCsdEngine(en, diagnostics::add)
+            .tradeMatchers(rule.copy(directiveTokens = listOf("display_indexable_skill", "2", "1"))).isEmpty())
+        assertTrue(diagnostics.single().contains("requires trailing literal '0'"))
+    }
+
+    @Test
+    fun `game lookups use passive hashes and map variants rather than row order`() = withDirectory { dir ->
+        dir.resolve("PassiveSkills.json").writeText("""[{"_index":7,"PassiveSkillGraphId":29199,"Name":"Iron Grip"}]""")
+        dir.resolve("ElderGuardians.json").writeText("""[{"_index":3,"Name":"The Purifier"}]""")
+        dir.resolve("AtlasExiles.json").writeText("""[{"_index":1,"CitadelName":"Veritania's Citadel"}]""")
+        dir.resolve("FishingLureTypes.json").writeText("""[{"_index":0,"Index":3,"Name":"Totemic Wood Lure"}]""")
+        val rules = parse(dir, """
+            description
+                1 stat
+                4
+                    # "Allocates {}" passive_hash 1
+                    # "Map is occupied by {0}" elder_guardian_index 1
+                    # "Map contains {0}" atlas_exile_citadel_index 1
+                    # "{0}" fishing_lure_type 1
+        """).single().rulesByLang.getValue("English")
+        val engine = gameCsdEngine(dir) { error(it) }
+        assertEquals("Allocates Iron Grip", engine.displayText(rules[0], listOf(29199)))
+        assertEquals("Map is occupied by The Purifier", engine.displayText(rules[1], listOf(4)))
+        assertEquals("Map contains Veritania's Citadel", engine.displayText(rules[2], listOf(2)))
+        assertEquals("Totemic Wood Lure", engine.displayText(rules[3], listOf(3)))
+    }
+
+    @Test
+    fun `legacy matcher understands implicit and explicit numeric format slots`() {
+        assertEquals("#% chance to Flee", legacyMatcherText("{:d}% chance to Flee"))
+        assertEquals("# to Strength; # to Dexterity", legacyMatcherText("{:+d} to Strength; {10:+d} to Dexterity"))
     }
 
     @Test

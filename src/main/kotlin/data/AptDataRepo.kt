@@ -53,6 +53,10 @@ object AptDataRepo {
         override val associateKey: String
             get() = refName
 
+        val tradeIds: List<String>
+            get() = rawData.getAsJsonObject("trade")?.getAsJsonObject("ids")?.entrySet().orEmpty()
+                .flatMap { (_, ids) -> ids.asJsonArray.map { it.asString } }
+
         val reminderText: String?
             get() = rawData["reminderText"]?.takeUnless { it.isJsonNull }?.asString
 

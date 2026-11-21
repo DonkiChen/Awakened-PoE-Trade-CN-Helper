@@ -62,8 +62,6 @@ set "TENCENT_GAME_PATH=C:\Program Files (x86)\流放之路(511)"
 
 国际服和国服共用 [config.template.json](./data_repo/exported/config.template.json)。脚本会填入游戏路径和目标语言（国际服为 `Traditional Chinese`，国服为 `Simplified Chinese`），生成各数据源目录中的 `config.json`。两者都保留 `English`。模板已包含 `Mods` 表及其 `Id`、`Name` 列；如果旧导出缺少这张表，请用新模板重新导出。生成的配置属于本地环境配置，不要直接复制其他人的路径。
 
-永恒珠宝还需要新模板中的 `AlternateTreeVersions` 和 `AlternateTreeVersionKeystones`。用旧导出生成时，缺表的动态规则会被跳过，日志会列出导出文件路径和 `.csd` 行号；普通词缀不依赖这些表。
-
 ### 2. 自动导出游戏数据
 
 将补丁 ZIP 放入 [`scripts/patch`](./scripts/patch)，关闭正在运行的游戏，然后执行：
@@ -136,11 +134,33 @@ set "TENCENT_GAME_PATH=C:\Program Files (x86)\流放之路(511)"
 
 `Main.kt` 中的 `targetLanguageKey` 只决定读取导出中的哪个语言目录，不改变 renderer 的输出目录。运行工具前请确认英文输入和简中 `client_strings.js` 都存在。
 
+### 审计词缀生成
+
+普通交易词缀优先使用英文 APT 数据里的 `trade.ids`。生成器从 CSD 的有序内部 `statIds` 计算 trade hash，再在对应候选中用英文 matcher 区分规则变体。中文文本仍来自 CSD。不同导出对同一内部 stat 有各自唯一的译名时，会保留这些别名；按 APT `ref` 明确维护的兼容别名也保留。同一导出内有歧义时报告冲突，只保留本导出中能被该 ID 验证的旧译文。无法验证时保留英文 matcher，不从全局文案表随意选一个。普通 ID 无法匹配时使用旧路径；固定选项、pseudo 和永恒珠宝等保留原来的专用处理。
+
+在 Helper 根目录运行以下命令，可用同一批当前导出逐条对比 ID 路径和旧文案路径。审计只输出报告，不改写 `stats.ndjson`、物品数据、客户端字符串或游戏文件。
+
+```bat
+gradlew.bat -q generateTranslations --args=--audit-stats --console=plain > audit-stats.ndjson 2> audit-stats.log
+```
+
+报告每行是一个 JSON 对象；首行是导出来源，末行是统计。用 `location.inputLine`（从 1 开始）、`groupIndex` 和 `matcherIndex`（从 0 开始）定位英文输入。`selected` 列出 ID 验证通过的译文和来源；`alternatives` 列出冲突候选；`legacy`、`output`、`removed` 和 `added` 记录旧、新结果和差异。CSD 来源含导出名、文件名、行号和内部 stat ID；非 CSD 的旧译文只列出 mapper。`trade_data/` 英中快照只用来核对完整 ID 是否存在，不提供 matcher 译文。
+
+首次验证（2026-11-21，使用上文配置的四组本地导出）：共 12,741 条英文 matcher，其中 8,632 条进入普通 ID 查找，7,843 条直接使用 ID 候选译文（90.9%），76 条有冲突但保留了经 ID 验证的旧译文，711 条走旧路径，2 条缺译。另有 4,109 条不适用普通 ID 查找，其中 2,238 条带 `|option` 的 matcher 全部不变。新旧对比剔除了 409 条 matcher 上的 416 个旧变体；报告将这些变体定位到不同的内部 stat，76 条 matcher 的首选变体随之改变。没有新增缺译，也没有改变 matcher 或查询元数据。更新导出后请重新测量，不要将此基线当作固定覆盖率。
+
 ## `.csd` 规则
 
 `StatDescriptionParser.kt` 读取规则，`CsdRuleEngine.kt` 求值并生成 matcher，`CsdMatcherTranslations.kt` 负责英中配对。在 `CsdGameDirectives.kt` 注册新的数值转换、查表或元数据指令即可扩展，不需要修改文件解析器。查表指令的参数是从 1 开始的 stat 索引；模板则从 `{0}` 开始编号。查表的第一项参数是输出槽，其余参数可参与过滤（例如永恒珠宝的阵营和内部修订号）。
 
 动态 matcher 根据 stat 值域配对；能覆盖同一变体的旧版字面规则也可以作为译文。不支持的指令、缺表、冲突或只覆盖部分值域的动态译文会报告并跳过。普通规则保留旧的文案归一化和配对行为。独立的 `include` 不递归展开，`reminderstring` 等元数据也不拼入 matcher。
+
+随机宝石、天赋、鱼饵和地图首领等词缀会按 CSD 指令查游戏表。星团珠宝的小天赋词缀使用 `PassiveTreeExpansionSkills`、`PassiveSkills` 和 `Stats` 的数值，再用 CSD 生成实际文本。升级后请用新模板重新导出，不要直接复用缺少这些表或列的旧导出。
+
+`extra_stats.json` 仍保留游戏文件未覆盖的交易站伪词缀，以及当前导出无法替代的兼容译文。
+
+如果已在市集验证另一组内部属性也能用现有交易 ID 筛选，可在 `data_repo/extra/trade_stat_csd_aliases.json` 声明完整交易 ID 和有序的 CSD `sourceStatIds`。生成器只从指定属性组中提取与英文 matcher 匹配的译文，不需要复制中文，也不会新增交易 ID。希望之线的全抗使用此方式。
+
+半径指令读取各语言的 `JewelRadius*` 字符串，并保留 CSD 中同值的字面旧译。鱼钩、塑界者技能、召唤物翻倍、物品类别、惊悸奖励、风暴词缀及武器天赋传奇基底的查表指令需要新版导出模板中的表或列；旧导出仍可运行，但会报告缺失数据并跳过相应规则。`tree_expansion_jewel_passive` 仍由上面的星团珠宝生成流程覆盖，不把珠宝尺寸表误用作天赋文案。
 
 ## 项目结构
 

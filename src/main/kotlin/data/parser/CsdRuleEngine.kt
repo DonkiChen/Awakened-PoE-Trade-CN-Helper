@@ -12,6 +12,8 @@ internal data class CsdLookupRow(
     val text: String,
 )
 
+internal enum class CsdLookupVariants { DEFAULT, ALSO_TEMPLATE, TEMPLATE_ONLY }
+
 internal sealed interface CsdDirective {
     val arity: Int
 
@@ -36,7 +38,12 @@ internal sealed interface CsdDirective {
         }
     }
 
-    data class Lookup(override val arity: Int, val rows: () -> List<CsdLookupRow>) : CsdDirective
+    data class Lookup(
+        override val arity: Int,
+        val trailingLiteral: String? = null,
+        val variants: CsdLookupVariants = CsdLookupVariants.DEFAULT,
+        val rows: () -> List<CsdLookupRow>,
+    ) : CsdDirective
 
     // Metadata, not part of the trade matcher (e.g. a reminder or canonical line index).
     data class Metadata(override val arity: Int) : CsdDirective
@@ -67,6 +74,10 @@ internal class CsdRuleEngine(
         rule.directiveTokens.any { registry[it] is CsdDirective.Lookup }
     }
 
+    fun hasLookupVariants(rule: StatDescriptionRule, mode: CsdLookupVariants) = rule.directiveTokens.any {
+        (registry[it] as? CsdDirective.Lookup)?.variants == mode
+    }
+
     fun legacyProjection(rule: StatDescriptionRule): String? = evaluate(rule) {
         require(instructions(rule).none { it.directive is CsdDirective.Lookup }) { "legacy projection cannot resolve a lookup" }
         if (rule.conditions.any { it.bounds == null }) {
@@ -95,8 +106,13 @@ internal class CsdRuleEngine(
                 matches
             }
         }
-        val conflicting = if (lookups.isEmpty()) emptyList() else variants.filter { variant ->
-            variants.any { other -> other.labels != variant.labels && domainsOverlap(other.domains, variant.domains) }
+        val conflicting = if (lookups.isEmpty()) emptyList() else {
+            val index = CsdDomainIndex(variants, Variant::domains)
+            variants.filter { variant ->
+                index.candidates(variant.domains).any { other ->
+                    other.labels != variant.labels && domainsOverlap(other.domains, variant.domains)
+                }
+            }
         }
         if (conflicting.isNotEmpty()) report("${rule.location}: overlapping lookup rows return different text")
         (variants - conflicting.toSet()).distinct().map { variant ->
@@ -157,7 +173,12 @@ internal class CsdRuleEngine(
                 require(args.none { it in registry }) { "missing argument for '$name'" }
                 continue
             }
-            add(Instruction(handler, args.map {
+            val literal = (handler as? CsdDirective.Lookup)?.trailingLiteral
+            val statArgs = if (literal == null) args else {
+                require(args.last() == literal) { "'$name' requires trailing literal '$literal'" }
+                args.dropLast(1)
+            }
+            add(Instruction(handler, statArgs.map {
                 val index = it.toIntOrNull()
                 require(index != null && index in 1..rule.conditions.size) { "invalid stat index '$it' for '$name'" }
                 index - 1
@@ -206,17 +227,44 @@ internal fun domainsOverlap(left: List<List<IntRange>>, right: List<List<IntRang
         a.any { x -> b.any { y -> intersect(x, y) != null } }
     }
 
+private fun List<IntRange>.pointValue(): Int? = singleOrNull()?.let { range ->
+    range.first.takeIf { it == range.last }
+}
+
+// A concrete value can only overlap rows with the same value or with a non-point domain.
+// This avoids scanning thousands of unrelated passive hashes for each lookup variant.
+internal class CsdDomainIndex<T>(private val rows: List<T>, domains: (T) -> List<List<IntRange>>) {
+    private data class Slot(val points: Map<Int, List<Int>>, val ranges: List<Int>)
+
+    private val slots = rows.firstOrNull()?.let { row ->
+        domains(row).indices.map { slot ->
+            val byValue = rows.indices.groupBy { domains(rows[it])[slot].pointValue() }
+            Slot(byValue.filterKeys { it != null }.mapKeys { requireNotNull(it.key) }, byValue[null].orEmpty())
+        }
+    }.orEmpty()
+
+    fun candidates(domains: List<List<IntRange>>): List<T> {
+        val best = domains.mapIndexedNotNull { slot, domain ->
+            val value = domain.pointValue() ?: return@mapIndexedNotNull null
+            val index = slots.getOrNull(slot) ?: return@mapIndexedNotNull null
+            index.points[value].orEmpty() to index.ranges
+        }.minByOrNull { (points, ranges) -> points.size + ranges.size } ?: return rows
+        return if (best.second.isEmpty()) best.first.map(rows::get)
+        else (best.first + best.second).sorted().map(rows::get)
+    }
+}
+
 private val placeholder = Regex("""(?<![>{])(\+?)\{(\d*)(?::([^}]+))?}""")
 private val supportedFormats = setOf("", "d", "+d", "+")
 private val markup = Regex("<[^>]+>")
 private val brace = Regex("[{}]+")
 private val link = Regex("""\[([^\]|]+\|)?([^\]]+)]""")
 private val legacyLink = Regex("""\[([^|]+\|)?([^]]+)]""")
-private val legacyPlaceholder = Regex("""\+?\{\d?}""")
+private val legacyPlaceholder = Regex("""\+?\{\d*(?::(?:\+?d|\+))?}""")
 
 internal fun legacyMatcherText(raw: String): String {
     if (raw.startsWith("[DNT]")) return raw
-    return raw.unescapeCsd().replace("{0:+d}", "#").replace(legacyPlaceholder, "#")
+    return raw.unescapeCsd().replace(legacyPlaceholder, "#")
         .replace(brace, "").replace(markup, "").replace(legacyLink, "\$2")
 }
 

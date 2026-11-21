@@ -23,7 +23,14 @@ internal class CsdMatcherTranslations(
             return emptyList()
         }
         return if (dynamic) {
-            pairByDomain(sourceRules, targetRules)
+            val templateOnly = targetRules.filter { targetEngine.hasLookupVariants(it, CsdLookupVariants.TEMPLATE_ONLY) }
+            if (templateOnly.isNotEmpty()) return pairByDomain(sourceRules, templateOnly)
+            // Some clients use the lookup template even when the CSD also contains
+            // historical literal overrides. Keep both, with the template first.
+            val lookupVariants = targetRules.filter { targetEngine.hasLookupVariants(it, CsdLookupVariants.ALSO_TEMPLATE) }
+            if (lookupVariants.isEmpty()) pairByDomain(sourceRules, targetRules)
+            else (pairByDomain(sourceRules, lookupVariants) +
+                pairByDomain(sourceRules, targetRules, preferGeneral = false)).distinct()
         } else {
             // Named descriptions are reusable format definitions. They were not standalone
             // dictionary entries before this parser; indexing them adds unrelated numeric aliases.
@@ -54,11 +61,14 @@ internal class CsdMatcherTranslations(
     private fun pairByDomain(
         source: List<StatDescriptionRule>,
         target: List<StatDescriptionRule>,
+        // With multiple source rows, a specific condition can change the
+        // meaning (e.g. skills granted by a slot vs. skills socketed in it).
+        preferGeneral: Boolean = source.size == 1,
     ): List<Pair<String, String>> {
         val from = source.flatMap(sourceEngine::tradeMatchers)
-        val to = target.flatMap(targetEngine::tradeMatchers)
+        val to = CsdDomainIndex(target.flatMap(targetEngine::tradeMatchers), Matcher::domains)
         val resolved = from.map { matcher ->
-            val candidates = to.filter { candidate ->
+            val candidates = to.candidates(matcher.domains).filter { candidate ->
                 val keySlots = matcher.keySlots + candidate.keySlots
                 val lookupSlots = matcher.lookupSlots + candidate.lookupSlots
                 candidate.rule.restrictions == matcher.rule.restrictions &&
@@ -73,12 +83,13 @@ internal class CsdMatcherTranslations(
                             (slot in candidate.lookupSlots || candidate.domains[slot].isPoint())
                     }
             }
-            // A localized file can contain both the broad lookup row and legacy literal overrides.
-            // Prefer a stricter row only when it covers the whole intersection with the source.
-            val best = candidates.filterNot { broad ->
-                candidates.any { specific ->
-                    moreSpecific(specific, broad) &&
-                        contains(specific.domains, overlap(matcher.domains, broad.domains))
+            // For a single source template, prefer its general localized counterpart.
+            // A preferred rule must cover the entire intersection of the replaced rule.
+            val best = candidates.filterNot { candidate ->
+                candidates.any { preferred ->
+                    val hasPriority = if (preferGeneral) moreSpecific(candidate, preferred)
+                    else moreSpecific(preferred, candidate)
+                    hasPriority && contains(preferred.domains, overlap(matcher.domains, candidate.domains))
                 }
             }
             val texts = best.map { it.text }.distinct()
@@ -119,7 +130,7 @@ internal class CsdMatcherTranslations(
         val otherConditions = other.rule.conditions.map { it.intersect(allStatValues) }
         if (candidateConditions != otherConditions) return contains(otherConditions, candidateConditions)
         // Both rules may already constrain the slot to the same value. A literal
-        // translation that replaces a lookup at that slot still overrides the default.
+        // translation that replaces a lookup at that slot is still more specific.
         val replacedLookups = other.lookupSlots - candidate.lookupSlots
         return replacedLookups.isNotEmpty() &&
             other.lookupSlots.containsAll(candidate.lookupSlots) &&

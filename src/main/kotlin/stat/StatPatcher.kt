@@ -6,11 +6,18 @@ import data.AptDataRepo
 import data.GameDataRepo
 import data.parser.ExtraStat
 import util.removeMarkup
+import util.fromJson
 import java.io.File
 
 
 object StatPatcher {
     private val outputFile = File(AptDataRepo.APT_PROJECT_DIR, "renderer/public/data/zh_CN/stats.ndjson")
+    private val spacesBeforeNewline = Regex(" +\n")
+    private val tradeCsdAliases by lazy {
+        File("data_repo/extra/trade_stat_csd_aliases.json").reader(Charsets.UTF_8).use {
+            fromJson<List<TradeCsdAlias>>(it)
+        }.groupBy { it.tradeId }
+    }
 
     // Some translations collapse distinct English stats into the same matcher.
     // Keep these groups explicit instead of merging every duplicate translation.
@@ -41,18 +48,13 @@ object StatPatcher {
         )
     )
 
-    private fun AptDataRepo.StatGroup.translateStringAndAdvanced(mapper: GameDataRepo.GameDataMapper): AptDataRepo.StatGroup {
-        stats.forEach { it.translateStringAndAdvanced(mapper) }
-        syncToRawData()
-        return this
-    }
-
     private fun specialFix(text: String): String {
         // 有些词缀在换行前会有空格, 例如: 以阿华纳（阿华纳 - 夏巴夸亚）的名义用 # 名祭品之血浸染 \n范围内的天赋被瓦尔抑制
         // 这里处理一下
         return text
             .removeMarkup()
-            .replace(Regex(" +\n"), "\n")
+            .replace('\u00a0', ' ')
+            .replace(spacesBeforeNewline, "\n")
     }
 
     private fun createCombinations(
@@ -108,6 +110,23 @@ object StatPatcher {
         return cnMatcherNames to cnAdvancedNames
     }
 
+    internal fun refScopedAliases(extraStats: List<ExtraStat>, matcher: AptDataRepo.Stat.Matcher): List<JsonObject> =
+        extraStats.flatMap { extraStat ->
+            val index = extraStat.en.indexOfFirst { it.string.equals(matcher.string, true) }
+            if (index < 0) return@flatMap emptyList()
+            extraStat.translationSets.mapNotNull { texts ->
+                val text = texts.getOrNull(index) ?: return@mapNotNull null
+                val advanced = if (matcher.advanced != null) {
+                    text.advanced?.takeUnless { it.isBlank() || it.equals(matcher.advanced, true) }
+                        ?: return@mapNotNull null
+                } else null
+                if (text.string.isBlank() || text.string.equals(matcher.string, true)) return@mapNotNull null
+                TradeStatResolver.apply(matcher, TradeStatResolver.Translation(
+                    specialFix(text.string), advanced?.let(::specialFix),
+                ))
+            }
+        }.distinct()
+
     internal fun doReplace(
         cnMatcherNames: Set<String>,
         cnAdvancedNames: Set<String>,
@@ -141,17 +160,20 @@ object StatPatcher {
         return true
     }
 
-    private fun AptDataRepo.Stat.translateStringAndAdvanced(mapper: GameDataRepo.GameDataMapper): AptDataRepo.Stat {
+    private fun AptDataRepo.Stat.translateLegacy(
+        matcher: AptDataRepo.Stat.Matcher,
+        mapper: GameDataRepo.GameDataMapper,
+    ): List<JsonObject> {
         val mercenary = rawData["mercenary"]?.asJsonObject
         if (mercenary != null) {
             val translatedName: String
             val tier: Int?
             if (mercenary.has("tier")) {
-                val support = mapper.mercenarySupports[refName] ?: return this
+                val support = mapper.mercenarySupports[refName] ?: return listOf(matcher.rawData)
                 translatedName = support.name
                 tier = support.tier
             } else {
-                translatedName = mapper.mercenarySkills[refName] ?: return this
+                translatedName = mapper.mercenarySkills[refName] ?: return listOf(matcher.rawData)
                 tier = null
             }
 
@@ -161,61 +183,33 @@ object StatPatcher {
             } else {
                 ""
             }
-            replaceMatchers(matchers.map { matcher ->
-                matcher.rawData.deepCopy().also { rawData ->
-                    rawData.addProperty("string", specialFix(translatedName))
-                    if (rawData.has("advanced")) {
-                        rawData.addProperty("advanced", specialFix(translatedName + tierText))
-                    }
-                }
-            })
-            return this
+            return listOf(TradeStatResolver.apply(matcher, TradeStatResolver.Translation(
+                specialFix(translatedName),
+                matcher.advanced?.let { specialFix(translatedName + tierText) },
+            )))
         }
 
-        val translatedMatchers = matchers.toList().flatMap { matcher ->
-            if (refName == "+# to Level of all Raise Spectre Gems") {
-                println()
-            }
-            val cnMatcherNames = mutableSetOf<String>()
-            val cnAdvancedNames = mutableSetOf<String>()
+        val cnMatcherNames = mapper.preferredStats[matcher.string.uppercase()].orEmpty().toMutableSet()
+        val cnAdvancedNames = matcher.advanced?.let { mapper.preferredStats[it.uppercase()] }
+            .orEmpty().toMutableSet()
 
-            if (mapper.preferredStats[matcher.string.uppercase()] != null) {
-                cnMatcherNames.addAll(mapper.preferredStats[matcher.string.uppercase()]!!)
-            }
-            if (matcher.advanced != null && mapper.preferredStats[matcher.advanced.uppercase()] != null) {
-                cnAdvancedNames.addAll(mapper.preferredStats[matcher.advanced.uppercase()]!!)
-            }
-
-            if (matcher.advanced != null && cnAdvancedNames.isEmpty()) {
-                // 如果 matcher 有 advanced, 则必须要有 cnAdvancedNames
-                cnMatcherNames.clear()
-            }
-
-            val extraStats = buildList {
-                addAll(mapper.secondaryStats[refName.uppercase()].orEmpty())
-                addAll(mapper.secondaryStats[matcher.string.uppercase()].orEmpty())
-            }.distinct()
-            val (extraMatcherNames, extraAdvancedNames) = collectExtraStatTranslations(extraStats, matcher)
-            cnMatcherNames.addAll(extraMatcherNames)
-            cnAdvancedNames.addAll(extraAdvancedNames)
-
-            createCombinations(cnMatcherNames, cnAdvancedNames, matcher).map { (cnStatName, cnAdvanced) ->
-                matcher.rawData.deepCopy().also { rawData ->
-                    rawData.addProperty("string", specialFix(cnStatName))
-                    if (rawData.has("advanced") && cnAdvanced.isNotBlank()) {
-                        rawData.addProperty("advanced", specialFix(cnAdvanced))
-                    }
-                }
-            }
+        if (matcher.advanced != null && cnAdvancedNames.isEmpty()) {
+            cnMatcherNames.clear()
         }
-        replaceMatchers(translatedMatchers.distinctBy { it.toString() })
-        return this
-    }
 
-    private fun AptDataRepo.BaseStat.translate(mapper: GameDataRepo.GameDataMapper): AptDataRepo.BaseStat {
-        return when (this) {
-            is AptDataRepo.Stat -> deepClone().translateStringAndAdvanced(mapper)
-            is AptDataRepo.StatGroup -> deepClone().translateStringAndAdvanced(mapper)
+        val extraStats = buildList {
+            addAll(mapper.secondaryStats[refName.uppercase()].orEmpty())
+            addAll(mapper.secondaryStats[matcher.string.uppercase()].orEmpty())
+        }.distinct()
+        val (extraMatcherNames, extraAdvancedNames) = collectExtraStatTranslations(extraStats, matcher)
+        cnMatcherNames.addAll(extraMatcherNames)
+        cnAdvancedNames.addAll(extraAdvancedNames)
+
+        return createCombinations(cnMatcherNames, cnAdvancedNames, matcher).map { (cnStatName, cnAdvanced) ->
+            TradeStatResolver.apply(matcher, TradeStatResolver.Translation(
+                specialFix(cnStatName),
+                cnAdvanced.takeIf { matcher.advanced != null && it.isNotBlank() }?.let(::specialFix),
+            ))
         }
     }
 
@@ -346,30 +340,150 @@ object StatPatcher {
         return result
     }
 
-    fun patch(mappers: List<GameDataRepo.GameDataMapper>) {
-        val translatedByMapper = mappers.map { mapper ->
-            AptDataRepo.enStatOrGroup.map { statOrGroup ->
-                statOrGroup.translate(mapper)
-            }
-        }
-        val reminderTexts = mappers.asSequence().map { it.reminderTexts }
+    private data class RankedMatcher(val mapperIndex: Int, val data: JsonObject)
 
-        val merged = AptDataRepo.enStatOrGroup.mapIndexed { index, statOrGroup ->
-            val translated = mergeMapperTranslations(
-                original = statOrGroup,
-                translated = translatedByMapper.map { it[index] },
-                reminderTexts = reminderTexts
+    private fun translateStat(
+        stat: AptDataRepo.Stat,
+        mappers: List<GameDataRepo.GameDataMapper>,
+        reminderTexts: Sequence<Map<String, String>>,
+        location: StatTranslationAudit.Location,
+        audit: StatTranslationAudit?,
+    ): AptDataRepo.Stat {
+        val ids = stat.tradeIds
+        val special = stat.rawData.has("mercenary") || stat.rawData.getAsJsonObject("trade")?.get("option")?.asBoolean == true
+        val hashes = if (special) emptyList() else TradeStatResolver.hashes(ids)
+        val candidates = mappers.flatMap { mapper -> hashes.flatMap(mapper::tradeCandidates) }
+        val configuredCsdAliases = ids.flatMap { tradeCsdAliases[it].orEmpty() }
+        val aliasCandidates = mutableMapOf<Long, List<TradeCsdCandidate>>()
+
+        data class Outcome(
+            val resolution: TradeStatResolver.Resolution,
+            val legacy: List<RankedMatcher>,
+            val localized: List<RankedMatcher>,
+            val refScopedAliases: List<JsonObject>,
+        )
+        val outcomes = stat.matchers.map { matcher ->
+            val resolution = TradeStatResolver.resolve(matcher, hashes, candidates, ::specialFix, audit != null)
+            val legacy = if (audit != null || resolution.accepted.isEmpty()) {
+                mappers.flatMapIndexed { index, mapper ->
+                    stat.translateLegacy(matcher, mapper).map { RankedMatcher(index, it) }
+                }
+            } else emptyList()
+            // Manual aliases scoped by APT ref cover older client variants. Don't reuse
+            // entries found only by the global English matcher text on the ID path.
+            val aliases = if (resolution.accepted.isEmpty()) emptyList() else mappers.flatMapIndexed { index, mapper ->
+                refScopedAliases(mapper.secondaryStats[stat.refName.uppercase()].orEmpty(), matcher)
+                    .map { RankedMatcher(index, it) }
+            }
+            val csdAliases = if (resolution.accepted.isEmpty()) emptyList() else TradeStatResolver.resolveAliases(
+                matcher, ids, configuredCsdAliases,
+                { hash -> aliasCandidates.getOrPut(hash) { mappers.flatMap { it.tradeCandidates(hash) } } },
+                ::specialFix,
+            ).map { match ->
+                RankedMatcher(
+                    mappers.indexOfFirst { it.id == match.origins.first().mapper },
+                    TradeStatResolver.apply(matcher, match.translation),
+                )
+            }
+            val localized = when {
+                resolution.accepted.isNotEmpty() -> resolution.accepted.map { match ->
+                    RankedMatcher(
+                        mappers.indexOfFirst { it.id == match.origins.first().mapper },
+                        TradeStatResolver.apply(matcher, match.translation),
+                    )
+                } + aliases + csdAliases
+                // Don't choose an ambiguous rule or add global text matches from other stats.
+                // Retain previously shipped variants only when that same mapper verifies them
+                // against the same internal stat sequence.
+                resolution.status == "conflict" -> retainVerifiedLegacy(matcher, resolution, legacy, mappers)
+                else -> legacy
+            }
+            Outcome(resolution, legacy, localized, (aliases + csdAliases).map { it.data }.distinct())
+        }
+
+        val someLegacy = outcomes.any { it.legacy.isNotEmpty() }
+        val someLocalized = outcomes.any { it.localized.isNotEmpty() }
+        val output = stat.matchers.zip(outcomes).flatMapIndexed { index, (matcher, outcome) ->
+            // Preserve the unresolved English matcher on a conflict rather than silently dropping it.
+            val emitted = outcome.localized.ifEmpty {
+                if (!someLocalized || outcome.resolution.status == "conflict") {
+                    listOf(RankedMatcher(mappers.size, matcher.rawData))
+                } else emptyList()
+            }.sortedBy { it.mapperIndex }
+            audit?.matcher(
+                location, index, stat.refName, ids, matcher.rawData, outcome.resolution,
+                legacy = outcome.legacy.map { it.data }.ifEmpty { if (someLegacy) emptyList() else listOf(matcher.rawData) },
+                output = emitted.map { it.data },
+                refScopedAliases = outcome.refScopedAliases,
+                legacyMappers = outcome.legacy.map { mappers[it.mapperIndex].id }.distinct(),
+                legacyCsdOrigins = if (stat.rawData.has("mercenary")) emptyList() else outcome.legacy.flatMap { ranked ->
+                    val mapper = mappers[ranked.mapperIndex]
+                    fun sources(field: String, source: String?) = source?.let {
+                        mapper.legacyCsdOrigins(it).mapNotNull { (text, origin) ->
+                            if (specialFix(text) == ranked.data[field]?.asString) {
+                                StatTranslationAudit.LegacyOrigin(field, specialFix(text), origin)
+                            } else null
+                        }
+                    }.orEmpty()
+                    sources("string", matcher.string) + sources("advanced", matcher.advanced)
+                }.distinct(),
             )
-            if (translated.rawData == statOrGroup.rawData) {
-                println("missing: ${statOrGroup.rawData}")
-            }
-            translated
-        }
-        val normalized = mergeTrivialGroups(merged)
-            .distinctBy { it.rawData.toString() }
+            emitted
+        }.sortedBy { it.mapperIndex }.map { it.data }.distinct()
 
+        val result = mergeTranslatedStats(stat, emptyList(), reminderTexts)
+        result.replaceMatchers(output)
+        audit?.stat(stat.rawData, result.rawData)
+        return result
+    }
+
+    private fun retainVerifiedLegacy(
+        matcher: AptDataRepo.Stat.Matcher,
+        resolution: TradeStatResolver.Resolution,
+        legacy: List<RankedMatcher>,
+        mappers: List<GameDataRepo.GameDataMapper>,
+    ): List<RankedMatcher> {
+        if (resolution.matches.flatMap { it.origins }.map { it.statIds }.distinct().size != 1) return emptyList()
+        val verified = resolution.matches.flatMap { match ->
+            val data = TradeStatResolver.apply(matcher, match.translation)
+            match.origins.map { it.mapper to data }
+        }.toSet()
+        return legacy.filter { (mappers[it.mapperIndex].id to it.data) in verified }
+    }
+
+    private fun generate(
+        mappers: List<GameDataRepo.GameDataMapper>,
+        audit: StatTranslationAudit? = null,
+    ): List<AptDataRepo.BaseStat> {
+        val reminderTexts = mappers.asSequence().map { it.reminderTexts }
+        val merged = AptDataRepo.enStatOrGroup.mapIndexed { index, statOrGroup ->
+            when (statOrGroup) {
+                is AptDataRepo.Stat -> translateStat(
+                    statOrGroup, mappers, reminderTexts, StatTranslationAudit.Location(index + 1), audit,
+                )
+                is AptDataRepo.StatGroup -> AptDataRepo.StatGroup(
+                    statOrGroup.stats.mapIndexed { childIndex, stat ->
+                        translateStat(stat, mappers, reminderTexts, StatTranslationAudit.Location(index + 1, childIndex), audit)
+                    },
+                    statOrGroup.rawData.deepCopy(),
+                ).also { it.syncToRawData() }
+            }
+        }
+        return mergeTrivialGroups(merged).distinctBy { it.rawData.toString() }
+    }
+
+    fun patch(mappers: List<GameDataRepo.GameDataMapper>) {
+        val normalized = generate(mappers)
         outputFile.bufferedWriter().use { writer ->
             normalized.forEach { writer.appendLine(it.rawData.toString()) }
+        }
+    }
+
+    fun audit(mappers: List<GameDataRepo.GameDataMapper>) {
+        System.out.writer(Charsets.UTF_8).buffered().use { writer ->
+            val audit = StatTranslationAudit(writer, mappers)
+            val output = generate(mappers, audit)
+            audit.finish(output.size)
         }
     }
 }

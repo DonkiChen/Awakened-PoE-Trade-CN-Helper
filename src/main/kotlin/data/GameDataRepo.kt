@@ -1,6 +1,9 @@
 package data
 
 import data.parser.*
+import stat.TradeCsdCandidate
+import stat.TradeCsdOrigin
+import stat.TradeStatHash
 import util.fromJson
 import java.io.File
 
@@ -53,12 +56,14 @@ object GameDataRepo {
         private val targetStatUnlabelledLanguage: String,
     ) {
 
-        internal fun readModNameTables(): Pair<List<ModNameRow>, List<ModNameRow>> {
+        private val modNameTables by lazy {
             val tables = File(exportedDataDir, "$targetExportDirName/tables")
             fun read(language: String): List<ModNameRow> =
                 File(tables, "$language/Mods.json").reader().use { fromJson(it) }
-            return read("English") to read(targetLanguageKey)
+            read("English") to read(targetLanguageKey)
         }
+
+        internal fun readModNameTables() = modNameTables
 
         private inline fun <reified T : BaseTableItem> parseTableDataToMapper(
             gameFileName: String,
@@ -107,10 +112,6 @@ object GameDataRepo {
             }
         }
 
-        val passiveSkills by lazy {
-            parseTableDataToTextMapper<BaseTableItem>("PassiveSkills.json")
-        }
-
         val expeditionAreas by lazy {
             parseTableDataToTextMapper<BaseTableItem>("WorldAreas.json") {
                 it.id.startsWith("Expedition")
@@ -125,22 +126,22 @@ object GameDataRepo {
             parseTableDataToTextMapper<BaseTableItem>("AchievementItems.json")
         }
 
-        val lakeRooms by lazy {
+        private val lakeRooms by lazy {
             parseTableDataToTextMapper<BaseTableItem>("LakeRooms.json")
         }
 
-        val incursionRooms by lazy {
-            parseTableDataToTextMapper<IncursionRoom>("IncursionRooms.json")
+        private val incursionRoomTables by lazy {
+            parseTableDataToMapper<IncursionRoom>("IncursionRooms.json")
         }
 
         private val incursionRoomReminderTexts by lazy {
-            parseTableDataToMapper<IncursionRoom>("IncursionRooms.json")
+            incursionRoomTables
                 .filter { !it.key.description.isNullOrBlank() && !it.value.description.isNullOrBlank() }
                 .map { it.key.description!! to it.value.description!! }
                 .toMap()
         }
 
-        val logbookFactions by lazy {
+        private val logbookFactions by lazy {
             parseTableDataToTextMapper<BaseTableItem>("ExpeditionFactions.json")
         }
 
@@ -167,38 +168,6 @@ object GameDataRepo {
             parseTableDataToTextMapper<BaseTableItem>("MercenaryBuilds.json")
         }
 
-        val betrayalNpcs by lazy {
-            parseTableDataToTextMapper<BaseTableItem>("NPCs.json") {
-                it.id.startsWith("Metadata/Monsters/LeagueBetrayal/Betrayal")
-            }
-        }
-
-        val ascendancies by lazy {
-            buildMap {
-                putAll(parseTableDataToTextMapper<BaseTableItem>("Ascendancy.json"))
-                putAll(parseTableDataToTextMapper<BaseTableItem>("PassiveSkills.json") { it.id.startsWith("Ascendancy") })
-            }
-        }
-
-        val keystones by lazy {
-            buildMap {
-                val targetStatsById = rawTargetStatsFromStatDescriptions.associateBy { it.dictionaryKey() }
-                putAll(rawSourceStatsFromStatDescriptions
-                    .filter { it.id.startsWith("keystone_") }
-                    .flatMap { stat ->
-                        val targetStat = targetStatsById[stat.dictionaryKey()] ?: return@flatMap emptyList()
-                        pairStatDescriptions(stat, targetStat)
-                    }
-                    .toMap()
-                )
-                putAll(parseTableDataToTextMapper<BaseTableItem>("AchievementItems.json") { it.id.startsWith("Keystone") })
-                putAll(parseTableDataToTextMapper<BaseTableItem>("PassiveSkills.json") { it.id.contains("keystone") })
-            }
-        }
-
-        // 偷懒直接用全量数据了
-        val exarchEaterMods by lazy { statsFromDescriptions }
-
         val words by lazy {
             parseTableDataToTextMapper<BaseTableItem>("Words.json")
         }
@@ -208,20 +177,6 @@ object GameDataRepo {
                 !it.id.contains("Royale")
                         // 电能释放 被覆盖了
                         && it.id != "Metadata/Items/Gems/SkillGemLightningTendrilsChannelled"
-            }
-        }
-
-        // 裂界守卫
-        val elderGuardians by lazy {
-            parseTableDataToTextMapper<BaseTableItem>("WorldAreas.json") {
-                it.id.startsWith("MavenElderGuardian")
-            }
-        }
-
-        // 征服者守卫
-        val atlasExiles by lazy {
-            parseTableDataToTextMapper<BaseTableItem>("NPCs.json") {
-                it.id.startsWith("Metadata/Monsters/AtlasExiles/AtlasExile")
             }
         }
 
@@ -262,6 +217,65 @@ object GameDataRepo {
             }.toMap()
         }
 
+        private val veiledStats by lazy {
+            val (english, localized) = readModNameTables()
+            val localizedById = localized.associateBy { it.id }
+            english.asSequence()
+                .filter { "VeiledPrefix" in it.id || "VeiledSuffix" in it.id }
+                .mapNotNull { source ->
+                    val target = localizedById[source.id]?.name?.takeIf(String::isNotBlank) ?: return@mapNotNull null
+                    val matcher = source.name?.takeIf(String::isNotBlank) ?: return@mapNotNull null
+                    matcher.uppercase() to target
+                }
+                .groupBy({ it.first }, { it.second })
+                .mapValues { it.value.toSet() }
+        }
+
+        private val clusterStats by lazy {
+            val (source, target) = clientStrings["StatDescripotionTreeExpansionJewelGrantedSmallStat"]
+                ?: return@lazy emptyMap()
+            clusterJewelStats(
+                File(exportedDataDir, "$sourceExportDirName/tables/$sourceStatUnlabelledLanguage"),
+                File(exportedDataDir, "$targetExportDirName/tables/$targetLanguageKey"),
+                rawSourceStatsFromStatDescriptions,
+                rawTargetStatsFromStatDescriptions,
+                sourceStatUnlabelledLanguage,
+                targetLanguageKey,
+                source.text,
+                target.text,
+                ::reportCsd,
+            ).groupBy({ it.first.uppercase() }, { it.second }).mapValues { it.value.toSet() }
+        }
+
+        private val areaOptionStats by lazy {
+            val roomTier = clientStrings["IncursionRoomPopupTier"]?.first?.text
+            val lakeDifficulty = clientStrings["ItemDisplayLakeRoomDifficulty"]
+            buildList {
+                addAll(logbookFactions.toList())
+                for ((source, target) in incursionRoomTables) {
+                    add(source.name to target.name)
+                    if (source.tier > 0 && roomTier != null) {
+                        val tier = roomTier.replace("{0}", source.tier.toString())
+                        add("${source.name} $tier" to target.name)
+                        // Some trade-only room filters use the full label instead of an option name.
+                        add("Has Room: ${source.name} $tier " to target.name)
+                    }
+                }
+                if (lakeDifficulty != null) {
+                    val (source, target) = lakeDifficulty
+                    val en = legacyMatcherText(source.text)
+                    val cn = legacyMatcherText(target.text)
+                    for ((sourceName, targetName) in lakeRooms) {
+                        if (sourceName.isNotBlank() && targetName.isNotBlank()) {
+                            add("$sourceName ($en)" to "$targetName ($cn)")
+                        }
+                    }
+                }
+            }.filter { (source, target) -> source.isNotBlank() && target.isNotBlank() }
+                .groupBy({ it.first.uppercase() }, { it.second })
+                .mapValues { it.value.toSet() }
+        }
+
         /**
          * 手动维护的数据
          */
@@ -281,10 +295,33 @@ object GameDataRepo {
             StatDescriptionParsers.parse(dir, targetStatUnlabelledLanguage, setOf(targetLanguageKey))
         }
 
+        private val influencedStats by lazy {
+            buildMap<String, Set<String>> {
+                for (id in listOf("ModDescriptionLineCleansingFireImplicit", "ModDescriptionLineGreatTangleImplicit")) {
+                    val (source, target) = clientStrings[id] ?: continue
+                    val matcher = legacyMatcherText(source.text).uppercase()
+                    val translations = setOf(legacyMatcherText(target.text))
+                    put(matcher, translations)
+                    // APT's implicit-tier pseudo matchers include a trailing space.
+                    put("$matcher ", translations)
+                }
+                for (id in listOf("InfluenceStatConditionPresenceCelestialBoss", "InfluenceStatConditionPresenceUniqueMonster")) {
+                    val (source, target) = clientStrings[id] ?: continue
+                    if ("{0}" !in source.text || "{0}" !in target.text) continue
+                    for ((matcher, translations) in statsFromDescriptions) {
+                        put(
+                            source.text.uppercase().replace("{0}", matcher),
+                            translations.map { target.text.replace("{0}", it) }.toSet(),
+                        )
+                    }
+                }
+            }
+        }
+
         private fun GameStatDescription.dictionaryKey() = uniqueId to identifier
 
         private fun reportCsd(message: String) {
-            println("[WARNING] CSD [$id] $message")
+            System.err.println("[WARNING] CSD [$id] $message")
         }
 
         private val csdTranslations by lazy {
@@ -298,30 +335,77 @@ object GameDataRepo {
         private fun pairStatDescriptions(source: GameStatDescription, target: GameStatDescription) =
             csdTranslations.pair(source, sourceStatUnlabelledLanguage, target, targetLanguageKey)
 
-        private val statsFromDescriptions: Map<String, Set<String>> by lazy {
-            val enStatsFromGame = rawSourceStatsFromStatDescriptions
-            val cnStatsFromGameById = rawTargetStatsFromStatDescriptions.associateBy { it.dictionaryKey() }
-            buildMap<String, MutableSet<String>> statsMap@{
-                enStatsFromGame
-                    .filter {
-                        // fishing_lure_type 英文名有 6 个, 中文名只有 4 个, 直接跳过
-                        it.id != "fishing_lure_type"
-                    }
-                    .forEach { sourceDesc ->
-                        // 源和目标可以来自不同导出目录，因此通过文件名和 id 匹配，不能依赖翻译后的文案。
-                        val targetDesc = cnStatsFromGameById[sourceDesc.dictionaryKey()] ?: return@forEach
-                        pairStatDescriptions(sourceDesc, targetDesc).forEach { (source, target) ->
-                            getOrPut(source.uppercase()) { mutableSetOf() }.add(target)
-                        }
-                    }
+        private val tradeCsdByHash by lazy {
+            rawSourceStatsFromStatDescriptions
+                .filter { it.statIds.isNotEmpty() }
+                .groupBy { TradeStatHash.compute(it.statIds) }
+        }
+
+        private val tradeTargetCsdByKey by lazy {
+            rawTargetStatsFromStatDescriptions.groupBy { it.dictionaryKey() }
+        }
+
+        private val tradeCsdCandidates = mutableMapOf<Long, List<TradeCsdCandidate>>()
+
+        private fun csdOrigin(source: GameStatDescription, target: GameStatDescription) = TradeCsdOrigin(
+            id, sourceExportDirName, targetExportDirName, source.fileName,
+            source.statIds, source.identifier, source.location.line, target.location.line,
+        )
+
+        internal fun tradeCandidates(hash: Long): List<TradeCsdCandidate> = tradeCsdCandidates.getOrPut(hash) {
+            tradeCsdByHash[hash].orEmpty().flatMap { source ->
+                tradeTargetCsdByKey[source.dictionaryKey()].orEmpty().map { target ->
+                    TradeCsdCandidate(csdOrigin(source, target), pairStatDescriptions(source, target))
+                }
             }
         }
+
+        internal fun auditExports() = mapOf(
+            "mapper" to id,
+            "sourceExport" to sourceExportDirName,
+            "targetExport" to targetExportDirName,
+            "targetLanguage" to targetLanguageKey,
+            "sourceCsdFiles" to rawSourceStatsFromStatDescriptions.map { it.fileName }.distinct().size,
+            "targetCsdFiles" to rawTargetStatsFromStatDescriptions.map { it.fileName }.distinct().size,
+        )
+
+        private data class LegacyCsd(
+            val translations: Map<String, Set<String>>,
+            val origins: Map<String, List<Pair<String, TradeCsdOrigin>>>,
+        )
+
+        private val legacyCsd by lazy {
+            val enStatsFromGame = rawSourceStatsFromStatDescriptions
+            val cnStatsFromGameById = rawTargetStatsFromStatDescriptions.associateBy { it.dictionaryKey() }
+            val origins = mutableMapOf<String, MutableList<Pair<String, TradeCsdOrigin>>>()
+            val translations = buildMap<String, MutableSet<String>> {
+                enStatsFromGame.forEach { sourceDesc ->
+                    // 源和目标可以来自不同导出目录，因此通过文件名和 id 匹配，不能依赖翻译后的文案。
+                    val targetDesc = cnStatsFromGameById[sourceDesc.dictionaryKey()] ?: return@forEach
+                    val origin = csdOrigin(sourceDesc, targetDesc)
+                    pairStatDescriptions(sourceDesc, targetDesc).forEach { (source, target) ->
+                        val key = source.uppercase()
+                        getOrPut(key) { mutableSetOf() }.add(target)
+                        origins.getOrPut(key) { mutableListOf() }.add(target to origin)
+                    }
+                }
+            }
+            LegacyCsd(translations, origins)
+        }
+
+        private val statsFromDescriptions get() = legacyCsd.translations
+
+        internal fun legacyCsdOrigins(source: String) = legacyCsd.origins[source.uppercase()].orEmpty()
 
         val preferredStats by lazy {
             buildMap {
                 putAll(builtinSupportGems.map { it.key.uppercase() to setOf(it.value) }.toMap())
                 putAll(grantsSupportEffectWithLevel.map { it.key.uppercase() to setOf(it.value) }.toMap())
                 putAll(grantsEffectWithLevel.map { it.key.uppercase() to setOf(it.value) }.toMap())
+                putAll(influencedStats)
+                putAll(veiledStats)
+                putAll(clusterStats)
+                putAll(areaOptionStats)
                 // 放在最后, 有些名词在不同地方翻译不同(例如: Caustic Retribution), 先以 stat_descriptions 为准
                 putAll(statsFromDescriptions)
             }

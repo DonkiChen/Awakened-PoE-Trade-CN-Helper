@@ -20,7 +20,13 @@ internal fun gameCsdDirectives(tables: File): Map<String, CsdDirective> = buildM
         put(name, CsdDirective.Number(multiplier, divisor, addend, decimalPlaces, fixed, reciprocal))
     }
 
-    fun lookup(name: String, arity: Int, load: () -> List<CsdLookupRow>) {
+    fun lookup(
+        name: String,
+        arity: Int,
+        trailingLiteral: String? = null,
+        variants: CsdLookupVariants = CsdLookupVariants.DEFAULT,
+        load: () -> List<CsdLookupRow>,
+    ) {
         // Cache missing/unreadable tables too. Include the actual export path in the diagnostic.
         val result by lazy {
             try {
@@ -29,7 +35,7 @@ internal fun gameCsdDirectives(tables: File): Map<String, CsdDirective> = buildM
                 Result.failure(error)
             }
         }
-        put(name, CsdDirective.Lookup(arity) {
+        put(name, CsdDirective.Lookup(arity, trailingLiteral, variants) {
             result.getOrElse { error("$name: ${it.message}") }
         })
     }
@@ -114,7 +120,7 @@ internal fun gameCsdDirectives(tables: File): Map<String, CsdDirective> = buildM
     fun indexableSupport(name: String, table: String) {
         // The second argument is the level, which does not affect the support name.
         lookup(name, 2) {
-            tables.readRows<IndexableSupport>(table).map {
+            tables.readRows<ExplicitIndexedName>(table).map {
                 val index = requireNotNull(it.index) { "missing Index in $table" }
                 CsdLookupRow(listOf(point(index), allStatValues), it.name.orEmpty())
             }
@@ -122,6 +128,96 @@ internal fun gameCsdDirectives(tables: File): Map<String, CsdDirective> = buildM
     }
     indexableSupport("display_indexable_support", "IndexableSupportGems")
     indexableSupport("display_indexable_non_active_support", "IndexableNonActiveSupportGems")
+
+    // The final 0 selects Name1; it is not a stat slot.
+    lookup("display_indexable_skill", 2, trailingLiteral = "0") {
+        tables.readRows<IndexableSkill>("IndexableSkillGems").map {
+            val index = requireNotNull(it.index) { "missing Index in IndexableSkillGems" }
+            CsdLookupRow(listOf(point(index)), it.name.orEmpty())
+        }
+    }
+    lookup("fishing_lure_type", 1) {
+        tables.readRows<ExplicitIndexedName>("FishingLureTypes").map {
+            val index = requireNotNull(it.index) { "missing Index in FishingLureTypes" }
+            CsdLookupRow(listOf(point(index)), it.name.orEmpty())
+        }
+    }
+    fun namesByIndex(
+        directive: String,
+        table: String,
+        valueOffset: Int = 0,
+        variants: CsdLookupVariants = CsdLookupVariants.DEFAULT,
+    ) {
+        lookup(directive, 1, variants = variants) {
+            tables.readRows<ExplicitIndexedName>(table).mapNotNull {
+                val index = requireNotNull(it.index) { "missing Index in $table" }
+                it.name?.takeIf(String::isNotBlank)?.let { name -> CsdLookupRow(listOf(point(index + valueOffset)), name) }
+            }
+        }
+    }
+    fun namesByRow(directive: String, table: String) {
+        lookup(directive, 1) {
+            tables.readRows<IndexedName>(table).mapNotNull {
+                val index = requireNotNull(it.index) { "missing _index in $table" }
+                it.name?.takeIf(String::isNotBlank)?.let { name -> CsdLookupRow(listOf(point(index)), name) }
+            }
+        }
+    }
+    namesByIndex("fishing_hook_type", "FishingHookTypes")
+    // These tables have zero-based Index fields; the CSD literal overrides and
+    // the minion trade options use one-based values.
+    namesByIndex("shaper_apparition_ability", "ShaperApparitionAbility", valueOffset = 1)
+    // Some patched literal overrides refer to the wrong minion. Use the localized names table.
+    namesByIndex("minion_doubling_type", "MinionDoublingStatTypes", 1, CsdLookupVariants.TEMPLATE_ONLY)
+    namesByRow("mod_value_to_item_class", "ItemClasses")
+    namesByRow("affliction_reward_type", "AfflictionRewardTypeVisuals")
+
+    lookup("tempest_mod_text", 1) {
+        // GenerationType 8 is Tempest. Do not expand a two-slot lookup against all Mods rows.
+        tables.readRows<TempestMod>("Mods")
+            .also { require(it.any { mod -> mod.generationType != null }) { "missing GenerationType in Mods" } }
+            .filter { it.generationType == 8 }
+            .mapNotNull { mod ->
+                val index = requireNotNull(mod.index) { "missing _index in Mods" }
+                mod.name?.takeIf(String::isNotBlank)?.let { CsdLookupRow(listOf(point(index)), it) }
+            }
+    }
+    lookup("weapon_tree_unique_base_type_name", 1) {
+        val bases = tables.readRows<IndexedName>("BaseItemTypes").associateBy { it.index }
+        tables.readRows<WeaponTreeUniqueBase>("WeaponPassiveTreeUniqueBaseTypes").mapNotNull {
+            val index = requireNotNull(it.index) { "missing _index in WeaponPassiveTreeUniqueBaseTypes" }
+            val base = requireNotNull(bases[it.base]) { "missing BaseItemTypes row for UniqueBase ${it.base}" }
+            // Value zero is reserved for "of this Base Type" in the CSD.
+            base.name?.takeIf(String::isNotBlank)?.let { name -> CsdLookupRow(listOf(point(index + 1)), name) }
+        }
+    }
+    lookup("passive_jewel_radius", 1, variants = CsdLookupVariants.ALSO_TEMPLATE) {
+        val strings = tables.readRows<PearlClientString>("ClientStrings").associate { it.id to it.text }
+        listOf("Small", "Medium", "Large", "VeryLarge", "Massive").mapIndexed { index, radius ->
+            val id = "JewelRadius$radius"
+            val text = strings[id]?.takeIf(String::isNotBlank)
+            requireNotNull(text) { "missing text for $id in ${tables.resolve("ClientStrings.json")}" }
+            CsdLookupRow(listOf(point(index + 1)), text)
+        }
+    }
+    lookup("passive_hash", 1) {
+        tables.readRows<PassiveName>("PassiveSkills").mapNotNull {
+            val hash = requireNotNull(it.hash) { "missing PassiveSkillGraphId in PassiveSkills" }
+            it.name?.takeIf(String::isNotBlank)?.let { name -> CsdLookupRow(listOf(point(hash)), name) }
+        }
+    }
+    lookup("elder_guardian_index", 1) {
+        tables.readRows<IndexedName>("ElderGuardians").map {
+            val index = requireNotNull(it.index) { "missing _index in ElderGuardians" }
+            CsdLookupRow(listOf(point(index + 1)), it.name.orEmpty())
+        }
+    }
+    lookup("atlas_exile_citadel_index", 1) {
+        tables.readRows<AtlasExile>("AtlasExiles").map {
+            val index = requireNotNull(it.index) { "missing _index in AtlasExiles" }
+            CsdLookupRow(listOf(point(index + 1)), it.citadelName.orEmpty())
+        }
+    }
 
     lookup("pelagic_pearl_slot", 1) {
         val strings = tables.readRows<PearlClientString>("ClientStrings").associate { it.id to it.text }
@@ -136,7 +232,7 @@ internal fun gameCsdDirectives(tables: File): Map<String, CsdDirective> = buildM
 
 private fun point(value: Int) = value..value
 
-private inline fun <reified T> File.readRows(table: String): List<T> {
+internal inline fun <reified T> File.readRows(table: String): List<T> {
     val file = resolve("$table.json")
     require(file.isFile) { "missing table $file; rerun the game data export" }
     return file.reader(Charsets.UTF_8).use { fromJson(it) }
@@ -154,9 +250,35 @@ private data class AlternateTreeKeystone(
     @SerializedName("Conqueror") val conqueror: String?,
 )
 
-private data class IndexableSupport(
+private data class ExplicitIndexedName(
     @SerializedName("Index") val index: Int?,
     @SerializedName("Name") val name: String?,
+)
+
+private data class WeaponTreeUniqueBase(
+    @SerializedName("_index") val index: Int?,
+    @SerializedName("UniqueBase") val base: Int?,
+)
+
+private data class TempestMod(
+    @SerializedName("_index") val index: Int?,
+    @SerializedName("GenerationType") val generationType: Int?,
+    @SerializedName("Name") val name: String?,
+)
+
+private data class IndexableSkill(
+    @SerializedName("Index") val index: Int?,
+    @SerializedName("Name1") val name: String?,
+)
+
+private data class PassiveName(
+    @SerializedName("PassiveSkillGraphId") val hash: Int?,
+    @SerializedName("Name") val name: String?,
+)
+
+private data class AtlasExile(
+    @SerializedName("_index") val index: Int?,
+    @SerializedName("CitadelName") val citadelName: String?,
 )
 
 private data class PearlClientString(
