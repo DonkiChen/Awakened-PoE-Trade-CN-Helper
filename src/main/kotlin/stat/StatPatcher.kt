@@ -469,7 +469,12 @@ object StatPatcher {
                 ).also { it.syncToRawData() }
             }
         }
-        return mergeTrivialGroups(merged).distinctBy { it.rawData.toString() }
+        val output = mergeTrivialGroups(merged)
+        TradeEffectMatchers.supplement(
+            AptDataRepo.enStatOrGroup, output, mappers.flatMap { it.effectMatcherTranslations },
+        ) { audit?.effectMatcher(it) }
+        output.filterIsInstance<AptDataRepo.StatGroup>().forEach { it.syncToRawData() }
+        return output.distinctBy { it.rawData.toString() }
     }
 
     fun patch(mappers: List<GameDataRepo.GameDataMapper>) {

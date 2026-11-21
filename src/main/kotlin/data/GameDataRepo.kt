@@ -105,6 +105,33 @@ object GameDataRepo {
             parseTableDataToTextMapper<BaseTableItem>("IndexableSupportGems.json")
         }
 
+        // Keep the game IDs so identical display names cannot silently overwrite one another.
+        internal val effectMatcherTranslations by lazy {
+            buildList {
+                for ((table, template, predicate) in listOf(
+                    Triple("ActiveSkills.json", "ModGrantsEffect", { row: BaseTableItem -> !row.id.endsWith("Royale", true) }),
+                    Triple("BaseItemTypes.json", "ModGrantsSupportEffect", { row: BaseTableItem ->
+                        row.id.startsWith("Metadata/Items/Gems/SupportGem") && !row.id.endsWith("Royale", true)
+                    }),
+                )) {
+                    val templates = listOf(template, "${template}WithLevel").mapNotNull { key ->
+                        clientStrings[key]?.let { (en, localized) -> en.text to localized.text }
+                    }
+                    if (templates.isEmpty()) continue
+                    for ((en, localized) in parseTableDataToMapper(table, predicate)) {
+                        if (en.name.isNullOrBlank() || localized.name.isNullOrBlank()) continue
+                        for ((enTemplate, localizedTemplate) in templates) {
+                            add(EffectMatcherTranslation(
+                                gameId = en.id,
+                                english = enTemplate.replace("{1}", "#").replace("{0}", en.name),
+                                localized = localizedTemplate.replace("{1}", "#").replace("{0}", localized.name),
+                            ))
+                        }
+                    }
+                }
+            }
+        }
+
         val monsters by lazy {
             parseTableDataToTextMapper<BaseTableItem>("MonsterVarieties.json") {
                 // 有些怪物在中文中的灵体名和野兽名不一样...
@@ -425,3 +452,5 @@ object GameDataRepo {
         val tier: Int,
     )
 }
+
+internal data class EffectMatcherTranslation(val gameId: String, val english: String, val localized: String)

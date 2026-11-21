@@ -24,6 +24,7 @@ internal class StatTranslationAudit(
     private val decisions = sortedMapOf<String, Int>()
     private val lookup = sortedMapOf<String, Int>()
     private val changes = sortedMapOf<String, Int>()
+    private val effectMatchers = sortedMapOf<String, Int>()
     private var missing = 0
     private val seenIds = mutableSetOf<String>()
     private val metadataFields = setOf("string", "advanced")
@@ -147,6 +148,17 @@ internal class StatTranslationAudit(
         ))
     }
 
+    fun effectMatcher(decision: TradeEffectMatchers.Decision) {
+        effectMatchers.count(decision.status)
+        write(mapOf(
+            "kind" to "effect-matcher",
+            "decision" to decision.status,
+            "ref" to decision.ref,
+            "tradeIds" to decision.ids,
+            "matcher" to decision.matcher,
+        ))
+    }
+
     fun finish(outputRows: Int) {
         val counts = mapOf(
             "distinctTradeIds" to seenIds.size,
@@ -168,6 +180,7 @@ internal class StatTranslationAudit(
                 "matchersWithAddedVariants" to 0,
             ) + changes),
             "tradeSnapshotCheck" to counts,
+            "effectMatchers" to effectMatchers,
         ))
     }
 }

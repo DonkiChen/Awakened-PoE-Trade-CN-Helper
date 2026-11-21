@@ -144,7 +144,9 @@ set "TENCENT_GAME_PATH=C:\Program Files (x86)\流放之路(511)"
 gradlew.bat -q generateTranslations --args=--audit-stats --console=plain > audit-stats.ndjson 2> audit-stats.log
 ```
 
-报告每行是一个 JSON 对象；首行是导出来源，末行是统计。用 `location.inputLine`（从 1 开始）、`groupIndex` 和 `matcherIndex`（从 0 开始）定位英文输入。`selected` 列出 ID 验证通过的译文和来源；`alternatives` 列出冲突候选；`legacy`、`output`、`removed` 和 `added` 记录旧、新结果和差异。CSD 来源含导出名、文件名、行号和内部 stat ID；非 CSD 的旧译文只列出 mapper。`trade_data/` 英中快照只用来核对完整 ID 是否存在，不提供 matcher 译文。
+报告每行是一个 JSON 对象；首行是导出来源，末行是统计。用 `location.inputLine`（从 1 开始）、`groupIndex` 和 `matcherIndex`（从 0 开始）定位英文输入。`selected` 列出 ID 验证通过的译文和来源；`alternatives` 列出冲突候选；`legacy`、`output`、`removed` 和 `added` 记录旧、新结果和差异。CSD 来源含导出名、文件名、行号和内部 stat ID；非 CSD 的旧译文只列出 mapper。
+
+`effect_*` 词缀的缺失写法由客户端数据补齐，不依赖 `trade_data/` 快照。生成器按游戏 ID 关联 `ActiveSkills` 或 `BaseItemTypes` 中的英中技能名，再填入 `ClientStrings` 中的赋予技能或镶嵌辅助模板。只接受唯一对应现有英文 APT matcher 和游戏 ID、且两端 `#` 数量一致的结果，保留原有交易 ID、固定值和译文。补齐结果和跳过原因以 `effect-matcher` 记录写入审计报告；交易快照只用于审计时核对 ID 是否存在。
 
 首次验证（2026-11-21，使用上文配置的四组本地导出）：共 12,741 条英文 matcher，其中 8,632 条进入普通 ID 查找，7,843 条直接使用 ID 候选译文（90.9%），76 条有冲突但保留了经 ID 验证的旧译文，711 条走旧路径，2 条缺译。另有 4,109 条不适用普通 ID 查找，其中 2,238 条带 `|option` 的 matcher 全部不变。新旧对比剔除了 409 条 matcher 上的 416 个旧变体；报告将这些变体定位到不同的内部 stat，76 条 matcher 的首选变体随之改变。没有新增缺译，也没有改变 matcher 或查询元数据。更新导出后请重新测量，不要将此基线当作固定覆盖率。
 
